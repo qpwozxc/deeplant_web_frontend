@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import styles from "./LogInField.module.css";
+import { useNavigate } from 'react-router-dom';
 
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "./firebase-config";
@@ -16,15 +17,13 @@ const LogInField = () => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        const auth = getAuth(); // Firebase 인증 객체를 가져옵니다.
+        const auth = getAuth(); 
 
-        // 로그인 상태 변경 시 호출될 콜백 함수를 등록합니다.
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
         });
 
         return () => {
-            // 컴포넌트가 언마운트되면 구독을 해제합니다.
             unsubscribe();
         };
     }, []);
@@ -38,20 +37,25 @@ const LogInField = () => {
                 registerPassword
             );
             console.log(userCredential.user);
+
+            
         } catch (error) {
             console.log(error.message);
         }
     };
 
+    const navigate = useNavigate();
     // 로그인
-    const login = async () => {
+    const Login = async () => {
         try {
             const userCredential = await signInWithEmailAndPassword(
                 auth,
                 loginEmail,
                 loginPassword
             );
+                
             console.log(userCredential.user);
+            navigate('/home');
         } catch (error) {
             console.log(error.message);
         }
@@ -72,7 +76,7 @@ const LogInField = () => {
     <>
       <Form.Control
         type="email"
-        id="email"
+        placeholder="Email"
         onChange={(e) => {
             setLoginEmail(e.target.value);
         }}
@@ -84,18 +88,18 @@ const LogInField = () => {
                 <>
       <Form.Control
         type="password"
+        placeholder="Password"
         onChange={(e) => {
             setLoginPassword(e.target.value);
         }}
         />
     </>
         </div>
-                <Button onClick={login} variant="success">로그인</Button>
+                <Button onClick={Login} variant="success">로그인</Button>
+                {/* <Button onClick={logout} variant="danger">로그아웃</Button> */}
                 <div>User Logged In:</div>
                 <div>{user?.email}</div>
-                <button onClick={logout}>로그아웃</button>
         </div>
-      
     );
 };
 

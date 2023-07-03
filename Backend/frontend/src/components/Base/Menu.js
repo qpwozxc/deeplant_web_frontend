@@ -1,13 +1,18 @@
 import {Link} from "react-router-dom";
 import styles from "./Menu.module.css"
 import {FaRightFromBracket} from "react-icons/fa6";
-// add link to log out 
+import { useNavigate } from 'react-router-dom';
+
+
 function Menu(){
+    
     return(
         <div className={styles.container}>
             <div className={styles.content_wrapper}>
                 <div className={styles.content}>
+                <Link to={"/Home"} >
                 로그아웃 <FaRightFromBracket/>
+                    </Link>
                 </div>
             </div>
             <div className={styles.content_wrapper}>
