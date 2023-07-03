@@ -9,11 +9,12 @@ import Stats from "./routes/Stats";
 import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import './App.module.css';
+import LogIn from "./routes/LogIn";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home/>}></Route>
+        <Route path="/" element={<LogIn/>}></Route>
         <Route path="/dataView" element={<DataView/>}></Route>
         <Route path="/stats" element={<Stats/>}></Route>cd 
         <Route path="/profile" element={<Profile/>}></Route>
@@ -24,4 +25,3 @@ function App() {
 }
 
 export default App;
-stt
