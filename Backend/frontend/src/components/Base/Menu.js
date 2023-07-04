@@ -17,7 +17,7 @@ function Menu(){
             </div>
             <div className={styles.content_wrapper}>
                 <div className={styles.content}>
-                    <Link to={"/dataView"} >
+                    <Link to={"/Home"} >
                         데이터 조회
                     </Link>
                 </div>
@@ -33,13 +33,6 @@ function Menu(){
                 <div className={styles.content}>
                     <Link to={"/profile"}>
                     프로필
-                    </Link>
-                </div>               
-            </div>
-            <div className={styles.content_wrapper}>
-                <div className={styles.content}>
-                    <Link to={"/UserManagement"}>
-                    사용자 관리
                     </Link>
                 </div>               
             </div>
