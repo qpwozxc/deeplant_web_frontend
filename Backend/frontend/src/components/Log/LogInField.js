@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import styles from "./LogInField.module.css";
 import { useNavigate } from 'react-router-dom';
 
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "./firebase-config";
+import { auth } from "../../firebase-config";
 
 const LogInField = () => {
     const [registerEmail, setRegisterEmail] = useState("");

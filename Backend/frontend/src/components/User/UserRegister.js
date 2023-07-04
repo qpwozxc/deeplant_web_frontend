@@ -1,86 +1,111 @@
 import React, { useState, useEffect } from "react";
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Stack from 'react-bootstrap/Stack';
+import { Button } from "react-bootstrap";
+import InputGroup from 'react-bootstrap/InputGroup';
+import {
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "../../firebase-config";
 
 function UserRegister() {
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+
+
+  const [users, setUsers] = useState([]);
+  const usersCollectionRef = collection(db, "users_2");
+  const createUser = async () => {
+    const docRef = doc(usersCollectionRef, newEmail);
+    await setDoc(docRef, { name: newName,email:newEmail});
+  };
+  useEffect(() => {
+    const getUsers = async () => {
+        const data = await getDocs(usersCollectionRef);
+        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    
+    getUsers();
+}, [usersCollectionRef]);
+
+const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+  };
+
     return (
         <div>
         <div>
-        
-        <Form>
-      <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
         <Form.Label column >
-          *아이디
-        </Form.Label>
-          <Form.Control type="email" placeholder="영문/숫자" />
-      </Form.Group>
-
-      <Form.Group as={Row} className="mb-3" controlId="formHorizontalPassword">
-        <Form.Label column>
-          *임시 패스워드
+          *이름
         </Form.Label>
           <Form.Control 
-          type="password" 
-          placeholder="영문+숫자" 
-          aria-describedby="passwordHelpBlock"
+          required
+          type="text" 
+          placeholder="이름" 
+          onChange={(event) => {
+            setNewName(event.target.value);
+          }}
           />
-          <Form.Text id="passwordHelpBlock" muted>
-          영문/숫자로만 구성해주세요.
-      </Form.Text>
+          <Form.Control.Feedback type="invalid">
+              Please choose a username.
+            </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group as={Row} className="mb-3" controlId="formHorizontalPassword">
-        <Form.Label column >
-          비밀번호 확인
-        </Form.Label>
-          <Form.Control 
-          type="password" 
-          placeholder="비밀번호 확인" 
-          aria-describedby="passwordHelpBlock"
-          />
-          <Form.Text id="passwordHelpBlock" muted>
-        비밀번호가 일치하지 않습니다.(조건부)
-      </Form.Text>
-      </Form.Group>
+      <Form.Label>*이메일</Form.Label>
+      <InputGroup className="mb-3">
+        <Form.Control
+          type="email"
+          placeholder="이메일 입력"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+          onChange={(event) => {
+            setNewEmail(event.target.value);
+          }}
+        />
+        <Button variant="outline-secondary" id="button-addon2">
+          중복 확인
+        </Button>
+      </InputGroup>
     </Form>
 
+    <Form.Select aria-label="Default select example">
+      <option>사용자 선택</option>
+      <option value="1">사용자1</option>
+      <option value="2">사용자2</option>
+    </Form.Select>
 
-
-      <div className="text-center mb-3">
-    <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        사용자 선택
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu >
-        <Dropdown.Item href="#/action-1">사용자1</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">사용자2</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-    </div>
-
-    <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+    <Form.Group  className="mb-3" >
         <Form.Label column >
           소속
         </Form.Label>
-          <Form.Control type="email" placeholder="회사명 입력" />
-      </Form.Group><Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
-          <Form.Control type="email" placeholder="직접 입력" />
-      </Form.Group><Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
-          <Form.Control type="email" placeholder="회사주소 검색" />
+          <Form.Control 
+          type="text" 
+          placeholder="회사명 입력" 
+          
+          />
+      </Form.Group><Form.Group  className="mb-3" >
+          <Form.Control type="text" placeholder="직책 입력" />
+      </Form.Group><Form.Group  className="mb-3" >
+          <Form.Control type="adress" placeholder="회사주소 검색" />
       </Form.Group>
 
-      <Stack gap={2} className="col-md-5 mx-auto">
-      <Button variant="success">Save changes</Button>
-    </Stack>
-
-
-   
-
-
+      <Button 
+      variant="success"
+      type="submit"
+      onClick={createUser}
+      >Save changes</Button>
     </div>
         </div>
     );
