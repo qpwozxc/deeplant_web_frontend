@@ -10,6 +10,7 @@ import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import './App.module.css';
 import LogIn from "./routes/LogIn";
+import UserManagement from "./routes/UserManagement";
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
         <Route path="/stats" element={<Stats/>}></Route>cd 
         <Route path="/profile" element={<Profile/>}></Route>
         <Route path="/dataEdit/:id" element={<DataEdit/>}></Route>
+        <Route path="/UserManagement" element={<UserManagement/>}></Route>
       </Routes>
     </Router>
   );

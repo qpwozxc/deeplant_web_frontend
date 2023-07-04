@@ -4,7 +4,7 @@ import Header from "./Header";
 import Menu from "./Menu";
 function Base(){
     return(
-        <div>
+        <div style={{ marginBottom: "100px" }}>
             <Header/>
             <Sidebar width={280}>
                 <Menu/>
