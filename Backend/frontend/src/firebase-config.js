@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
+import "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"; // 코드 추가
+import { getFirestore } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,7 +20,10 @@ const firebaseConfig = {
   measurementId: "G-8E01LSBPD3"
 };
 
+const firebase=initializeApp(firebaseConfig);
+const fireStore=getFirestore(firebase);
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const db=getFirestore(app);
 // Initialize Firebase
+export {fireStore};
 export const auth = getAuth(app); // 코드 추가
