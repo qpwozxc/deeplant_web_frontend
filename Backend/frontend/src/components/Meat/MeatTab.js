@@ -54,7 +54,7 @@ function MeatTab({fresh, heated , lab_data, tongue, apiData}){
             />
             <div className={styles.meat_info_container_content}>
                 {console.log('setdata')}
-                {data ? JSON.stringify(data) : 'null'}      
+                {data ? JSON.stringify(data) : '{}'}      
             </div>
         </div>
     );

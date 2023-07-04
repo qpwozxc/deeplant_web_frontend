@@ -13,7 +13,7 @@ function DataLoad(){
         email: "example@example.com",
         farmAddr:"강원도 원주시 호저면 매호리",
         fresh : {color: 2.3, marbling: 5.2, surfaceMoisture: 1, texture: 3, total: 4},
-        gradeNm: 3,
+        gradeNm: "3",
         heated : null,
         id: "1-2-3-4-5",
         l_division: "rib",
@@ -29,6 +29,7 @@ function DataLoad(){
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState(samples);
+    
 
     const getData = async() => {
         
@@ -92,7 +93,22 @@ useEffect(()=>{
     setItems(samples)
     setIsLoaded(true)
 },[]);
-    //fetch 확인
+    
+    //api json변환
+    const convertToApiData = (butcheryPlaceNm,butcheryYmd, farmAddr,gradeNm,l_division,s_division,species, traceNumber) =>{
+        const apiData = {
+        "butcheryPlaceNm" : butcheryPlaceNm,
+        "butcheryYmd" : butcheryYmd,
+        "farmAddr" : farmAddr,
+        "gradeNm" : gradeNm,
+        "l_division": l_division,
+        "s_division" : s_division,
+        "species" : species,
+        "traceNumber" : traceNumber,
+        };
+        console.log("apiData,",butcheryPlaceNm)
+        return apiData;
+    };
     //console.log(items);
     if (error){
         console.log('error!');
@@ -120,25 +136,28 @@ useEffect(()=>{
             isLoaded 
             ? (<div className={styles.meat_container}> 
                 {items.map((item) =>
-                <Meat
+                // API관련 데이터 JSON으로 변환
+                {const apiData = convertToApiData(
+                    item.butcheryPlaceNm,
+                    item.butcheryYmd, 
+                    item.farmAddr,
+                    item.gradeNm,
+                    item.l_division,
+                    item.s_division,
+                    item.species, 
+                    item.traceNumber);
+                return (<Meat
                     key={item.id}
                     id = {item.id}
-                    butcheryPlaceNm={item.butcheryPlaceNm}
-                    butcheryYmd={item.butcheryYmd}
                     deepAging={item.deepAging}
                     email={item.email} 
-                    farmAddr={item.farmAddr}
                     fresh={item.fresh} 
-                    gradeNm={item.gradeNm}
                     heated={item.heated} 
-                    l_division={item.l_division}
                     lab_data={item.lab_data} 
-                    s_division={item.s_division}
                     saveTime={item.saveTime} 
-                    species={item.species}
                     tongue={item.tongue} 
-                    traceNumber={item.traceNumber}
-                />                
+                    apiData={apiData}
+                /> )}            
                 )}
             </div>)
             : <div> <span>Loading...</span> </div>
