@@ -9,16 +9,17 @@ import { auth } from "../../firebase-config";
 const LogInField = () => {
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
-
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [user, setUser] = useState({});
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        const auth = getAuth(); 
+        const auth = getAuth();
 
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            setIsLoggedIn(!!currentUser); // currentUser가 존재하면 true, 그렇지 않으면 false
         });
 
         return () => {
@@ -26,7 +27,6 @@ const LogInField = () => {
         };
     }, []);
 
-    // 회원가입
     const register = async () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(
@@ -36,22 +36,21 @@ const LogInField = () => {
             );
             console.log(userCredential.user);
 
-            
         } catch (error) {
             console.log(error.message);
         }
     };
 
     const navigate = useNavigate();
-    // 로그인
-    const Login = async () => {
+
+    const login = async () => {
         try {
             const userCredential = await signInWithEmailAndPassword(
                 auth,
                 loginEmail,
                 loginPassword
             );
-                
+
             console.log(userCredential.user);
             navigate('/home');
         } catch (error) {
@@ -59,7 +58,6 @@ const LogInField = () => {
         }
     };
 
-    // 로그아웃
     const logout = async () => {
         try {
             await signOut(auth);
@@ -69,37 +67,48 @@ const LogInField = () => {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-    <div>
-    <>
-      <Form.Control
-        type="email"
-        placeholder="Email"
-        onChange={(e) => {
-            setLoginEmail(e.target.value);
-        }}
-      />
-    </>
-    </div>
-    <div>
-
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", }}>
+            {!isLoggedIn && (
                 <>
-      <Form.Control
-        type="password"
-        placeholder="Password"
-        onChange={(e) => {
-            setLoginPassword(e.target.value);
-        }}
-        />
-    </>
-        </div>
-                <Button onClick={Login} variant="success">로그인</Button>
-                {/* <Button onClick={logout} variant="danger">로그아웃</Button> */}
-                <div>User Logged In:</div>
-                <div>{user?.email}</div>
+                    <Form.Group className="mb-3">
+                        <Form.Label>
+                            아이디
+                        </Form.Label>
+                        <Form.Control
+                            type="email"
+                            placeholder="Email"
+                            onChange={(event) => {
+                                setLoginEmail(event.target.value);
+                            }}
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>
+                            비밀번호
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            placeholder="Password"
+                            onChange={(event) => {
+                                setLoginPassword(event.target.value);
+                            }}
+                        />
+                    </Form.Group>
+                </>
+            )}
+
+            {isLoggedIn ? (
+                <>
+                    <Button onClick={logout} variant="danger">로그아웃</Button>
+                    <div>User Logged In:</div>
+                    <div>{user?.email}</div>
+                </>
+            ) : (
+                <Button onClick={login} variant="success">로그인</Button>
+            )}
         </div>
     );
 };
 
 export default LogInField;
-//이메일,등급,이름

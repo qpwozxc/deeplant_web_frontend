@@ -6,7 +6,10 @@ function LogIn(){
     return (
         <div>
             <Header/>
+
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
             <LogInField/>
+        </div>
         </div>
     );
 }

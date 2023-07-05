@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react"
+import React from 'react';
 import Base from "../components/Base/BaseCmp";
 import UserList from "../components/User/UserList";
-import UserRegister from "../components/User/UserRegister";
+
 function UserManagement(){
     return (
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div>
             <Base/>
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
             <UserList/>
+        </div>
         </div>
     );
 }
