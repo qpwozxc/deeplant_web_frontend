@@ -5,6 +5,8 @@ import MeatTab from "./MeatTab";
 import meatImg from "../../src_assets/meat.jpeg"
 import Button from '@mui/material/Button';
 import styles from "./Meat.module.css";
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 // 고기 데이터를 받아서 조회/수정 
 function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, apiData}){
     
@@ -12,7 +14,7 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
     console.log('Meats');
     return (
     <div className={styles.meat}>
-        <div className={styles.meat_info}>
+        {/* <div className={styles.meat_info}>
             <div className={styles.meat_code}>
               <span>관리번호: {id}</span>
             </div>
@@ -25,7 +27,21 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
             <div className={styles.meat_img}>
                 <img src={meatImg}/>
             </div>
-        </div>
+
+            
+        </div> */}
+        <Card style={{ width: '30rem' }}>
+      <Card.Img variant="top" src={meatImg} />
+      <Card.Body>
+        <Card.Text>
+          <ListGroup variant="flush">
+        <ListGroup.Item>관리번호: {id}</ListGroup.Item>
+        <ListGroup.Item>email: {email}</ListGroup.Item>
+        <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
+      </ListGroup>
+        </Card.Text>
+      </Card.Body>
+    </Card>
         <MeatTab
           fresh={fresh}
           heated={heated}

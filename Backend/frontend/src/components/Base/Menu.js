@@ -2,15 +2,25 @@ import {Link} from "react-router-dom";
 import styles from "./Menu.module.css"
 import {FaRightFromBracket} from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
-
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase-config";
 
 function Menu(){
-    
+    const navigate = useNavigate();
+
+    const logout = async () => {
+        try {
+            await signOut(auth);
+            navigate('/');
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     return(
         <div className={styles.container}>
             <div className={styles.content_wrapper}>
                 <div className={styles.content}>
-                <Link to={"/Home"} >
+                <Link to={"/"} onClick={logout}>
                 로그아웃 <FaRightFromBracket/>
                     </Link>
                 </div>
