@@ -319,7 +319,7 @@ class MyFlaskApp:
                 # imagePath field
                 meat_dict[
                     "imagePath"
-                ] = f"https://deep-plant-flask-server.s3.ap-northeast-2.amazonaws.com/{self.s3_conn.folder}/{meat_dict['id']}.png"
+                ] = f"https://deep-plant-flask-server.s3.ap-northeast-2.amazonaws.com/meats/{meat_dict['id']}.png"
                 return jsonify(meat_dict)
 
     def _get_range_meat_data(self, offset, count):  # 날짜를 기준으로 특정 범위의 meat data 요청
