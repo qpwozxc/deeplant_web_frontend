@@ -6,9 +6,7 @@ function UserManagement(){
     return (
         <div>
             <Base/>
-        <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
             <UserList/>
-        </div>
         </div>
     );
 }

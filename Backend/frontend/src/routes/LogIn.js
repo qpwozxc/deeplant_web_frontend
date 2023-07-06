@@ -4,13 +4,11 @@ import Header from "../components/Base/Header";
 import LogInField from "../components/Log/LogInField";
 function LogIn(){
     return (
-        <div>
-            <Header/>
-
-            <div className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
-            <LogInField/>
-        </div>
-        </div>
+        <>
+            <div className="d-flex  align-items-center" style={{ height: "100vh" }}>
+                <LogInField/>
+            </div>
+        </>
     );
 }
 
