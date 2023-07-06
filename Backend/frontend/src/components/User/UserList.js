@@ -1,5 +1,5 @@
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import * as React from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -10,6 +10,29 @@ import { db } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { ButtonGroup } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Sidebar from '../Base/Sidebar';
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
@@ -31,60 +54,71 @@ function UserList() {
     };
     getUsers();
   }, []);
-
+  const defaultTheme = createTheme();
+  
   return (
-    <div>
-       <Card className="text-center mb-5">
-      <Card.Body><h1>회원 관리</h1></Card.Body>
-    </Card>
-      
-
-      <InputGroup className="mb-5">
-        <Form.Control
-          placeholder="이름"
-        />
-        <Button variant="outline-primary" id="button-addon2">
-          검색
-        </Button>
-      </InputGroup>
-
-      <>
-      <ButtonGroup className="mb-3">
-
-        <Button variant="primary" onClick={handleRegisterShow}>
-          +신규 회원 등록
-        </Button>
-      </ButtonGroup>
-
-        <Modal
-          show={registerShow}
-          onHide={handleRegisterClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>신규 회원 등록</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <UserRegister handleClose={handleRegisterClose}/>
-          </Modal.Body>
-        </Modal>
-      </>
-
-      <Table striped bordered hover size="lg" variant="secondary" style={{ minWidth: '800px' }} className="text-center">
-        <thead >
-          <tr>
-            <th>이름 (아이디)</th>
-            <th>권한</th>
-            <th>관리</th>
-          </tr>
-        </thead>
-        <tbody>
+    <ThemeProvider theme={defaultTheme}>
+      <Box sx={{ display: 'flex' }}>
+      <Sidebar/>
+        <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: '100vh',
+          overflow: 'auto',
+        }}
+      >
+       
+        <Toolbar />
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8} lg={9}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: 240,
+                }}
+              >
+            
+              </Paper>
+            </Grid>
+            {/* Recent Deposits */}
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: 240,
+                }}
+              >
+              </Paper>
+            </Grid>
+            {/* Recent Orders */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+              <Table striped bordered hover size="lg" variant="secondary" style={{ minWidth: '800px' }} className="text-center">
+        <TableHead >
+          <TableRow>
+            <TableCell>이름</TableCell>
+            <TableCell>아이디</TableCell>
+            <TableCell>권한</TableCell>
+            <TableCell>관리</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.name} ({user.id})</td>
-              <td>사용자2</td>
-              <td>
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.id}</TableCell>
+              <TableCell>사용자2</TableCell>
+              <TableCell>
                 <Button variant="primary" onClick={() => handleEditShow(user)}>
                   수정
                 </Button>
@@ -107,12 +141,18 @@ function UserList() {
                     </Button>
                   </Modal.Footer>
                 </Modal>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
+        </TableBody>
       </Table>
-    </div>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </Box>
+  </ThemeProvider>
   );
 }
 
