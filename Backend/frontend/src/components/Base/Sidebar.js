@@ -60,8 +60,8 @@ const mainListItems = (
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="Integrations" />
         <Link to={"/UserManagement"}>
+        <ListItemText primary="Integrations" />
                     사용자 관리
                     </Link>
       </ListItemButton>
