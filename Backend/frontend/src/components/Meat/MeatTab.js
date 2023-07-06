@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import styles from "./MeatTab.module.css";
 import TabBtns from "./TabBtns";
+import Table from 'react-bootstrap/Table';
  
 //tab 버튼 별 데이터 설정
 function MeatTab({fresh, heated , lab_data, tongue, apiData}){
@@ -53,8 +54,25 @@ function MeatTab({fresh, heated , lab_data, tongue, apiData}){
                 currentTabHandler={currentTabHandler}
             />
             <div className={styles.meat_info_container_content}>
-                {console.log('setdata')}
-                {data ? JSON.stringify(data) : '{}'}      
+            <Table striped bordered hover size="sm">
+            {data ? 
+            <tbody>
+            { Object.entries(data).map(([key, value])=>
+            {
+                return (<tr>
+                    <td style={{width:"30%"}}>{key}</td>
+                    <td>{value}</td>
+                </tr>)
+            })}
+            </tbody>
+            : 
+            '{}'}  
+            
+                
+                
+                {console.log('data',data)}
+            </Table>
+                
             </div>
         </div>
     );

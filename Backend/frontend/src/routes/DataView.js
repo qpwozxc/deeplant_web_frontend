@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import Base from "../components/Base/BaseCmp";
-import DataLoad from "../components/Meat/DataLoad";
+import SingleDataLoad from "../components/Meat/SingleDataLoad";
 import styles from "./DataView.module.css"
 import Sidebar from "../components/Base/Sidebar";
 function DataView(){
@@ -9,7 +9,7 @@ function DataView(){
         <div className={styles.container}>
             <Sidebar/>
             <Base/>
-            <DataLoad/>
+            <SingleDataLoad/>
         </div>
     );
 }

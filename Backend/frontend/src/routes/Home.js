@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect , useRef} from "react"
 import styles from "./Home.module.css";
 import Base from "../components/Base/BaseCmp";
 import Form from 'react-bootstrap/Form';
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
 import Button from '@mui/material/Button';
-import { FaChevronLeft,FaChevronRight } from "react-icons/fa6";
-import { width } from "@mui/system";
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
-
-import { DataGrid } from '@mui/x-data-grid';
 import Table from 'react-bootstrap/Table';
+import {ExcelRenderer, OutTable} from 'react-excel-renderer';
+import Papa from "papaparse";
+import csv from 'csv';
 
 function Home(){
     const [isLoaded, setIsLoaded] = useState(true);
@@ -21,11 +20,8 @@ function Home(){
     const [currentPN, setCurrentPN] = useState(1);
     const [currentPageArray ,setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray , setTotalSlicedPageArray] = useState([]);
-    
-    // 페이지가 5개 미만인 경우 
-    // < 1 2 3 >
-    // 페이지가 5개 이상인 경우
-    // < 1 2 3 4 5 ... >
+    const [excelFile, setExcelFile] = useState("");
+    const fileRef = useRef(null);
 
     const offset = 0;
     const count = 7;
@@ -84,7 +80,38 @@ function Home(){
         console.log("late total page-array:", totalSlicedPageArray);
     }, [totalSlicedPageArray]);
       
+    const handleExcelFile = (file) => {
+        console.log("file path", file);
+        /*const csvToJson = Papa.parse(file, {
+            header: true,
+            encoding: 'EUC-KR',
+            complete: (results) =>{
+              console.log("Finished:", results.data);
+            }}
+          )*/
+        const reader = new FileReader();
+        reader.onload = () => {
+            csv.parse(reader.result, (err, data) => {
+                console.log(data);
+            });
+        };
 
+        const res = reader.readAsBinaryString(file);
+        console.log('res', res);
+        ExcelRenderer(file, (err, resp) => {
+            if(err){
+              console.log(err);            
+            }
+            else{
+                console.log("cols: ",resp.cols, "rows: ", resp.rows);
+              /*this.setState({
+                cols: resp.cols,
+                rows: resp.rows
+              });*/
+              
+            }
+          }); 
+    }
     return(
         <div>
             <Base/> 
@@ -119,20 +146,15 @@ function Home(){
                 }
                 </tbody>
             </Table>
-            </div >
-            
-            
-            
+            </div > 
             
             <div className="" style={{display:'flex', justifyContent:'space-between', margin:'0px 40px' }}>
-                <div style={{width:'100%', marginRight:'20px'}}>
-                    <Form.Group controlId="formFile" className="mb-3" >
-                    <Form.Label>엑셀 파일 업로드</Form.Label>
-                    <Form.Control type="file" />
-                    </Form.Group>
+                <div class="mb-3" style={{width:'100%', marginRight:'20px'}}>
+                    <label for="formFile" class="form-label">엑셀 파일 업로드</label>
+                    <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef} onChange={(e)=>{setExcelFile(e.target.files[0]);}} />
                 </div>
                 <div style={{display:'flex', alignItems:'center',justifyContent:'center',margin:'35px', marginBottom:'0px'}}>
-                    <Button variant="outlined" style={{height:'35px', width:'100px'}}>업로드</Button>
+                    <Button variant="outlined" style={{height:'35px', width:'100px'}} onClick={()=> { handleExcelFile(excelFile); }}>업로드</Button>
                 </div>
             </div>
 

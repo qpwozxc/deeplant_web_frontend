@@ -12,14 +12,14 @@ function DataList({idx, content}){
     const [isReviewed, setIsReviewed] = useState(false);
     const id = 1;
     return (
-        <tr>
+        <tr className={`${style.table_row}`}>
             <td>
                 
                 <div className={`${style.list_idx}`}>{idx+1}</div>
                 
             </td>
             <td>
-                <Link to={{pathname : `/dataView/${id}`}}>
+                <Link to={{pathname : `/dataView/${content}`}}>
                 <div className={`${style.list_content}` } >{content}</div>
                 </Link>
             </td>

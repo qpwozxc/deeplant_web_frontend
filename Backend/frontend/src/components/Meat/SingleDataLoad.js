@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react"
+import { useParams } from 'react-router-dom';
 import Meat from "./Meat";
 import Search from "./Search";
 import SearchFilter from "./SearchFilter";
-import styles from "./DataLoad.module.css"
+import styles from "./SingleDataLoad.module.css"
 
 
 function DataLoad(){
@@ -29,18 +30,20 @@ function DataLoad(){
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState(samples);
-    
-
+    //const [item, setItem] = useState();
+    //관리번호 받아오기 (url 이름과 변수명 통일 )
+    const {id} = useParams();
+    console.log('id from param', id);
     const getData = async() => {
         
         const json = await(
              await fetch(
-                'http://localhost:8080/meat'
+                `http://localhost:8080/meat?id=${id}`
             )
         ).json();
         console.log('connected!!');
         console.log(json);
-        setItems(json);
+        setItems([json,]);
         setIsLoaded(true);
 
         
@@ -83,11 +86,11 @@ function DataLoad(){
         });
         */
     }
-    /*
     useEffect(()=>{
-        getData();
+        //getData();
+        console.log('get data');
     },[]);
-*/
+
 
 useEffect(()=>{
     setItems(samples)
