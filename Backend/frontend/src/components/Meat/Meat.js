@@ -14,22 +14,6 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
     console.log('Meats');
     return (
     <div className={styles.meat}>
-        {/* <div className={styles.meat_info}>
-            <div className={styles.meat_code}>
-              <span>관리번호: {id}</span>
-            </div>
-            <div className={styles.email}>
-              <div>email: {email}</div>
-            </div>
-            <div className={styles.save_time}>
-              <div>저장 시간: {saveTime}</div>
-            </div>
-            <div className={styles.meat_img}>
-                <img src={meatImg}/>
-            </div>
-
-            
-        </div> */}
         <Card style={{ width: '30rem' }}>
       <Card.Img variant="top" src={meatImg} />
       <Card.Body>

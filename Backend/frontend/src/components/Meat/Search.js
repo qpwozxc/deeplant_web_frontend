@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 import styles from "./Search.module.css";
-import {FaMagnifyingGlass ,FaCalendarDays, FaAngleDown} from "react-icons/fa6";
+import {FaMagnifyingGlass} from "react-icons/fa6";
 import DatePicker from "react-datepicker";
 import { ko } from 'date-fns/esm/locale';
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,7 +8,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 function Search(){
@@ -50,30 +49,9 @@ function Search(){
         category.value === "date_based" ? setIsDate(true) : setIsDate(false);
         // api 호출 
     }
-    /*
-  <div className="MuiSelect-select">
-                    <div className={`${styles.search_toggle} ${toggle? styles.open : ''}`}
-                        onClick={()=>setToggle(!toggle)}
-                    >
-                        {categoryItem.name}
-                        <FaAngleDown/>
-                    </div>
-                    
-                    {console.log(toggle)}
 
-                    {toggle && (
-                        <div className={styles.search_toggle_box}>
-                            {category.map((c, idx )=>
-                                (<div className={styles.search_toggle_box_item} key={idx} onClick={()=> filterCategory(c)}>
-                                    {c.name}
-                                </div>)
-                            )}
-                        </div>
-                    )}
-                </div>
-    */
     return(
-        <div>
+        <div style={{marginBottom:"20px"}}>
             <div className={ ` ${styles.search}`}>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-standard-label">검색</InputLabel>

@@ -1,5 +1,5 @@
-td{
-    padding : 5px;
+.table_row > td{
+    padding : 3px;
 }
 .list_wrapper{
     display:flex;
