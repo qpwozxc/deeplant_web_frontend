@@ -4,13 +4,14 @@ import Base from "../components/Base/BaseCmp";
 import Form from 'react-bootstrap/Form';
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import Table from 'react-bootstrap/Table';
 import {ExcelRenderer, OutTable} from 'react-excel-renderer';
 import Papa from "papaparse";
-import csv from 'csv';
+import Sidebar from "../components/Base/Sidebar";
 
 function Home(){
     const [isLoaded, setIsLoaded] = useState(true);
@@ -81,46 +82,25 @@ function Home(){
     }, [totalSlicedPageArray]);
       
     const handleExcelFile = (file) => {
-        console.log("file path", file);
-        /*const csvToJson = Papa.parse(file, {
-            header: true,
-            encoding: 'EUC-KR',
-            complete: (results) =>{
-              console.log("Finished:", results.data);
-            }}
-          )*/
-        const reader = new FileReader();
-        reader.onload = () => {
-            csv.parse(reader.result, (err, data) => {
-                console.log(data);
-            });
-        };
-
-        const res = reader.readAsBinaryString(file);
-        console.log('res', res);
-        ExcelRenderer(file, (err, resp) => {
-            if(err){
-              console.log(err);            
-            }
-            else{
-                console.log("cols: ",resp.cols, "rows: ", resp.rows);
-              /*this.setState({
-                cols: resp.cols,
-                rows: resp.rows
-              });*/
-              
-            }
-          }); 
     }
     return(
-        <div>
-            <Base/> 
-            <div style={{padding:'0px 100px', paddingBottom:'0'}}>
+        <Box sx={{ display: 'flex'}}>
+            <Sidebar/>
+            <Box
+            component="main"
+            sx={{
+            backgroundColor: (theme) =>
+                theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+            }}
+            >
             <Search />
-
-            </div>
-            <div style={{display:'flex', flexDirection:'column',alignItems:'center', justifyContent:'center'}}>
-            <Table striped bordered hover style={{width:"80%", padding:'0px 100px', paddingBottom:'0'}}>
+            <div style={{display:'flex'}}>
+            <Table striped bordered hover style={{width:"80%"}}>
                 <thead>
                     <tr>
                     <th>id</th>
@@ -192,7 +172,8 @@ function Home(){
             </Pagination>
                 
             </div>
-        </div>
+            </Box>
+        </Box>
       );
 }
 
