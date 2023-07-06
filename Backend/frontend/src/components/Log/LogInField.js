@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
-
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../firebase-config";
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
+const defaultTheme = createTheme();
 const LogInField = () => {
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
@@ -67,48 +79,95 @@ const LogInField = () => {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", }}>
-            {!isLoggedIn && (
-                <>
-                    <Form.Group className="mb-3">
-                        <Form.Label>
-                            아이디
-                        </Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Email"
-                            onChange={(event) => {
-                                setLoginEmail(event.target.value);
-                            }}
-                        />
-                    </Form.Group>
+      <ThemeProvider theme={defaultTheme}>
+          <Grid container component="main" sx={{ height: '100vh' }}>
+          <CssBaseline />
+        <Grid item xs={false} sm={4} md={7}
+          sx={{
+            backgroundImage: 'url(https://static.wixstatic.com/media/3b5756_a962e05dd635419aa597ac8ea972cc70~mv2.jpg/v1/fill/w_1359,h_622,al_c,q_85,enc_auto/3b5756_a962e05dd635419aa597ac8ea972cc70~mv2.jpg)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+              backgroundSize: '95% ', 
+            backgroundPosition: 'center',
+        }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+          <img src="https://static.wixstatic.com/media/3b5756_aba29808c0b24d0ea6233ac6dcb5664e~mv2.png/v1/fill/w_340,h_85,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Deeplant_Iogo.png" />
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>
-                            비밀번호
-                        </Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Password"
-                            onChange={(event) => {
-                                setLoginPassword(event.target.value);
-                            }}
-                        />
-                    </Form.Group>
-                </>
-            )}
+            
+        <Box component="form" noValidate sx={{ mt: 5}}>
+            { (
+      <Box component="form" noValidate sx={{ mt: 1 }}>
+        <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="email"
+        label="이메일 주소"
+        name="email"
+        autoComplete="email"
+        autoFocus
+          onChange={(event) => {
+            setLoginEmail(event.target.value);
+          }}
+        />
 
-            {isLoggedIn ? (
-                <>
-                    <Button onClick={logout} variant="danger">로그아웃</Button>
-                    <div>User Logged In:</div>
-                    <div>{user?.email}</div>
-                </>
-            ) : (
-                <Button onClick={login} variant="success">로그인</Button>
-            )}
-        </div>
-    );
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="비밀번호"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          onChange={(event) => {
+            setLoginPassword(event.target.value);
+          }}
+        />
+      </Box>
+    )}
+    <>
+      <Button 
+      onClick={login} 
+      fullWidth
+      variant="contained"
+      color="success"
+      sx={{ mt: 3, mb: 2,bgcolor: 'green' ,}}>로그인</Button>
+              <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="아이디 저장"
+              />
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    비밀번호를 잊으셨나요?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    계정이 없나요? 계정 생성하기
+                  </Link>
+                </Grid>
+              </Grid>
+              </>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+);
+
 };
 
 export default LogInField;

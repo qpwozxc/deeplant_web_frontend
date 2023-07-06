@@ -5,7 +5,7 @@ import logo from '../../src_assets/deeplant-text-logo.png'
 class Header extends React.Component{
     render(){
         return(
-            <Link to="/">
+            <Link to="/Home">
             <div className={styles.container}>
                 <img className={styles.logo} src={logo}/>
             </div>
