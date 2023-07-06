@@ -19,6 +19,20 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import Toolbar from '@mui/material/Toolbar';
+import { signOut } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
+import { auth } from "../../firebase-config";
+
+
+const logout = async () => {
+    const navigate = useNavigate();
+    try {
+        await signOut(auth);
+        navigate('/');
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
 const mainListItems = (
     <React.Fragment>
@@ -26,8 +40,10 @@ const mainListItems = (
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-        
+        <ListItemText primary="로그아웃" />
+        <Link to={"/"} onClick={logout}>
+                로그아웃 
+                    </Link>
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
@@ -60,8 +76,8 @@ const mainListItems = (
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="Integrations" />
         <Link to={"/UserManagement"}>
+        <ListItemText primary="Integrations" />
                     사용자 관리
                     </Link>
       </ListItemButton>
