@@ -4,8 +4,6 @@ import DataLoad from "../components/Meat/DataLoad";
 import styles from "./DataView.module.css"
 function DataView(){
     const [loading, setLoading] = useState(true);
-
-    
     return (
         <div className={styles.container}>
             <Base/>

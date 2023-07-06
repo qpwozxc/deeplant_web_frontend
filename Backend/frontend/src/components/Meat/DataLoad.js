@@ -3,7 +3,7 @@ import Meat from "./Meat";
 import Search from "./Search";
 import SearchFilter from "./SearchFilter";
 import styles from "./DataLoad.module.css"
-import Form from 'react-bootstrap/Form';
+
 
 function DataLoad(){
     const sample = {
@@ -164,12 +164,7 @@ useEffect(()=>{
             
             }
 
-            <div className={`${styles.search_container}`}>
-                <Form.Group controlId="formFile" className="mb-3" >
-                <Form.Label>엑셀 파일 업로드</Form.Label>
-                <Form.Control type="file" />
-                </Form.Group>
-            </div>
+            
            
         </div>
     );

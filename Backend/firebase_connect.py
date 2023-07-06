@@ -20,22 +20,25 @@ class FireBase_:
 
         # 2. Making FireStorage Connection
         self.bucket = storage.bucket(keyId.firebase_bucket_address)
+        # 2-1. 저장할 이미지 디렉토리가 없다면 생성합니다.
+        os.makedirs('images/meats', exist_ok=True)
+        os.makedirs('images/qr_codes',exist_ok = True)
 
         # 3. Making Buffer Data (Firebase -> Flask Server )
         self.temp_data = dict()  # 버퍼
-        self.temp_user1_data = dict() # 일반
-        self.temp_user2_data = dict() # 직원
-        self.temp_user3_data = dict() # 관리자
+        self.temp_normal_data = dict() # 일반
+        self.temp_researcher_data = dict() # 직원
+        self.temp_manager_data = dict() # 관리자
         self.temp_meat_data = dict()
 
     def print_flask_database(self):
-        print(f"transfer user-1 data: {self.temp_user1_data}")
-        print(f"transfer user-2 data: {self.temp_user2_data}")
-        print(f"transfer user-3 data: {self.temp_user3_data}")
+        print(f"transfer normal data: {self.temp_normal_data}")
+        print(f"transfer researcher data: {self.temp_researcher_data}")
+        print(f"transfer manager data: {self.temp_manager_data}")
         print(f"transfer meat data: {self.temp_meat_data}")
 
     def transferDbData(self):
-        print("Trasfer DB&Image Data [Firebase -> Flask Server]",datetime.now())
+        print("1. Trasfer DB&Image Data [Firebase -> Flask Server]",datetime.now())
         # 1. 바뀐 데이터 확인
         self.firestoreCheck()
 
@@ -44,17 +47,17 @@ class FireBase_:
             # 1. firestore -> server 가져오기
             self.firestore2server("users_1")
             # 2. 버퍼에 있는 데이터 채워두기
-            self.temp_user1_data = self.temp_data
+            self.temp_normal_data = self.temp_data
         if self.fix_data_state["fix_data"]["users_2"]:
             # 1. firestore -> server 가져오기
             self.firestore2server("users_2")
             # 2. 버퍼에 있는 데이터 채워두기
-            self.temp_user2_data = self.temp_data
+            self.temp_researcher_data = self.temp_data
         if self.fix_data_state["fix_data"]["users_3"]:
             # 1. firestore -> server 가져오기
             self.firestore2server("users_3")
             # 2. 버퍼에 있는 데이터 채워두기
-            self.temp_user3_data = self.temp_data
+            self.temp_manager_data = self.temp_data
         if self.fix_data_state["fix_data"]["meat"]:
             # 1. firestore -> server 가져오기
             self.firestore2server("meat")
@@ -91,21 +94,26 @@ class FireBase_:
         # 'meat' 컬렉션의 문서 ID가 있는 리스트를 가져옵니다.
         items = self.fix_data_state["fix_data"]["meat"]
 
-        # 저장할 이미지 디렉토리가 없다면 생성합니다.
-        os.makedirs('images', exist_ok=True)
-
         for item_id in items:
             # Firebase Storage에서 해당 파일을 찾아 blob으로 가져옵니다.
-            blob = self.bucket.blob(f"{item_id}.png")
+            blob_meats = self.bucket.blob(f"meats/{item_id}.png")
+            blob_qr_codes = self.bucket.blob(f"qr_codes/{item_id}.png")
 
             # blob이 존재하는지 확인하고 존재하면 파일로 저장합니다.
-            if blob.exists():
-                blob.download_to_filename(f"./images/{item_id}.png")
+            if blob_meats.exists():
+                blob_meats.download_to_filename(f"./images/meats/{item_id}.png")
             else:
-                print(f"No such file: {item_id}.png")
-        
-    def server2firestore(self):  # Firestore에 data 넣기 (Firestore <- Flask Server)
-        pass
+                print(f"No such file: meats/{item_id}.png")
 
-    def server2firestorage(self):
-        pass
+            if blob_qr_codes.exists():
+                blob_qr_codes.download_to_filename(f"./images/qr_codes/{item_id}.png")
+            else:
+                print(f"No such file: qr_codes/{item_id}.png")
+                
+    def server2firestore(self,collection,document_id,data):  # Firestore에 data 넣기 (Firestore <- Flask Server)
+        doc_ref = self.firebase_db.collection(collection).document(document_id)
+        doc_ref.set(data,merge=True)
+
+    def server2firestorage(self,filepath,blob_name): # Firebase Storage에 image 데이터 넣기 (Storage <- Flask Server)
+        blob = self.bucket.blob(blob_name)
+        blob.upload_from_filename(filename=filepath,content_type="image/png")
