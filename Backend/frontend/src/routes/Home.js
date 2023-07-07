@@ -4,8 +4,7 @@ import Base from "../components/Base/BaseCmp";
 import Form from 'react-bootstrap/Form';
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import excelController from "../components/DataView/excelController";
@@ -156,8 +155,6 @@ function Home(){
             }}
             >
             <Search />
-
-            </div>
             <div style={{textAlign:'center',width:"100%", padding:'0px 200px', paddingBottom:'0'}}>
             {
                 isLoaded?
