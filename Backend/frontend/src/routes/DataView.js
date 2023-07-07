@@ -3,14 +3,18 @@ import Base from "../components/Base/BaseCmp";
 import SingleDataLoad from "../components/Meat/SingleDataLoad";
 import styles from "./DataView.module.css"
 import Sidebar from "../components/Base/Sidebar";
+import { Box,  } from '@mui/material';
 function DataView(){
     const [loading, setLoading] = useState(true);
     return (
-        <div className={styles.container}>
+        <Box sx={{ display: 'flex'}}>
             <Sidebar/>
             <Base/>
+            
             <SingleDataLoad/>
-        </div>
+            
+           
+        </Box>
     );
 }
 
