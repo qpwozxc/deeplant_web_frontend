@@ -11,28 +11,48 @@ function UserRegister({ handleClose }) {
   const [newCompany, setNewCompany] = useState("");
   const [newPosition, setNewPosition] = useState("");
   const [newlastLogin, setNewlastLogin] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [emailExists, setEmailExists] = useState(false); // 이메일 중복 여부 상태 변수
 
-  const [users, setUsers] = useState([]);
-  const usersCollectionRef = collection(db, "users_2");
+  const [users1, setUsers1] = useState([]);
+  const [users2, setUsers2] = useState([]);
+  const users1CollectionRef = collection(db, "users_1");
+  const users2CollectionRef = collection(db, "users_2");
 
   const createUser = async () => {
-    const docRef = doc(usersCollectionRef, newEmail);
-    await setDoc(docRef, { 
-      name: newName, 
-      email: newEmail, 
-      company:newCompany,
-      position:newPosition,
-      lastLogin:newlastLogin,
-    });
+    const userData = {
+      name: newName,
+      email: newEmail,
+      company: newCompany,
+      position: newPosition,
+      lastLogin: newlastLogin,
+    };
+
+    if (selectedUser === "1") {
+      const docRef = doc(users1CollectionRef, newEmail);
+      await setDoc(docRef, userData);
+    } else if (selectedUser === "2") {
+      const docRef = doc(users2CollectionRef, newEmail);
+      await setDoc(docRef, userData);
+    }
   };
 
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const getUsers1 = async () => {
+      const data = await getDocs(users1CollectionRef);
+      setUsers1(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
-    
-    getUsers();
+
+    const getUsers2 = async () => {
+      const data = await getDocs(users2CollectionRef);
+      setUsers2(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    if (selectedUser === "1") {
+      getUsers1();
+    } else if (selectedUser === "2") {
+      getUsers2();
+    }
   }, []);
 
   const [validated, setValidated] = useState(false);
@@ -52,7 +72,7 @@ function UserRegister({ handleClose }) {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
-    if (isNameValid(newName) && isEmailValid(newEmail)) {
+    if (isNameValid(newName) && isEmailValid(newEmail) && selectedUser !== "") {
       await createUser();
       handleClose();
     }
@@ -64,13 +84,11 @@ function UserRegister({ handleClose }) {
       <div>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label column>
-              *이름
-            </Form.Label>
-            <Form.Control 
+            <Form.Label column>*이름</Form.Label>
+            <Form.Control
               required
-              type="text" 
-              placeholder="이름" 
+              type="text"
+              placeholder="이름"
               onChange={(event) => {
                 const name = event.target.value;
                 setNewName(name);
@@ -110,19 +128,28 @@ function UserRegister({ handleClose }) {
             </Form.Control.Feedback>
           </InputGroup>
 
-          <Form.Select aria-label="Default select example">
-            <option>사용자 선택</option>
-            <option value="1">사용자2</option>
-            <option value="2">사용자3</option>
-          </Form.Select>
+          <Form.Group className="mb-3">
+            <Form.Select
+              required
+              onChange={(event) => setSelectedUser(event.target.value)}
+              aria-describedby="userSelectionFeedback"
+            >
+              <option selected disabled value="">
+                *사용자 선택
+              </option>
+              <option value="1">사용자1</option>
+              <option value="2">사용자2</option>
+            </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              사용자를 선택하세요.
+            </Form.Control.Feedback>
+          </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label column>
-              소속
-            </Form.Label>
-            <Form.Control 
-              type="text" 
-              placeholder="회사명 입력" 
+            <Form.Label column>소속</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="회사명 입력"
               onChange={(event) => {
                 setNewCompany(event.target.value);
               }}
@@ -130,9 +157,9 @@ function UserRegister({ handleClose }) {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Control 
-              type="text" 
-              placeholder="직책 입력" 
+            <Form.Control
+              type="text"
+              placeholder="직책 입력"
               onChange={(event) => {
                 setNewPosition(event.target.value);
               }}
@@ -140,17 +167,16 @@ function UserRegister({ handleClose }) {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formGridAddress1">
-            <Form.Control 
-              type="address" 
-              placeholder="회사주소 검색" 
-            />
+            <Form.Control type="address" placeholder="회사주소 검색" />
           </Form.Group>
 
-          <div className="text-end"> {/* 오른쪽 정렬 */}
-    <Button variant="primary" type="submit">
-      회원 등록
-    </Button>
-  </div>
+          <div className="text-end">
+            {" "}
+            {/* 오른쪽 정렬 */}
+            <Button variant="primary" type="submit">
+              회원 등록
+            </Button>
+          </div>
         </Form>
       </div>
     </div>
