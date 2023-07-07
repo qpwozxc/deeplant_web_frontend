@@ -23,17 +23,6 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { auth } from "../../firebase-config";
 
-
-const logout = async () => {
-    const navigate = useNavigate();
-    try {
-        await signOut(auth);
-        navigate('/');
-    } catch (error) {
-        console.log(error.message);
-    }
-};
-
 const mainListItems = (
     <React.Fragment>
       <ListItemButton>
@@ -41,9 +30,7 @@ const mainListItems = (
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="로그아웃" />
-        <Link to={"/"} onClick={logout}>
-                로그아웃 
-                    </Link>
+       
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>

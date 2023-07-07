@@ -4,17 +4,20 @@ import Base from "../components/Base/BaseCmp";
 import Form from 'react-bootstrap/Form';
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
-import Table from 'react-bootstrap/Table';
+import excelController from "../components/DataView/excelController";
 import {ExcelRenderer, OutTable} from 'react-excel-renderer';
 import Papa from "papaparse";
-import csv from 'csv';
+import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
+import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
+import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
+import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 
 function Home(){
     const [isLoaded, setIsLoaded] = useState(true);
-    const [meatList, setMeatList] = useState(["1-2-3-4-5",1,1,1,1,1,1]);
+    const [meatList, setMeatList] = useState(["1-2-3-4-5","000189843795-cattle-chuck-chuck","000189843795-pig-boston_shoulder-boston_shoulder","1-2-3-4-5","1-2-3-4-5","1-2-3-4-5"]);
     const [currentPage , setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(78);
     const [currentPN, setCurrentPN] = useState(1);
@@ -24,7 +27,7 @@ function Home(){
     const fileRef = useRef(null);
 
     const offset = 0;
-    const count = 7;
+    const count = 6;
     const limit = 5;
     const page = 0;
     const totalPages = Math.ceil(totalData/count); // 현재 9개 
@@ -89,25 +92,48 @@ function Home(){
               console.log("Finished:", results.data);
             }}
           )*/
-        const reader = new FileReader();
+        /*const reader = new FileReader();
         reader.onload = () => {
             csv.parse(reader.result, (err, data) => {
                 console.log(data);
             });
         };
-
-        const res = reader.readAsBinaryString(file);
-        console.log('res', res);
+                const res = reader.readAsBinaryString(file);
+        console.log('res', res);*/
         ExcelRenderer(file, (err, resp) => {
             if(err){
               console.log(err);            
             }
             else{
+                const toJson = {};
+                const labData = {};
+                const tongue = {};
+                for (let i = 1; i < 11; i++){
+                    labData[resp.rows[0][i]] = resp.rows[1][i];
+                }
+                for (let i = 11; i < resp.rows[0].length; i++){
+                    tongue[resp.rows[0][i]] = resp.rows[1][i];
+                }
+                toJson[resp.rows[0][0]] = resp.rows[1][0];
+                toJson['lab_data'] = labData;
+                toJson['tongue'] = tongue;
+                /*resp.rows[0].map((key, index)=>{
+                    index == 0? toJson[key] = resp.rows[1][index]:
+                    toJson[key] = resp.rows[1][index];
+                })*/
+                console.log("jsons:",toJson);
                 console.log("cols: ",resp.cols, "rows: ", resp.rows);
-              /*this.setState({
-                cols: resp.cols,
-                rows: resp.rows
-              });*/
+
+              fetch(`http://localhost:8080/meat/update`, {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Request-Headers': 'Content-Type',
+                    'Access-Control-Request-Method':'POST',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(toJson),
+                })
               
             }
           }); 
@@ -119,43 +145,51 @@ function Home(){
             <Search />
 
             </div>
-            <div style={{display:'flex', flexDirection:'column',alignItems:'center', justifyContent:'center'}}>
-            <Table striped bordered hover style={{width:"80%", padding:'0px 100px', paddingBottom:'0'}}>
-                <thead>
-                    <tr>
-                    <th>id</th>
-                    <th>관리번호</th>
-                    <th>검토여부</th>
-                    <th>삭제</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
+            <div style={{textAlign:'center',width:"100%", padding:'0px 200px', paddingBottom:'0'}}>
+            {
                 isLoaded?
                 //데이터가 로드된 경우 데이터 목록 반환 
-                meatList.map((m, idx) =>
-                    <DataList
-                        key={idx}
-                        content={m}
-                        idx={idx}
-                    />
-                )
+                <DataList meatList={meatList} />
                 :
                 // 데이터가 로드되지 않은 경우 로딩중 반환 
                 <Spinner animation="border" />
-                }
-                </tbody>
-            </Table>
-            </div > 
+            }
+            </div>
+           
             
-            <div className="" style={{display:'flex', justifyContent:'space-between', margin:'0px 40px' }}>
-                <div class="mb-3" style={{width:'100%', marginRight:'20px'}}>
-                    <label for="formFile" class="form-label">엑셀 파일 업로드</label>
-                    <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef} onChange={(e)=>{setExcelFile(e.target.files[0]);}} />
+            
+            <div className="" style={{display:'flex', justifyContent:'center', margin:'0px 40px' }}>
+                <div class="mb-3" style={{display:'flex',width:'70%', marginTop:"40px"}}>
+                    
+                    <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef} onChange={(e)=>{setExcelFile(e.target.files[0]);}}
+                    style={{marginRight:'20px'}}
+                    />
+             
+                    <Button
+                    color="inherit"
+                    startIcon={(
+                        <SvgIcon fontSize="small">
+                        <ArrowUpOnSquareIcon />
+                        </SvgIcon>
+                    )}
+                    onClick={()=> { handleExcelFile(excelFile); }}
+                    style={{ margin:'0px 10px'}}
+                    >
+                    Import
+                    </Button>
+                    <Button
+                    color="inherit"
+                    startIcon={(
+                        <SvgIcon fontSize="small">
+                        <ArrowDownOnSquareIcon />
+                        </SvgIcon>
+                    )}
+                    style={{ margin:'0px 10px'}}
+                    >
+                    Export
+                    </Button>
                 </div>
-                <div style={{display:'flex', alignItems:'center',justifyContent:'center',margin:'35px', marginBottom:'0px'}}>
-                    <Button variant="outlined" style={{height:'35px', width:'100px'}} onClick={()=> { handleExcelFile(excelFile); }}>업로드</Button>
-                </div>
+                
             </div>
 
             <div className="pagination-bar" style={{display:'flex' ,width:'100%',justifyContent:'center'}}>
