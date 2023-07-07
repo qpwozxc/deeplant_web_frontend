@@ -12,17 +12,7 @@ function MeatTab({fresh, heated , lab_data, tongue, apiData}){
         fetchDataToTab(tab);
         setCurrentTab(tab);
     }
-    /*
-    console.log("fresh");
-    console.log(fresh);
-    console.log( "heated" );
-    console.log( heated );
-    console.log( "lab_data");
-    console.log( lab_data);
-    console.log( "tongue");
-    console.log( tongue);
-    console.log(apiData);
-    */
+
     // tab버튼에 따라서 보여줄 data를 다르게 set함
     const fetchDataToTab =(currentTab)=> {//async(pageNum) =>{\
         switch(currentTab){
@@ -60,17 +50,13 @@ function MeatTab({fresh, heated , lab_data, tongue, apiData}){
             { Object.entries(data).map(([key, value])=>
             {
                 return (<tr>
-                    <td style={{width:"30%"}}>{key}</td>
+                    <td style={{width:"30%" }}>{key}</td>
                     <td>{value}</td>
                 </tr>)
             })}
             </tbody>
             : 
             '{}'}  
-            
-                
-                
-                {console.log('data',data)}
             </Table>
                 
             </div>

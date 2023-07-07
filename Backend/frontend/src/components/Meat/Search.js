@@ -9,6 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
+import { Card, InputAdornment, OutlinedInput, SvgIcon , Typography} from '@mui/material';
 
 function Search(){
     const [search, setSearch] = useState("");
@@ -51,9 +53,13 @@ function Search(){
     }
 
     return(
-        <div style={{marginBottom:"20px"}}>
-            <div className={ ` ${styles.search}`}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+        <div style={{marginTop:'60px', marginBottom:"20px", width:'100%'}} fullWidth>
+            <Typography variant="h4">
+                Meat Datas
+            </Typography>
+            <div className={styles.search_input} style={{ width: "100%"}} fullWidth>
+            <Card sx={{ p: 2 }} style={{display:'flex',width: "100%"}}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} style={{width: "10%"}}>
                     <InputLabel id="demo-simple-select-standard-label">검색</InputLabel>
                     <Select
                     labelId="demo-simple-select-standard-label"
@@ -68,28 +74,35 @@ function Search(){
                     <MenuItem value="date_based" onClick={()=> filterCategory(category[1])}>날짜 검색</MenuItem>
                     </Select>
                 </FormControl>
-                
-                
-                <div className={styles.search_input}>
-                    {isDate ?
-                        (<DatePicker className={styles.search_input_date}  dateFormat="yyyy년 MM월 dd일" locale={ko} selected={date} onChange={date => setDate(date)} />) 
-                    : (<TextField  fullWidth
-                        id="filled-search"
-                        label="Search field"
-                        type="search"
-                        variant="filled"
-                        onChange={onChange}
-                        value={search} 
-                      />
-                        )
-                    }
-                   <div className={styles.search_btn_wrapper}>
-                    <button className={styles.search_btn} onClick={()=>{console.log('click button')}}>
-                        <FaMagnifyingGlass onClick={()=>{console.log('clicked')}}/>
-                        </button>
-                   </div>
-                  
+                {isDate ?
+                    (<DatePicker className="" style={{padding:"16.5px"}} dateFormat="yyyy년 MM월 dd일" locale={ko} selected={date} onChange={date => setDate(date)} />) 
+                : (
+                    <OutlinedInput
+                    style={{width: "70%", marginLeft:"20px"}}
+                    defaultValue=""
+                    fullWidth
+                    placeholder="사용자명을 입력하세요"
+                    startAdornment={(
+                        <InputAdornment position="start">
+                        <SvgIcon
+                            color="action"
+                            fontSize="small"
+                        >
+                            <MagnifyingGlassIcon />
+                        </SvgIcon>
+                        </InputAdornment>
+                    )}
+                    sx={{ maxWidth: 500 }}
+                    onChange={onChange}
+                    />
+                    )
+                }
+                <div style={{width: "10%"}} className={styles.search_btn_wrapper}>
+                <button className={styles.search_btn} onClick={()=>{console.log('click button')}}>
+                    <FaMagnifyingGlass onClick={()=>{console.log('clicked')}}/>
+                    </button>
                 </div>
+                </Card>
             </div>
         </div>
     );
