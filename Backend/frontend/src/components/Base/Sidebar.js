@@ -35,11 +35,10 @@ import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import GroupIcon from '@mui/icons-material/Group';
 
-
-
 const mainListItems = (
     <React.Fragment>
       <ListItemButton >
+
         <ListItemIcon>
           <DataThresholdingIcon />
         </ListItemIcon>
