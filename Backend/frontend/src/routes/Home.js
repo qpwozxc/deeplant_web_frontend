@@ -4,12 +4,14 @@ import Base from "../components/Base/BaseCmp";
 import Form from 'react-bootstrap/Form';
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
-//import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import excelController from "../components/DataView/excelController";
 import {ExcelRenderer, OutTable} from 'react-excel-renderer';
 import Papa from "papaparse";
+import Sidebar from "../components/Base/Sidebar";
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
@@ -139,9 +141,20 @@ function Home(){
           }); 
     }
     return(
-        <div>
-            <Base/> 
-            <div style={{padding:'0px 100px', paddingBottom:'0'}}>
+        <Box sx={{ display: 'flex'}}>
+            <Sidebar/>
+            <Box
+            component="main"
+            sx={{
+            backgroundColor: (theme) =>
+                theme.palette.mode === 'light'
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+            }}
+            >
             <Search />
 
             </div>
@@ -226,7 +239,8 @@ function Home(){
             </Pagination>
                 
             </div>
-        </div>
+            </Box>
+        </Box>
       );
 }
 

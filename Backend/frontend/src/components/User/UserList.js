@@ -22,16 +22,7 @@ import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Sidebar from '../Base/Sidebar';
 
 function UserList() {
@@ -85,7 +76,38 @@ function UserList() {
                   height: 240,
                 }}
               >
-            
+      <InputGroup className="mb-5">
+        <Form.Control
+          placeholder="이름"
+        />
+        <Button variant="outline-primary" id="button-addon2">
+          검색
+        </Button>
+      </InputGroup>
+
+      <>
+      <ButtonGroup className="mb-3">
+
+        <Button variant="success" onClick={handleRegisterShow}>
+          +신규 회원 등록
+        </Button>
+      </ButtonGroup>
+
+        <Modal
+          show={registerShow}
+          onHide={handleRegisterClose}
+          backdrop="static"
+          keyboard={false}
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>신규 회원 등록</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <UserRegister handleClose={handleRegisterClose}/>
+          </Modal.Body>
+        </Modal>
+      </>
               </Paper>
             </Grid>
             {/* Recent Deposits */}
@@ -103,7 +125,7 @@ function UserList() {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <Table striped bordered hover size="lg" variant="secondary" style={{ minWidth: '800px' }} className="text-center">
+      <Table >
         <TableHead >
           <TableRow>
             <TableCell>이름</TableCell>
@@ -119,7 +141,7 @@ function UserList() {
               <TableCell>{user.id}</TableCell>
               <TableCell>사용자2</TableCell>
               <TableCell>
-                <Button variant="primary" onClick={() => handleEditShow(user)}>
+                <Button variant="success" onClick={() => handleEditShow(user)}>
                   수정
                 </Button>
                 <Modal
