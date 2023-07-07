@@ -18,7 +18,8 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/materia
 
 function Home(){
     const [isLoaded, setIsLoaded] = useState(true);
-    const [meatList, setMeatList] = useState(["1-2-3-4-5","000189843795-cattle-chuck-chuck","000189843795-pig-boston_shoulder-boston_shoulder","1-2-3-4-5","1-2-3-4-5","1-2-3-4-5"]);
+    const [meatList, setMeatList] = useState(["1-2-3-4-5","000189843795-cattle-chuck-chuck","000189843795-pig-boston_shoulder-boston_shoulder","000189843795-pig-tenderloin-foreshank","000189843795-cattle-sirloin-ribeye_roll
+    ","000189843795-cattle-striploin-strip_loin"]);
     const [currentPage , setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(78);
     const [currentPN, setCurrentPN] = useState(1);
