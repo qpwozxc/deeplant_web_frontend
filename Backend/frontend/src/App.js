@@ -11,17 +11,19 @@ import DataEdit from "./routes/DataEdit";
 import './App.module.css';
 import LogIn from "./routes/LogIn";
 import UserManagement from "./routes/UserManagement";
+import MainPage from "./routes/MainPage";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LogIn/>}></Route>
-        <Route path="/home" element={<Home/>}></Route>
-        <Route path="/dataView/:id" element={<DataView/>}></Route>
-        <Route path="/stats" element={<Stats/>}></Route>cd 
-        <Route path="/profile" element={<Profile/>}></Route>
-        <Route path="/dataEdit/:id" element={<DataEdit/>}></Route>
-        <Route path="/UserManagement" element={<UserManagement/>}></Route>
+        <Route path="/" element={<LogIn />}></Route>
+        <Route path="/MainPage" element={<MainPage />}></Route>
+        <Route path="/home" element={<Home />}></Route>
+        <Route path="/dataView/:id" element={<DataView />}></Route>
+        <Route path="/stats" element={<Stats />}></Route>cd
+        <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/dataEdit/:id" element={<DataEdit />}></Route>
+        <Route path="/UserManagement" element={<UserManagement />}></Route>
       </Routes>
     </Router>
   );
