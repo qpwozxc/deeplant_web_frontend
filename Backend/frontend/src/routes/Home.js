@@ -84,6 +84,7 @@ function Home(){
         console.log("late total page-array:", totalSlicedPageArray);
     }, [totalSlicedPageArray]);
       
+    //엑셀파일을 JSON 으로 변환 
     const handleExcelFile = (file) => {
         console.log("file path", file);
         /*const csvToJson = Papa.parse(file, {

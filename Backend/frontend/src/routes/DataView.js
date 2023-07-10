@@ -10,10 +10,7 @@ function DataView(){
         <Box sx={{ display: 'flex'}}>
             <Sidebar/>
             <Base/>
-            
-            <SingleDataLoad/>
-            
-           
+            <SingleDataLoad/>           
         </Box>
     );
 }

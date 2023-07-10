@@ -2,7 +2,8 @@ import {useState, useEffect} from "react";
 import styles from "./MeatTab.module.css";
 import TabBtns from "./TabBtns";
 import Table from 'react-bootstrap/Table';
- 
+
+
 //tab 버튼 별 데이터 설정
 function MeatTab({fresh, heated , lab_data, tongue, apiData}){
     const [currentTab , setCurrentTab] = useState("");
