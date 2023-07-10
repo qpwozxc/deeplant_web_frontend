@@ -64,7 +64,7 @@ const LogInField = () => {
             );
 
             console.log(userCredential.user);
-            navigate('/home');
+            navigate("/MainPage");
         } catch (error) {
             console.log(error.message);
         }

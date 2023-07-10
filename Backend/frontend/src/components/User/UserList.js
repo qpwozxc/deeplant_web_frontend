@@ -1,20 +1,19 @@
 import Button from "react-bootstrap/Button";
 import * as React from "react";
-import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import InputGroup from "react-bootstrap/InputGroup";
 import UserRegister from "./UserRegister";
-import UserEdit from "./UserEdit";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { db } from "../../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { ButtonGroup } from "react-bootstrap";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -22,150 +21,133 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Sidebar from "../Base/Sidebar";
-import InputBase from "@mui/material/InputBase";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import DirectionsIcon from "@mui/icons-material/Directions";
+import {
+  DataGrid,
+  GridToolbarQuickFilter,
+  GridToolbar,
+} from "@mui/x-data-grid";
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
   const [editShow, setEditShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [users1, setUsers1] = useState([]);
-  const [users2, setUsers2] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState([]);
+
   const handleRegisterClose = () => setRegisterShow(false);
   const handleRegisterShow = () => setRegisterShow(true);
   const handleEditClose = () => setEditShow(false);
+
   const users1CollectionRef = collection(db, "users_1");
   const users2CollectionRef = collection(db, "users_2");
-  const [searchedUsers1, setSearchedUsers1] = useState([]);
-  const [searchedUsers2, setSearchedUsers2] = useState([]);
+  const columns = [
+    { field: "name", headerName: "이름", width: 150, editable: false },
+    { field: "id", headerName: "아이디", width: 200, editable: false },
+    { field: "user", headerName: "권한", width: 150, editable: true },
+    { field: "company", headerName: "회사", width: 100, editable: false },
+    { field: "position", headerName: "직책", width: 100, editable: false },
+    {
+      field: "lastLogin",
+      headerName: "최근 로그인",
+      width: 250,
+      editable: false,
+    },
+    {
+      field: "manage",
+      headerName: "관리",
+      width: 150,
+      editable: false,
+      renderCell: (params) => (
+        <Button variant="success" onClick={() => handleEditShow(params.row)}>
+          수정
+        </Button>
+      ),
+    },
+  ];
 
-  const handleEditShow = (user) => {
-    setSelectedUser(user);
-    setEditShow(true);
-  };
   useEffect(() => {
     const fetchData = async () => {
       const data1 = await getDocs(users1CollectionRef);
       const data2 = await getDocs(users2CollectionRef);
 
-      setUsers1(data1.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      setUsers2(data2.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      setSearchedUsers1([
-        ...data1.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-      ]);
-      setSearchedUsers2([
-        ...data2.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-      ]);
+      const users1 = data1.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        user: "사용자1",
+      }));
+      const users2 = data2.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        user: "사용자2",
+      }));
+
+      const allUsers = [...users1, ...users2];
+      setUsers(allUsers);
+      setSearchedUsers(allUsers);
     };
 
     fetchData();
   }, []);
 
-  const handleSearch = (event, userType) => {
+  const handleSearch = (event) => {
     const keyword = event.target.value.toLowerCase();
     if (keyword === "") {
-      if (userType === "사용자1") {
-        setSearchedUsers1([...users1]);
-      } else if (userType === "사용자2") {
-        setSearchedUsers2([...users2]);
-      }
+      setSearchedUsers(users);
     } else {
-      let results = [];
-      if (userType === "사용자1") {
-        results = users1.filter((user) => {
-          return (
-            user.name.toLowerCase().includes(keyword) ||
-            user.id.toLowerCase().includes(keyword)
+      const results = users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(keyword) ||
+          user.id.toLowerCase().includes(keyword)
+      );
+      setSearchedUsers(results);
+    }
+  };
+
+  const handleEditShow = (user) => {
+    setSelectedUser(user);
+    setEditShow(true);
+  };
+
+  const moveUserToAnotherCollection = async (
+    sourceCollection,
+    targetCollection,
+    userId
+  ) => {
+    // 원본 컬렉션에서 사용자 데이터 가져오기
+    const sourceDocRef = doc(db, sourceCollection, userId);
+    const sourceDocSnapshot = await getDoc(sourceDocRef);
+    const userData = sourceDocSnapshot.data();
+
+    // 대상 컬렉션에 데이터 추가
+    const targetCollectionRef = collection(db, targetCollection);
+    await addDoc(targetCollectionRef, userData);
+
+    // 원본 컬렉션에서 데이터 삭제
+    await deleteDoc(sourceDocRef);
+  };
+
+  const handleEditCellChange = async ({ id, field, value }) => {
+    if (field === "user") {
+      const userToUpdate = searchedUsers.find((user) => user.id === id);
+      if (userToUpdate && userToUpdate.user !== value) {
+        try {
+          if (userToUpdate.user === "사용자1") {
+            await moveUserToAnotherCollection("users_1", "users_2", id);
+          } else if (userToUpdate.user === "사용자2") {
+            await moveUserToAnotherCollection("users_2", "users_1", id);
+          }
+          const updatedUsers = searchedUsers.map((user) =>
+            user.id === id ? { ...user, user: value } : user
           );
-        });
-        setSearchedUsers1(results);
-      } else if (userType === "사용자2") {
-        results = users2.filter((user) => {
-          return (
-            user.name.toLowerCase().includes(keyword) ||
-            user.id.toLowerCase().includes(keyword)
-          );
-        });
-        setSearchedUsers2(results);
+          setSearchedUsers(updatedUsers);
+          console.log("사용자 데이터 이동이 완료되었습니다.");
+        } catch (error) {
+          console.error("사용자 데이터 이동 중 오류가 발생했습니다.", error);
+        }
       }
     }
   };
-  const renderUserTable = (users, userType) => (
-    <Grid item xs={6}>
-      <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-          {userType}
-        </Typography>
-        <Paper
-          component="form"
-          sx={{
-            p: "2px 4px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="사용자 검색"
-            onChange={(event) => handleSearch(event, userType)}
-          />
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>이름</TableCell>
-              <TableCell>아이디</TableCell>
-              <TableCell>권한</TableCell>
-              <TableCell>관리</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{userType}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="success"
-                    onClick={() => handleEditShow(user)}
-                  >
-                    수정
-                  </Button>
-                  <Modal
-                    show={editShow}
-                    onHide={handleEditClose}
-                    backdrop="static"
-                    keyboard={false}
-                    centered
-                  >
-                    <Modal.Header closeButton>
-                      <Modal.Title>회원 정보 수정</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                      <UserEdit selectedUser={selectedUser} />
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button variant="primary" onClick={handleEditClose}>
-                        저장
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Paper>
-    </Grid>
-  );
+
   const defaultTheme = createTheme();
 
   return (
@@ -195,13 +177,6 @@ function UserList() {
                     flexDirection: "column",
                   }}
                 >
-                  <InputGroup className="mb-5">
-                    <Form.Control placeholder="이름" />
-                    <Button variant="outline-primary" id="button-addon2">
-                      검색
-                    </Button>
-                  </InputGroup>
-
                   <>
                     <ButtonGroup className="mb-3">
                       <Button variant="success" onClick={handleRegisterShow}>
@@ -244,8 +219,40 @@ function UserList() {
                   .
                 </Paper>
               </Grid>
-              {renderUserTable(searchedUsers1, "사용자1")}
-              {renderUserTable(searchedUsers2, "사용자2")}
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    color="primary"
+                    gutterBottom
+                  >
+                    사용자 관리
+                  </Typography>
+                  <div style={{ width: "100%", display: "flex" }}>
+                    <DataGrid
+                      rows={searchedUsers}
+                      columns={columns}
+                      initialState={{
+                        pagination: { paginationModel: { pageSize: 5 } },
+                      }}
+                      pageSizeOptions={[5, 10, 25]}
+                      disableRowSelectionOnClick
+                      disableColumnFilter
+                      disableColumnSelector
+                      disableDensitySelector
+                      onEditCellChange={handleEditCellChange}
+                      slots={{ toolbar: GridToolbar }}
+                      slotProps={{
+                        toolbar: {
+                          showQuickFilter: true,
+                          quickFilterProps: { debounceMs: 500 },
+                        },
+                      }}
+                    />
+                  </div>
+                </Paper>
+              </Grid>
             </Grid>
           </Container>
         </Box>
