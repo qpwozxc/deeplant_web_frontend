@@ -216,7 +216,6 @@ function Sidebar() {
           </IconButton>
         </Toolbar>
       </AppBar>
-
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{

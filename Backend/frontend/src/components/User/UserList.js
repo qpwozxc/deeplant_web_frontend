@@ -22,10 +22,16 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Sidebar from "../Base/Sidebar";
 import {
-  DataGrid,
   GridToolbarQuickFilter,
+  DataGrid,
   GridToolbar,
+  GridToolbarContainer,
 } from "@mui/x-data-grid";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
@@ -43,13 +49,13 @@ function UserList() {
   const columns = [
     { field: "name", headerName: "이름", width: 150, editable: false },
     { field: "id", headerName: "아이디", width: 200, editable: false },
-    { field: "user", headerName: "권한", width: 150, editable: true },
+    { field: "user", headerName: "권한", width: 100, editable: true },
     { field: "company", headerName: "회사", width: 100, editable: false },
     { field: "position", headerName: "직책", width: 100, editable: false },
     {
       field: "lastLogin",
       headerName: "최근 로그인",
-      width: 250,
+      width: 300,
       editable: false,
     },
     {
@@ -149,115 +155,111 @@ function UserList() {
   };
 
   const defaultTheme = createTheme();
+  function QuickSearchToolbar() {
+    return (
+      <Box
+        sx={{
+          p: 0.5,
+          pb: 0,
+        }}
+      >
+        <GridToolbarQuickFilter />
+      </Box>
+    );
+  }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
-        <Sidebar />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={8}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
+    <>
+      <Toolbar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Grid container spacing={3}>
+          <Grid item xs={8}>
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <>
+                <ButtonGroup className="mb-3">
+                  <Button variant="success" onClick={handleRegisterShow}>
+                    +신규 회원 등록
+                  </Button>
+                </ButtonGroup>
+                <Modal
+                  show={registerShow}
+                  onHide={handleRegisterClose}
+                  backdrop="static"
+                  keyboard={false}
+                  centered
                 >
-                  <>
-                    <ButtonGroup className="mb-3">
-                      <Button variant="success" onClick={handleRegisterShow}>
-                        +신규 회원 등록
-                      </Button>
-                    </ButtonGroup>
-                    <Modal
-                      show={registerShow}
-                      onHide={handleRegisterClose}
-                      backdrop="static"
-                      keyboard={false}
-                      centered
-                    >
-                      <Modal.Header closeButton>
-                        <Modal.Title>신규 회원 등록</Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <UserRegister handleClose={handleRegisterClose} />
-                      </Modal.Body>
-                    </Modal>
-                  </>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
+                  <Modal.Header closeButton>
+                    <Modal.Title>신규 회원 등록</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <UserRegister handleClose={handleRegisterClose} />
+                  </Modal.Body>
+                </Modal>
+              </>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography
+                component="h2"
+                variant="h6"
+                color="primary"
+                gutterBottom
+              >
+                최근 변경된 사항
+              </Typography>
+              .
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+              <Typography
+                component="h2"
+                variant="h6"
+                color="primary"
+                gutterBottom
+              >
+                사용자 관리
+              </Typography>
+              <Box sx={{ height: 410, width: "100%" }}>
+                <DataGrid
+                  rows={searchedUsers}
+                  columns={columns}
+                  initialState={{
+                    pagination: { paginationModel: { pageSize: 5 } },
                   }}
-                >
-                  <Typography
-                    component="h2"
-                    variant="h6"
-                    color="primary"
-                    gutterBottom
-                  >
-                    최근 변경된 사항
-                  </Typography>
-                  .
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    component="h2"
-                    variant="h6"
-                    color="primary"
-                    gutterBottom
-                  >
-                    사용자 관리
-                  </Typography>
-                  <div style={{ width: "100%", display: "flex" }}>
-                    <DataGrid
-                      rows={searchedUsers}
-                      columns={columns}
-                      initialState={{
-                        pagination: { paginationModel: { pageSize: 5 } },
-                      }}
-                      pageSizeOptions={[5, 10, 25]}
-                      disableRowSelectionOnClick
-                      disableColumnFilter
-                      disableColumnSelector
-                      disableDensitySelector
-                      onEditCellChange={handleEditCellChange}
-                      slots={{ toolbar: GridToolbar }}
-                      slotProps={{
-                        toolbar: {
-                          showQuickFilter: true,
-                          quickFilterProps: { debounceMs: 500 },
-                        },
-                      }}
-                    />
-                  </div>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-      </Box>
-    </ThemeProvider>
+                  pageSizeOptions={[5, 10, 25]}
+                  disableRowSelectionOnClick
+                  disableColumnFilter
+                  disableColumnSelector
+                  disableDensitySelector
+                  onEditCellChange={handleEditCellChange}
+                  slots={{ toolbar: QuickSearchToolbar }}
+                  slotProps={{
+                    toolbar: {
+                      showQuickFilter: true,
+                      quickFilterProps: { debounceMs: 500 },
+                    },
+                  }}
+                />
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   );
 }
 
