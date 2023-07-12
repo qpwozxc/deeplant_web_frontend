@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LogIn from "./routes/LogIn";
 import MainPage from "./routes/MainPage";
 import Home from "./routes/Home";
-import DataView from "./routes/DataView";
+import DataView from "./routes/SingleDataView";
 import Stats from "./routes/Stats";
 import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
