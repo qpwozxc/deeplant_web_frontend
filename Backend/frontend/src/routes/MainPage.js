@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Sidebar from "../components/Base/Sidebar";
-import * as React from "react";
+import React from "react";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { CardActions } from "@mui/material";
 const defaultTheme = createTheme();
+
 const cards = [
   {
     title: "홈",
@@ -54,65 +55,71 @@ function MainPage() {
   const handleCardClick = (link) => {
     navigate(link);
   };
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 4,
-        }}
-      >
-        <Container maxWidth="sm">
-          <Grid container spacing={5}>
-            {cards.map((card) => (
-              <Grid item xs={12} sm={6} md={6} lg={6} key={card}>
-                <Box
-                  sx={{
-                    maxWidth: 300,
-                    margin: "0 auto",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "4px",
-                    overflow: "hidden",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <CardActionArea
-                    sx={{ maxWidth: 300, margin: "0 auto" }}
-                    onClick={() => handleCardClick(card.link)}
+    <ThemeProvider theme={defaultTheme}>
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 4,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Grid container spacing={5}>
+              {cards.map((card) => (
+                <Grid item xs={12} sm={6} md={6} lg={6} key={card}>
+                  <Box
+                    sx={{
+                      maxWidth: 300,
+                      margin: "0 auto",
+                      border: "1px solid #e0e0e0",
+                      borderRadius: "4px",
+                      overflow: "hidden",
+                      backgroundColor: "white",
+                    }}
                   >
-                    <CardMedia sx={{ ...card.imageSize }} image={card.image} />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {card.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {card.description}
-                      </Typography>
-                    </CardContent>
-                    {/* <CardActions>
+                    <CardActionArea
+                      sx={{ maxWidth: 300, margin: "0 auto" }}
+                      onClick={() => handleCardClick(card.link)}
+                    >
+                      <CardMedia
+                        sx={{ ...card.imageSize }}
+                        image={card.image}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {card.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {card.description}
+                        </Typography>
+                      </CardContent>
+                      {/* <CardActions>
                       <Typography variant="body2" color="green">
                         {card.sub_description}
                       </Typography>
                     </CardActions> */}
-                  </CardActionArea>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
+                    </CardActionArea>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
 

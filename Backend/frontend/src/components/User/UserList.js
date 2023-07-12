@@ -13,6 +13,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import InputBase from "@mui/material/InputBase";
 import { ButtonGroup } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -27,11 +28,9 @@ import {
   GridToolbar,
   GridToolbarContainer,
 } from "@mui/x-data-grid";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
@@ -220,11 +219,16 @@ function UserList() {
               >
                 최근 변경된 사항
               </Typography>
-              .
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               <Typography
                 component="h2"
                 variant="h6"
@@ -233,28 +237,41 @@ function UserList() {
               >
                 사용자 관리
               </Typography>
-              <Box sx={{ height: 410, width: "100%" }}>
-                <DataGrid
-                  rows={searchedUsers}
-                  columns={columns}
-                  initialState={{
-                    pagination: { paginationModel: { pageSize: 5 } },
-                  }}
-                  pageSizeOptions={[5, 10, 25]}
-                  disableRowSelectionOnClick
-                  disableColumnFilter
-                  disableColumnSelector
-                  disableDensitySelector
-                  onEditCellChange={handleEditCellChange}
-                  slots={{ toolbar: QuickSearchToolbar }}
-                  slotProps={{
-                    toolbar: {
-                      showQuickFilter: true,
-                      quickFilterProps: { debounceMs: 500 },
-                    },
-                  }}
+              <Paper
+                component="form"
+                sx={{
+                  p: "2px 4px",
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="사용자 검색"
+                  onChange={(event) => handleSearch(event)}
                 />
-              </Box>
+                <IconButton
+                  type="button"
+                  sx={{ p: "10px" }}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
+              </Paper>
+              <DataGrid
+                rows={searchedUsers}
+                columns={columns}
+                initialState={{
+                  pagination: { paginationModel: { pageSize: 5 } },
+                }}
+                pageSizeOptions={[5, 10, 25]}
+                disableRowSelectionOnClick
+                onEditCellChange={handleEditCellChange}
+                sx={{
+                  minHeight: "370px", // 최소 높이 값 지정
+                }}
+              />
             </Paper>
           </Grid>
         </Grid>
