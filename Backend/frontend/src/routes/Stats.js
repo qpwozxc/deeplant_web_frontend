@@ -13,6 +13,7 @@ function Stats(){
             <div style={{ paddingTop:'80px' , width:"100%"}}>
             <SearchFilter/>
             <StatsTabs/>
+            
             </div>
             
         </div>
