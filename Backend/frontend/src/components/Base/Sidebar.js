@@ -29,6 +29,7 @@ import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
+import DeeplantLong from "../../src_assets/Deeplant_long.webp";
 
 const mainListItems = (
   <React.Fragment>
@@ -158,7 +159,11 @@ function Sidebar() {
   };
   return (
     <ThemeProvider theme={defaultTheme}>
-      <AppBar position="absolute" open={open} sx={{ backgroundColor: "green" }}>
+      <AppBar
+        position="absolute"
+        open={open}
+        sx={{ backgroundColor: "#cfe0e8" }}
+      >
         <Toolbar
           sx={{
             pr: "24px", // keep right padding when drawer closed
@@ -166,7 +171,6 @@ function Sidebar() {
         >
           <IconButton
             edge="start"
-            color="inherit"
             aria-label="open drawer"
             onClick={toggleDrawer}
             sx={{
@@ -176,41 +180,25 @@ function Sidebar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1 }}
-          >
-            Deeplant
+          <Typography sx={{ flexGrow: 1 }}>
+            <Link to="/Home">
+              <img src={DeeplantLong} alt="Deeplant Logo" height="70" />
+            </Link>
           </Typography>
-          <IconButton color="inherit" component={Link} to="/profile">
+          <IconButton component={Link} to="/profile">
             <Badge color="secondary">
               <PersonIcon />
             </Badge>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
               프로필
             </Typography>
           </IconButton>
 
-          <IconButton color="inherit" onClick={logout}>
+          <IconButton onClick={logout}>
             <Badge color="secondary">
               <LogoutIcon />
             </Badge>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
               로그아웃
             </Typography>
           </IconButton>
