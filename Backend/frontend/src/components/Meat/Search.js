@@ -54,9 +54,6 @@ function Search(){
 
     return(
         <div style={{marginTop:'60px', marginBottom:"20px", width:'100%'}} fullWidth>
-            <Typography variant="h4">
-                Meat Datas
-            </Typography>
             <div className={styles.search_input} style={{ width: "100%"}} fullWidth>
             <Card sx={{ p: 2 }} style={{display:'flex',width: "100%"}}>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} style={{width: "10%"}}>
