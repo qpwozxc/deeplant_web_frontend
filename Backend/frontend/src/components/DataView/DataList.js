@@ -110,7 +110,7 @@ function DataList({meatList}){
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
     return (
-        <Box>
+        <Box style={{backgroundColor:"white", borderRadius:'5px'}}>
         <TableContainer
             sx={{
             width: '100%',
@@ -118,7 +118,8 @@ function DataList({meatList}){
             position: 'relative',
             display: 'block',
             maxWidth: '100%',
-            '& td, & th': { whiteSpace: 'nowrap' }
+            '& td, & th': { whiteSpace: 'nowrap' },
+            margin:'10px'
             }}
         >
             <Table
