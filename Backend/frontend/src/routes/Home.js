@@ -14,28 +14,30 @@ import UserImage from "../src_assets/UserImage2.png";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { CardActions } from "@mui/material";
+import ProfileImage from "../src_assets/Profile.jpg";
+import LogOutImage from "../src_assets/LogOut.svg";
 const defaultTheme = createTheme();
 
 const cards = [
   {
     title: "홈",
-    description: "딥플랜트 관리자 페이지 홈입니다.",
+    description: "딥플랜트 홈",
     sub_description: "홈페이지",
     image: deeplantLogo,
     imageSize: { height: 140, width: 140 },
     link: "/Home",
   },
   {
-    title: "데이터 조회",
+    title: "데이터 관리",
     description: "육류 데이터 관리/검토",
     sub_description: "육류 데이터 관리/검토 ",
     image: MeatImage,
-    imageSize: { height: 140, width: "130%" },
+    imageSize: { height: 140, width: "100%" },
     link: "/DataManage",
   },
   {
     title: "통계 조회",
-    description: "통계 조회 페이지입니다.",
+    description: "통계 조회.",
     sub_description: "",
     image: StatisticImage,
     imageSize: { height: 140, width: "100%" },
@@ -47,6 +49,22 @@ const cards = [
     sub_description: "사용자 입력정보 열람 및 확인",
     image: UserImage,
     imageSize: { height: 140, width: "100%" },
+    link: "/UserManagement",
+  },
+  {
+    title: "프로필",
+    description: "프로필 조회/수정",
+    sub_description: "프로필 조회/수정",
+    image: ProfileImage,
+    imageSize: { height: 140, width: "55%" },
+    link: "/Profile",
+  },
+  {
+    title: "로그아웃",
+    description: "로그인 페이지로 이동",
+    sub_description: "로그아웃",
+    image: LogOutImage,
+    imageSize: { height: 140, width: "60%" },
     link: "/UserManagement",
   },
 ];
@@ -76,10 +94,10 @@ function Home() {
             marginTop: 4,
           }}
         >
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <Grid container spacing={5}>
               {cards.map((card) => (
-                <Grid item xs={12} sm={6} md={6} lg={6} key={card}>
+                <Grid item xs={12} sm={4} md={4} lg={4} key={card}>
                   <Box
                     sx={{
                       maxWidth: 300,
@@ -90,12 +108,12 @@ function Home() {
                       backgroundColor: "white",
                     }}
                   >
-                    <CardActionArea
-                      sx={{ maxWidth: 300, margin: "0 auto" }}
-                      onClick={() => handleCardClick(card.link)}
-                    >
+                    <CardActionArea onClick={() => handleCardClick(card.link)}>
                       <CardMedia
-                        sx={{ ...card.imageSize }}
+                        sx={{
+                          ...card.imageSize,
+                          margin: "0 auto",
+                        }}
                         image={card.image}
                       />
                       <CardContent>
