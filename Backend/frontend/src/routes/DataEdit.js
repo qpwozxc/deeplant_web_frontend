@@ -16,22 +16,20 @@ const DataEdit=(props)=>{
     const { id, email, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = location.state.data;
     //관리번호 받아오기
     const {editId} = useParams();
-    //탭 버튼 별 데이터 항목 -> map함수 이용 key값으로 세팅하는 걸로 바꾸기
-    
+    //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
     const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
     const freshField =['marbling','color','texture','surfaceMoisture','total'];
     const tongueField = ['sourness','bitterness','umami_t','richness'];
     const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI'];
     const apiField = ['traceNumber', 'species', 'l_division','s_division','gradeNm','farmAddr','butcheryPlaceNm','butcheryYmd' ];
+    //탭 정보 
     const tabFields = [heatedField, freshField, tongueField, apiField, labField];
-    const jsonFields = ['heated', 'fresh', 'tongue', 'api', 'lab'];
-//    apiData.map
-
-    //탭 정보 (나중에 고칠 예정 )
     const tabTitles = ["가열육","신선육","전자혀","API","실험실"]; 
-    const dataTypes = ["heated","fresh","tongue","api","lab"];
-
+    //데이터 정보
     const datas = [heated_data, fresh_data, tongue_data , api_data, lab_data];
+    const jsonFields = ['heated', 'fresh', 'tongue', 'api', 'lab'];
+    const jsonField = ['heatedmeat', 'freshmeat', 'tongue', 'api', 'lab'];
+
     //input text (that handles multiple inputs with same Handle function)
     const [inputText, setInput] = useState({});
     /**
@@ -58,7 +56,7 @@ const DataEdit=(props)=>{
             })
         })
     },[])
-    
+
 
     // 버튼 토글을 위한 수정 여부
     const [edited, setIsEdited] = useState(false);
@@ -71,6 +69,9 @@ const DataEdit=(props)=>{
     // 수정 완료 버튼, 클릭 시 수정된 data api로 전송 
     const [heatedArr, setHeatedArr] =useState({});
     const [respArr, setRespArr] = useState({});
+
+    //api respoonse data로 보낼 json data 만들기
+    // 관리번호 추가!!!
     const onClickSubmitBtn=()=>{
         setIsEdited(false);
         //데이터 업데이트 
@@ -86,7 +87,7 @@ const DataEdit=(props)=>{
                 }))
             ));
             // 전부다 lab data field 로 나오는 문제
-            console.log('data', heatedArr);
+            console.log('dataField', heatedArr);
             // response에 한번에 정리
             setRespArr(respArr=>({
                 ...respArr,
@@ -98,12 +99,6 @@ const DataEdit=(props)=>{
         // api 전송 
         console.log('input rerendered:', inputText)
     }
-   /* useEffect(() => {
-        // edit 모드일때 포커싱을 한다.
-        if (edited) {
-          editInputRef.current.focus();
-        }
-      }, [edited]);*/
 
     // 수정한 값에 맞춰서 input field 값 수정 
     const onChangeInput = (e)=>{
@@ -142,20 +137,70 @@ const DataEdit=(props)=>{
                 <Tab eventKey="ID" title="ID">
                     <div class="container">
                         <div class="row">
-                            <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>관리번호</div>
-                            <div class="col">{id}</div>
+                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>관리번호</div>
+                        <div class="col">{id}</div>
                         </div>
                         <div class="row">
-                            <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>email</div>
-                            <div class="col">{email}</div>
+                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>email</div>
+                        <div class="col">{email}</div>
                         </div>
                         <div class="row">
-                            <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>저장시간</div>
-                            <div class="col">{saveTime}</div>
+                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>저장시간</div>
+                        <div class="col">{saveTime}</div>
                         </div>
                     </div>
                 </Tab>
-               
+                {
+                tabFields.map((t,index) =>{
+                    return(
+                        <Tab eventKey={jsonFields[index]} title={tabTitles[index]}>
+                        <div key={index} class="container">
+                        {
+                        t.map((f, idx)=>{
+                        return(
+                            <div key={index+'-'+idx} class="row">
+                            <div key={index+'-'+idx+'col1'} class="col-5" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>{f}</div>
+                            <div key={index+'-'+idx+'col2'} class="col-7">
+                                {
+                                    
+                                    edited?
+                                    <input  key={index+'-'+idx+'input'} name={f} value={inputText[f]} placeholder={datas[index]===null?"null":datas[index][f]} onChange={onChangeInput}/>:
+                                    inputText[f] ? inputText[f] : "null"
+                                }
+                            </div>
+                            </div>
+                        );
+                        })
+                        }
+                        </div>
+                    </Tab>
+                    );
+                })
+                }
+
+            </Tabs>
+                       
+            </div>
+            
+        </div>
+        <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
+           { 
+            edited?
+            <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
+            <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
+           }
+        </div>
+           
+            </div>
+        
+        </Box>
+    );
+}
+
+export default DataEdit;
+
+/**
+ * 
                 <Tab eventKey="heated" title="가열육">
                 <div class="container">
                 {
@@ -167,7 +212,6 @@ const DataEdit=(props)=>{
                             {
                                 edited?
                                 <input name={f} value={inputText[f]} placeholder={heated_data===null?"null":heated_data[f]} onChange={onChangeInput}/>:
-                                //heated_data===null?"null":heated_data[f]
                                 inputText[f] ? inputText[f] : "null"
                             }
                         </div>
@@ -220,8 +264,6 @@ const DataEdit=(props)=>{
                 <div class="container">
                 {
                 apiField.map((f, index)=>{
-                    //console.log("api",apiData[f]);
-                    //(apiData[f]===null)?setInput(""):setInput(apiData[f]);
                     return(
                         <div key={index}  class="row">
                         <div class="col-5" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>{f}</div>
@@ -229,7 +271,6 @@ const DataEdit=(props)=>{
                             {
                                 edited?
                         <input name={f} value={inputText.f}style={{width:'100%'}} placeholder={api_data[f] === null? "null":api_data[f]} onChange={onChangeInput}/>:
-                                //api_data[f] === null? "":api_data[f]
                                 inputText[f] ? inputText[f] : "null"
                              }
                         </div>
@@ -249,7 +290,6 @@ const DataEdit=(props)=>{
                             {
                                 edited?
                                 <input name={f} value={inputText.f} placeholder={lab_data===null?"null":lab_data[f]}  onChange={onChangeInput}/>:
-                                //lab_data===null?"null":lab_data[f]
                                 inputText[f] ? inputText[f] : "null"
                             }
                         </div>
@@ -258,23 +298,6 @@ const DataEdit=(props)=>{
                 })}                
                 </div>
                 </Tab>
-            </Tabs>
-                       
-            </div>
-            
-        </div>
-        <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
-           { 
-            edited?
-            <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
-            <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
-           }
-        </div>
-           
-            </div>
-        
-        </Box>
-    );
-}
-
-export default DataEdit;
+ * 
+ * 
+ */

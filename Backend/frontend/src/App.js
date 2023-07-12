@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LogIn from "./routes/LogIn";
 import Home from "./routes/Home";
-
+import DataManage from "./routes/DataManage";
 import DataView from "./routes/SingleDataView";
 import Stats from "./routes/Stats";
 
