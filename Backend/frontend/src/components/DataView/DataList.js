@@ -119,7 +119,9 @@ function DataList({meatList}){
             display: 'block',
             maxWidth: '100%',
             '& td, & th': { whiteSpace: 'nowrap' },
-            margin:'10px'
+            padding:'10px',
+            boxShadow:1,
+            borderRadius:'5px'
             }}
         >
             <Table
