@@ -3,7 +3,11 @@ import Form from 'react-bootstrap/Form';
 import { Button } from "react-bootstrap";
 import InputGroup from 'react-bootstrap/InputGroup';
 import { collection, getDocs, setDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase-config";
+import { db, auth } from "../../firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 
 function UserRegister({ handleClose }) {
   const [newName, setNewName] = useState("");
@@ -66,6 +70,20 @@ function UserRegister({ handleClose }) {
     return nameRegex.test(name);
   };
 
+  const generateTempPassword = () => {
+    // Generate a random temporary password using characters from a predefined set
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const length = 10;
+    let tempPassword = "";
+    for (let i = 0; i < length; i++) {
+      tempPassword += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return tempPassword;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -73,7 +91,31 @@ function UserRegister({ handleClose }) {
       event.stopPropagation();
     }
     if (isNameValid(newName) && isEmailValid(newEmail) && selectedUser !== "") {
-      await createUser();
+      try {
+        // Generate a temporary password
+        const tempPassword = generateTempPassword();
+
+        // Register user email with Firebase Authentication
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          newEmail,
+          tempPassword
+        );
+        console.log("User registered with Firebase Authentication:", user);
+
+        // Send verification email to the registered user's email address
+        await sendEmailVerification(user);
+
+        // Create user document in Firestore
+        await createUser();
+        handleClose();
+      } catch (error) {
+        // Handle any errors that occurred during registration
+        console.error(
+          "Error registering user with Firebase Authentication:",
+          error
+        );
+      }
       handleClose();
     }
     setValidated(true);
@@ -173,7 +215,7 @@ function UserRegister({ handleClose }) {
           <div className="text-end">
             {" "}
             {/* 오른쪽 정렬 */}
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={handleSubmit}>
               회원 등록
             </Button>
           </div>

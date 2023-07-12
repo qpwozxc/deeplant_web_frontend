@@ -1,18 +1,18 @@
 import React, {useEffect, useRef, useState } from "react";
 import {Link} from "react-router-dom";
 import styles from "./Sidebar.module.css";
-
+import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import ListItemButton from '@mui/material/ListItemButton';
-import Button from '@mui/material/Button';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import PersonIcon from '@mui/icons-material/Person';
-import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
-import Badge from '@mui/material/Badge';
-import MuiDrawer from '@mui/material/Drawer';
-import ListSubheader from '@mui/material/ListSubheader';
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import ListItemButton from "@mui/material/ListItemButton";
+import Button from "@mui/material/Button";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import PersonIcon from "@mui/icons-material/Person";
+import Typography from "@mui/material/Typography";
+import ListItemText from "@mui/material/ListItemText";
+import Badge from "@mui/material/Badge";
+import MuiDrawer from "@mui/material/Drawer";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuIcon from "@mui/icons-material/Menu";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import List from "@mui/material/List";
@@ -32,36 +32,36 @@ import HomeIcon from "@mui/icons-material/Home";
 
 const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
-      
-      <Button component={Link} to="/MainPage">
-        <ListItemIcon>
-          <HomeIcon />
-        </ListItemIcon>
+    <ListItemButton component={Link} to="/MainPage">
+      <ListItemIcon>
+        <HomeIcon />
+      </ListItemIcon>
+      <Button>
         <ListItemText primary="홈" />
       </Button>
     </ListItemButton>
-    <ListItemButton>
-      <Button component={Link} to="/Home">
-        <ListItemIcon>
-          <DataThresholdingIcon />
-        </ListItemIcon>
+    <ListItemButton component={Link} to="/Home">
+      <ListItemIcon>
+        <DataThresholdingIcon />
+      </ListItemIcon>
+      <Button>
         <ListItemText primary="데이터 조회" />
       </Button>
     </ListItemButton>
-    <ListItemButton>
-      <Button component={Link} to="/stats">
-        <ListItemIcon>
-          <StackedLineChartIcon />
-        </ListItemIcon>
+    <ListItemButton component={Link} to="/stats">
+      <ListItemIcon>
+        <StackedLineChartIcon />
+      </ListItemIcon>
+      <Button>
         <ListItemText primary="통계 조회" />
       </Button>
     </ListItemButton>
-    <ListItemButton>
-      <Button component={Link} to="/UserManagement">
-        <ListItemIcon>
-          <GroupIcon />
-        </ListItemIcon>
+    <ListItemButton component={Link} to="/UserManagement">
+      <ListItemIcon>
+        <GroupIcon />
+      </ListItemIcon>
+      <Button>
+
         <ListItemText primary="사용자관리" />
       </Button>
     </ListItemButton>
@@ -143,6 +143,7 @@ const AppBar = styled(MuiAppBar, {
 
 function Sidebar() {
   const [open, setOpen] = React.useState(true);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -216,7 +217,6 @@ function Sidebar() {
           </IconButton>
         </Toolbar>
       </AppBar>
-
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
