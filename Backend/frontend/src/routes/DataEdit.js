@@ -7,7 +7,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Sidebar from "../components/Base/Sidebar";
-import Base from "../components/Base/BaseCmp";
 import { Box, Typography} from '@mui/material';
 
 const DataEdit=(props)=>{

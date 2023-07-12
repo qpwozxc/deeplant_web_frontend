@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Base from "../components/Base/BaseCmp";
 import Form from "react-bootstrap/Form";
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";

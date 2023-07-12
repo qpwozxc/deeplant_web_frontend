@@ -1,5 +1,4 @@
-import React from 'react';
-import Base from "../components/Base/BaseCmp";
+import React from "react";
 import UserList from "../components/User/UserList";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";

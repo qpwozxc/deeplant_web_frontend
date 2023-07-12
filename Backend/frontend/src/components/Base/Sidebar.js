@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState } from "react";
-import {Link} from "react-router-dom";
-import styles from "./Sidebar.module.css";
+import { Link } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
