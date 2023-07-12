@@ -63,7 +63,6 @@ function Home(){
         const totalPageArr = Array(totalPages)
         .fill()
         .map((_, i)=> (i+1));
-        console.log('total page', totalPageArr);
         return Array(Math.ceil(totalPages/limit))
         .fill()
         .map((_, i)=>
@@ -86,7 +85,6 @@ function Home(){
       
     //엑셀파일을 JSON 으로 변환 
     const handleExcelFile = (file) => {
-        console.log("file path", file);
         /*const csvToJson = Papa.parse(file, {
             header: true,
             encoding: 'EUC-KR',
@@ -123,7 +121,6 @@ function Home(){
                     index == 0? toJson[key] = resp.rows[1][index]:
                     toJson[key] = resp.rows[1][index];
                 })*/
-                console.log("jsons:",toJson);
                 console.log("cols: ",resp.cols, "rows: ", resp.rows);
 
               fetch(`http://localhost:8080/meat/update`, {
@@ -207,11 +204,9 @@ function Home(){
             <Pagination>
                 <Pagination.First />
                 <Pagination.Prev onClick={()=>{
-                    console.log('current pagination', currentPN);
                     currentPN > 0?
                     setCurrentPN(currentPN-1):
                     setCurrentPN(currentPN);
-                    console.log('after current pagination', currentPN);
                     setCurrentPageArray(totalSlicedPageArray[currentPN]);
                 }} />
                 {
@@ -230,7 +225,6 @@ function Home(){
                     (currentPN < totalSlicedPageArray.length-1 )?
                     setCurrentPN(currentPN+1)
                     : setCurrentPN(currentPN);
-                    console.log('current pagination', currentPN);
                     setCurrentPageArray(totalSlicedPageArray[currentPN]);
                 }} />
                 <Pagination.Last disabled/>

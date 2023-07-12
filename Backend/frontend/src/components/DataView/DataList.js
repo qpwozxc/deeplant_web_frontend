@@ -133,7 +133,7 @@ function DataList({meatList}){
             }}
             >
             <OrderTableHead />
-            {console.log("ml:",meatList)}
+          
             <TableBody>
                 {meatList.map((content, index) => {
                 const isItemSelected = isSelected(content);

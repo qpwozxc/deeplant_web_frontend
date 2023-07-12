@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useEffect, useState,useRef } from "react";
 import {Link,useNavigate } from "react-router-dom";
 import {FaRegPenToSquare} from "react-icons/fa6";
 import MeatTab from "./MeatTab";
@@ -10,18 +11,19 @@ import ListGroup from 'react-bootstrap/ListGroup';
 // 고기 데이터를 받아서 조회/수정 
 function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, apiData}){
     const navigate = useNavigate();
+    const [edit, setEdit] = useState(false);
     const data = {
       id:{id}.id, 
       email:{email}.email, 
       deepAging:{deepAging}.deepAging, 
-      fresh:{fresh}.fresh, 
-      heated:{heated}.heated, 
+      fresh_data:{fresh}.fresh, 
+      heated_data:{heated}.heated, 
       lab_data:{lab_data}.lab_data , 
       saveTime:{saveTime}.saveTime, 
-      tongue:{tongue}.tongue, 
-      apiData:{apiData}.apiData 
+      tongue_data:{tongue}.tongue, 
+      api_data:{apiData}.apiData 
     };
-    console.log(data);
+
     return (
     <div className={styles.meat}>
         <Card style={{ width: '30rem' }}>
@@ -44,10 +46,10 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
           apiData = {apiData}
         />
         <div className={styles.button_wrapper}>
-            <Button variant="contained" className={styles.button_box} onClick={()=>{navigate(`/dataEdit/${id}`, {state: { data}})}}>
-              수정
-              <FaRegPenToSquare/>
-            </Button>
+        <button type="button" class="btn btn-outline-success" style={{width: '100px'}} onClick={()=>{navigate(`/dataEdit/${id}`, {state: { data}})}}>
+          수정
+          <FaRegPenToSquare/>
+          </button> 
         </div>           
     </div>);
 }

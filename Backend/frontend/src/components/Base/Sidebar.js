@@ -33,34 +33,35 @@ import HomeIcon from "@mui/icons-material/Home";
 const mainListItems = (
   <React.Fragment>
     <ListItemButton>
-      <ListItemIcon>
-        <HomeIcon />
-      </ListItemIcon>
+      
       <Button component={Link} to="/MainPage">
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
         <ListItemText primary="홈" />
       </Button>
     </ListItemButton>
     <ListItemButton>
-      <ListItemIcon>
-        <DataThresholdingIcon />
-      </ListItemIcon>
       <Button component={Link} to="/Home">
+        <ListItemIcon>
+          <DataThresholdingIcon />
+        </ListItemIcon>
         <ListItemText primary="데이터 조회" />
       </Button>
     </ListItemButton>
     <ListItemButton>
-      <ListItemIcon>
-        <StackedLineChartIcon />
-      </ListItemIcon>
       <Button component={Link} to="/stats">
+        <ListItemIcon>
+          <StackedLineChartIcon />
+        </ListItemIcon>
         <ListItemText primary="통계 조회" />
       </Button>
     </ListItemButton>
     <ListItemButton>
-      <ListItemIcon>
-        <GroupIcon />
-      </ListItemIcon>
       <Button component={Link} to="/UserManagement">
+        <ListItemIcon>
+          <GroupIcon />
+        </ListItemIcon>
         <ListItemText primary="사용자관리" />
       </Button>
     </ListItemButton>
