@@ -121,7 +121,7 @@ function DataList({meatList}){
             '& td, & th': { whiteSpace: 'nowrap' },
             padding:'10px',
             boxShadow:1,
-            borderRadius:'5px'
+            borderRadius:'5px',
             }}
         >
             <Table
