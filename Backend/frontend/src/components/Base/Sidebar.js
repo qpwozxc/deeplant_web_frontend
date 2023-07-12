@@ -32,7 +32,7 @@ import HomeIcon from "@mui/icons-material/Home";
 
 const mainListItems = (
   <React.Fragment>
-    <ListItemButton component={Link} to="/MainPage">
+    <ListItemButton component={Link} to="/Home">
       <ListItemIcon>
         <HomeIcon />
       </ListItemIcon>
@@ -40,12 +40,12 @@ const mainListItems = (
         <ListItemText primary="홈" />
       </Button>
     </ListItemButton>
-    <ListItemButton component={Link} to="/Home">
+    <ListItemButton component={Link} to="/DataManage">
       <ListItemIcon>
         <DataThresholdingIcon />
       </ListItemIcon>
       <Button>
-        <ListItemText primary="데이터 조회" />
+        <ListItemText primary="데이터 관리" />
       </Button>
     </ListItemButton>
     <ListItemButton component={Link} to="/stats">
@@ -61,7 +61,6 @@ const mainListItems = (
         <GroupIcon />
       </ListItemIcon>
       <Button>
-
         <ListItemText primary="사용자관리" />
       </Button>
     </ListItemButton>

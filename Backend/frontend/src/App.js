@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LogIn from "./routes/LogIn";
-import MainPage from "./routes/MainPage";
 import Home from "./routes/Home";
+import DataManage from "./routes/DataManage";
 import DataView from "./routes/DataView";
 import Stats from "./routes/Stats";
 import Profile from "./routes/Profile";
@@ -11,16 +11,36 @@ import UserManagement from "./routes/UserManagement";
 
 function App() {
   const routes = [
-    { path: "/", title: "LogIn | DeePlant", component: <LogIn /> },
-    { path: "/MainPage", title: "Home | DeePlant", component: <MainPage /> },
-    { path: "/home", title: "DataManage | DeePlant", component: <Home /> },
+    {
+      path: "/",
+      title: "LogIn | DeePlant",
+      component: <LogIn />,
+    },
+    {
+      path: "/Home",
+      title: "Home | DeePlant",
+      component: <Home />,
+    },
+    {
+      path: "/DataManage",
+      title: "DataManage | DeePlant",
+      component: <DataManage />,
+    },
     {
       path: "/dataView/:id",
       title: "DataView | DeePlant",
       component: <DataView />,
     },
-    { path: "/stats", title: "Statistics | DeePlant", component: <Stats /> },
-    { path: "/profile", title: "Profile | DeePlant", component: <Profile /> },
+    {
+      path: "/stats",
+      title: "Statistics | DeePlant",
+      component: <Stats />,
+    },
+    {
+      path: "/profile",
+      title: "Profile | DeePlant",
+      component: <Profile />,
+    },
     {
       path: "/dataEdit/:id",
       title: "DataEdit | DeePlant",
@@ -28,7 +48,7 @@ function App() {
     },
     {
       path: "/UserManagement",
-      title: "UserManage | DeePlant",
+      title: "UserManage | Deepl",
       component: <UserManagement />,
     },
   ];

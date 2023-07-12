@@ -72,7 +72,7 @@ const LogInField = () => {
         );
 
         console.log(userCredential.user);
-        navigate("/MainPage");
+        navigate("/Home");
       } catch (error) {
         console.log(error.message);
         setLoginError("로그인에 실패했습니다. 다시 시도해주세요.");
