@@ -23,33 +23,50 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
     };
 
     return (
-    <div style={{ border: '1px solid gray',display: 'flex',padding: '10px 150px',justifyContent: 'space-around' }}>
-        <Card style={{ width: '30rem' }}>
-      <Card.Img variant="top" src={meatImg} />
-      <Card.Body>
-        <Card.Text>
-          <ListGroup variant="flush">
-        <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-        <ListGroup.Item>email: {email}</ListGroup.Item>
-        <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
-      </ListGroup>
-        </Card.Text>
-      </Card.Body>
-    </Card>
-        <MeatTab
-          fresh={fresh}
-          heated={heated}
-          lab_data={lab_data}
-          tongue={tongue}
-          apiData = {apiData}
-        />
-        <div style={{display: 'flex',alignItems: 'end'}}>
-        <button type="button" class="btn btn-outline-success" style={{width: '100px'}} onClick={()=>{navigate(`/dataEdit/${id}`, {state: { data}})}}>
-          수정
-          <FaRegPenToSquare/>
-          </button> 
-        </div>           
-    </div>);
+      <div
+        style={{
+          border: "1px solid gray",
+          display: "flex",
+          padding: "15px",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <Card style={{ width: "400px" }}>
+          <Card.Img variant="top" src={meatImg} />
+          <Card.Body>
+            <Card.Text>
+              <ListGroup variant="flush">
+                <ListGroup.Item>관리번호: {id}</ListGroup.Item>
+                <ListGroup.Item>email: {email}</ListGroup.Item>
+                <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
+              </ListGroup>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        <Card style={{ width: "400px" }}>
+          <MeatTab
+            fresh={fresh}
+            heated={heated}
+            lab_data={lab_data}
+            tongue={tongue}
+            apiData={apiData}
+          />
+        </Card>
+        <div style={{ alignSelf: "flex-end" }}>
+          <button
+            type="button"
+            className="btn btn-outline-success"
+            style={{ width: "100px" }}
+            onClick={() => {
+              navigate(`/dataEdit/${id}`, { state: { data } });
+            }}
+          >
+            수정 <FaRegPenToSquare />
+          </button>
+        </div>
+      </div>
+    );
 }
 
 Meat.propTypes={

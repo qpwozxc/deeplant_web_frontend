@@ -38,30 +38,29 @@ function MeatTab({fresh, heated , lab_data, tongue, apiData}){
         }
     }
 
-    return(
-        <div className={styles.meat_info_container}>
-            <TabBtns
-                currentTab={currentTab}
-                currentTabHandler={currentTabHandler}
-            />
-            <div className={styles.meat_info_container_content}>
-            <Table striped bordered hover size="sm">
-            {data ? 
+    return (
+      <div>
+        <TabBtns
+          currentTab={currentTab}
+          currentTabHandler={currentTabHandler}
+        />
+        <Table striped bordered hover>
+          {data ? (
             <tbody>
-            { Object.entries(data).map(([key, value])=>
-            {
-                return (<tr>
-                    <td style={{width:"30%" }}>{key}</td>
+              {Object.entries(data).map(([key, value]) => {
+                return (
+                  <tr>
+                    <td style={{ width: "30%" }}>{key}</td>
                     <td>{value}</td>
-                </tr>)
-            })}
+                  </tr>
+                );
+              })}
             </tbody>
-            : 
-            '{}'}  
-            </Table>
-                
-            </div>
-        </div>
+          ) : (
+            "{}"
+          )}
+        </Table>
+      </div>
     );
 }
 

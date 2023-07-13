@@ -156,7 +156,6 @@ const DataEdit = (props) => {
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />
-      <Base />
       <div>
         <Typography variant="h4" style={{ paddingTop: "70px" }}>
           Edit Meat Datas

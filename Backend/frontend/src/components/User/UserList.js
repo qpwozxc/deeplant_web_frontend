@@ -17,18 +17,10 @@ import InputBase from "@mui/material/InputBase";
 import { ButtonGroup } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
-import Sidebar from "../Base/Sidebar";
-import {
-  GridToolbarQuickFilter,
-  DataGrid,
-  GridToolbar,
-  GridToolbarContainer,
-} from "@mui/x-data-grid";
-import CancelIcon from "@mui/icons-material/Close";
+import { GridToolbarQuickFilter, DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -153,7 +145,6 @@ function UserList() {
     }
   };
 
-  const defaultTheme = createTheme();
   function QuickSearchToolbar() {
     return (
       <Box
@@ -168,75 +159,51 @@ function UserList() {
   }
 
   return (
-    <>
+    <div>
       <Toolbar />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Grid container spacing={3}>
-          <Grid item xs={8}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <>
-                <ButtonGroup className="mb-3">
-                  <Button variant="success" onClick={handleRegisterShow}>
-                    +신규 회원 등록
-                  </Button>
-                </ButtonGroup>
-                <Modal
-                  show={registerShow}
-                  onHide={handleRegisterClose}
-                  backdrop="static"
-                  keyboard={false}
-                  centered
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>신규 회원 등록</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <UserRegister handleClose={handleRegisterClose} />
-                  </Modal.Body>
-                </Modal>
-              </>
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Typography
-                component="h2"
-                variant="h6"
-                color="primary"
-                gutterBottom
-              >
-                최근 변경된 사항
-              </Typography>
-            </Paper>
-          </Grid>
           <Grid item xs={12}>
             <Paper
               sx={{
                 p: 2,
-                display: "flex",
                 flexDirection: "column",
               }}
             >
-              <Typography
-                component="h2"
-                variant="h6"
-                color="primary"
-                gutterBottom
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography
+                  component="h2"
+                  variant="h4"
+                  color="primary"
+                  gutterBottom
+                >
+                  사용자 관리
+                </Typography>
+                <div style={{ marginLeft: "auto" }}>
+                  <Button
+                    className="mb-3"
+                    variant="success"
+                    onClick={handleRegisterShow}
+                  >
+                    +신규 회원 등록
+                  </Button>
+                </div>
+              </div>
+
+              <Modal
+                show={registerShow}
+                onHide={handleRegisterClose}
+                backdrop="static"
+                keyboard={false}
+                centered
               >
-                사용자 관리
-              </Typography>
+                <Modal.Header closeButton>
+                  <Modal.Title>신규 회원 등록</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <UserRegister handleClose={handleRegisterClose} />
+                </Modal.Body>
+              </Modal>
               <Paper
                 component="form"
                 sx={{
@@ -276,7 +243,7 @@ function UserList() {
           </Grid>
         </Grid>
       </Container>
-    </>
+    </div>
   );
 }
 
