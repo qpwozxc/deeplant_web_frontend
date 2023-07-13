@@ -1,16 +1,24 @@
-import { useState, useEffect } from "react";
-import Sidebar from "../components/Base/Sidebar";
 import SearchFilter from "../components/Stats/SearchFilter";
 import StatsTabs from "../components/Stats/StatsTabs";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 
 function Stats() {
   return (
-    <div style={{ display: "flex", width: "100%" }}>
-      <div style={{ marginTop: "40px", width: "100%" }}>
-        <SearchFilter />
-        <StatsTabs/>
-      </div>
+<Container maxWidth="xl">
+  <Box sx={{
+        width: '80%',}}>
+  <div style={{ display: "flex", width: "100%" }}>
+  
+    <div style={{ width: "100%" }}>
+      <SearchFilter />
+      <StatsTabs/>
     </div>
+  </div>
+  </Box>
+
+</Container>
+    
   );
 }
 

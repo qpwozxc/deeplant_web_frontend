@@ -69,6 +69,7 @@ function Search() {
         justifyContent: "center",
         alignItems: "center",
         marginBottom: "20px",
+        marginTop:'70px',
         width: "500px",
         height: "80px",
       }}
