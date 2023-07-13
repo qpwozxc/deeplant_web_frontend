@@ -76,9 +76,9 @@ function App() {
                       <Box
                         component="main"
                         sx={{
-                          backgroundImage: `url(${BackGroundImage})`,
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
+                          // backgroundImage: `url(${BackGroundImage})`,
+                          // backgroundSize: "cover",
+                          // backgroundRepeat: "no-repeat",
                           backgroundColor: (theme) =>
                             theme.palette.mode === "light"
                               ? theme.palette.grey[100]
@@ -90,7 +90,7 @@ function App() {
                           alignItems: "center",
                           justifyContent: "center",
                           flexDirection: "column",
-                          marginTop: 3,
+                          marginTop: 8,
                         }}
                       >
                         {route.component}

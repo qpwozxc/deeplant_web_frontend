@@ -124,7 +124,12 @@ const DataEdit=()=>{
   };
 
   return (
+<<<<<<< HEAD
+    <Box sx={{ display: "flex" }}>
+      <Sidebar />
+=======
     <Box sx={{ display: "flex"}}>
+>>>>>>> c57991698b7db64d8c87d4e9092013aa40ff1498
       <div>
         <Search/>
         <div style={{width: "",padding: "20px 50px",paddingBottom: "0px",display: "flex",justifyContent: "space-between", backgroundColor:'white', borderTopLeftRadius:'10px' , borderTopRightRadius:'10px'}}>
