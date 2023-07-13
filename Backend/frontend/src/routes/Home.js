@@ -105,11 +105,6 @@ function Home() {
                     {card.description}
                   </Typography>
                 </CardContent>
-                {/* <CardActions>
-                      <Typography variant="body2" color="green">
-                        {card.sub_description}
-                      </Typography>
-                    </CardActions> */}
               </CardActionArea>
             </Box>
           </Grid>
