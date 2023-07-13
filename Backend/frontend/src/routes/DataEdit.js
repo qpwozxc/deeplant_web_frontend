@@ -105,94 +105,152 @@ const DataEdit=(props)=>{
             ...inputText,
             [e.target.name]: e.target.value});
     }
-    return(
-        <Box sx={{ display: 'flex'}}>
-            <Sidebar/>
-            <Base/>
-            <div>
-            <Typography variant="h4"  style={{paddingTop: '70px'}}>
-               Edit Meat Datas
-            </Typography>
-            <div className={styles.meat} style={{width:'',padding: '80px 60px', paddingBottom:'0px' ,display:'flex',justifyContent:'space-between'}}>
-        
-            <Card style={{ width: '20rem' }}>
-            <Card.Img variant="top" src={meatImg} />
-            <Card.Body>
+    return (
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <div>
+          <Typography variant="h4" style={{ paddingTop: "70px" }}>
+            Edit Meat Datas
+          </Typography>
+          <div
+            className={styles.meat}
+            style={{
+              width: "",
+              padding: "80px 60px",
+              paddingBottom: "0px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Card style={{ width: "20rem" }}>
+              <Card.Img variant="top" src={meatImg} />
+              <Card.Body>
                 <Card.Text>
-                <ListGroup variant="flush">
-                <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                <ListGroup.Item>email: {email}</ListGroup.Item>
-                <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
-                <ListGroup.Item>
-                    <button type="button" class="btn btn-success">이미지 업로드</button>
-                </ListGroup.Item>
-                </ListGroup>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>관리번호: {id}</ListGroup.Item>
+                    <ListGroup.Item>email: {email}</ListGroup.Item>
+                    <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
+                    <ListGroup.Item>
+                      <button type="button" class="btn btn-success">
+                        이미지 업로드
+                      </button>
+                    </ListGroup.Item>
+                  </ListGroup>
                 </Card.Text>
-            </Card.Body>
+              </Card.Body>
             </Card>
 
-            <div className={styles.meat_info_container} style={{margin:'0px 20px'}}>
-                <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+            <div
+              className={styles.meat_info_container}
+              style={{ margin: "0px 20px" }}
+            >
+              <Tabs
+                defaultActiveKey="profile"
+                id="uncontrolled-tab-example"
+                className="mb-3"
+              >
                 <Tab eventKey="ID" title="ID">
-                    <div class="container">
-                        <div class="row">
-                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>관리번호</div>
-                        <div class="col">{id}</div>
-                        </div>
-                        <div class="row">
-                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>email</div>
-                        <div class="col">{email}</div>
-                        </div>
-                        <div class="row">
-                        <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>저장시간</div>
-                        <div class="col">{saveTime}</div>
-                        </div>
+                  <div class="container">
+                    <div class="row">
+                      <div
+                        class="col"
+                        style={{ borderRight: "1px solid rgb(174, 168, 168)" }}
+                      >
+                        관리번호
+                      </div>
+                      <div class="col">{id}</div>
                     </div>
+                    <div class="row">
+                      <div
+                        class="col"
+                        style={{ borderRight: "1px solid rgb(174, 168, 168)" }}
+                      >
+                        email
+                      </div>
+                      <div class="col">{email}</div>
+                    </div>
+                    <div class="row">
+                      <div
+                        class="col"
+                        style={{ borderRight: "1px solid rgb(174, 168, 168)" }}
+                      >
+                        저장시간
+                      </div>
+                      <div class="col">{saveTime}</div>
+                    </div>
+                  </div>
                 </Tab>
-                {
-                tabFields.map((t,index) =>{
-                    return(
-                        <Tab eventKey={jsonFields[index]} title={tabTitles[index]}>
-                        <div key={index} class="container">
-                        {
-                        t.map((f, idx)=>{
-                        return(
-                            <div key={index+'-'+idx} class="row">
-                            <div key={index+'-'+idx+'col1'} class="col-5" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>{f}</div>
-                            <div key={index+'-'+idx+'col2'} class="col-7">
-                                {
-                                    
-                                    edited?
-                                    <input  key={index+'-'+idx+'input'} name={f} value={inputText[f]} placeholder={datas[index]===null?"null":datas[index][f]} onChange={onChangeInput}/>:
-                                    inputText[f] ? inputText[f] : "null"
-                                }
+                {tabFields.map((t, index) => {
+                  return (
+                    <Tab eventKey={jsonFields[index]} title={tabTitles[index]}>
+                      <div key={index} class="container">
+                        {t.map((f, idx) => {
+                          return (
+                            <div key={index + "-" + idx} class="row">
+                              <div
+                                key={index + "-" + idx + "col1"}
+                                class="col-5"
+                                style={{
+                                  borderRight: "1px solid rgb(174, 168, 168)",
+                                }}
+                              >
+                                {f}
+                              </div>
+                              <div
+                                key={index + "-" + idx + "col2"}
+                                class="col-7"
+                              >
+                                {edited ? (
+                                  <input
+                                    key={index + "-" + idx + "input"}
+                                    name={f}
+                                    value={inputText[f]}
+                                    placeholder={
+                                      datas[index] === null
+                                        ? "null"
+                                        : datas[index][f]
+                                    }
+                                    onChange={onChangeInput}
+                                  />
+                                ) : inputText[f] ? (
+                                  inputText[f]
+                                ) : (
+                                  "null"
+                                )}
+                              </div>
                             </div>
-                            </div>
-                        );
-                        })
-                        }
-                        </div>
+                          );
+                        })}
+                      </div>
                     </Tab>
-                    );
-                })
-                }
-
-            </Tabs>
-                       
+                  );
+                })}
+              </Tabs>
             </div>
-            
+          </div>
+          <div
+            style={{ width: "100%", display: "flex", justifyContent: "end" }}
+          >
+            {edited ? (
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                onClick={onClickSubmitBtn}
+              >
+                완료
+              </button>
+            ) : (
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                onClick={onClickEditBtn}
+              >
+                수정
+              </button>
+            )}
+          </div>
         </div>
-        <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
-           { 
-            edited?
-            <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
-            <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
-           }
-        </div>
-           
-            </div>
-        
-        </Box>
+      </Box>
     );
 }
 

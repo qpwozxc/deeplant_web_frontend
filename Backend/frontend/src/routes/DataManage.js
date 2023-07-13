@@ -143,132 +143,118 @@ function DataManage() {
     });
   };
   return (
-    <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
+    <>
+      <Search />
+      <div
+        style={{
+          textAlign: "center",
+          width: "100%",
+          padding: "0px 200px",
+          paddingBottom: "0",
         }}
       >
-        <Search />
-        <div
-          style={{
-            textAlign: "center",
-            width: "100%",
-            padding: "0px 200px",
-            paddingBottom: "0",
-          }}
-        >
-          {isLoaded ? (
-            //데이터가 로드된 경우 데이터 목록 반환
-            <DataList meatList={meatList} />
-          ) : (
-            // 데이터가 로드되지 않은 경우 로딩중 반환
-            <Spinner animation="border" />
-          )}
-        </div>
+        {isLoaded ? (
+          //데이터가 로드된 경우 데이터 목록 반환
+          <DataList meatList={meatList} />
+        ) : (
+          // 데이터가 로드되지 않은 경우 로딩중 반환
+          <Spinner animation="border" />
+        )}
+      </div>
 
+      <div
+        className=""
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: "0px 40px",
+        }}
+      >
         <div
-          className=""
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "0px 40px",
-          }}
+          class="mb-3"
+          style={{ display: "flex", width: "70%", marginTop: "40px" }}
         >
-          <div
-            class="mb-3"
-            style={{ display: "flex", width: "70%", marginTop: "40px" }}
+          <input
+            class="form-control"
+            accept=".csv,.xlsx,.xls"
+            type="file"
+            id="formFile"
+            ref={fileRef}
+            onChange={(e) => {
+              setExcelFile(e.target.files[0]);
+            }}
+            style={{ marginRight: "20px" }}
+          />
+
+          <Button
+            color="inherit"
+            startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowUpOnSquareIcon />
+              </SvgIcon>
+            }
+            onClick={() => {
+              handleExcelFile(excelFile);
+            }}
+            style={{ margin: "0px 10px" }}
           >
-            <input
-              class="form-control"
-              accept=".csv,.xlsx,.xls"
-              type="file"
-              id="formFile"
-              ref={fileRef}
-              onChange={(e) => {
-                setExcelFile(e.target.files[0]);
-              }}
-              style={{ marginRight: "20px" }}
-            />
-
-            <Button
-              color="inherit"
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <ArrowUpOnSquareIcon />
-                </SvgIcon>
-              }
-              onClick={() => {
-                handleExcelFile(excelFile);
-              }}
-              style={{ margin: "0px 10px" }}
-            >
-              Import
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={
-                <SvgIcon fontSize="small">
-                  <ArrowDownOnSquareIcon />
-                </SvgIcon>
-              }
-              style={{ margin: "0px 10px" }}
-            >
-              Export
-            </Button>
-          </div>
+            Import
+          </Button>
+          <Button
+            color="inherit"
+            startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowDownOnSquareIcon />
+              </SvgIcon>
+            }
+            style={{ margin: "0px 10px" }}
+          >
+            Export
+          </Button>
         </div>
+      </div>
 
-        <div
-          className="pagination-bar"
-          style={{ display: "flex", width: "100%", justifyContent: "center" }}
-        >
-          <Pagination>
-            <Pagination.First />
-            <Pagination.Prev
-              onClick={() => {
-                currentPN > 0
-                  ? setCurrentPN(currentPN - 1)
-                  : setCurrentPN(currentPN);
-                setCurrentPageArray(totalSlicedPageArray[currentPN]);
-              }}
-            />
-            {currentPageArray
-              ? currentPageArray.map((m, idx) => {
-                  return (
-                    <Pagination.Item
-                      key={idx}
-                      onClick={() => {
-                        //페이지 api 불러오기
-                        setCurrentPage(m);
-                      }}
-                    >
-                      {m}
-                    </Pagination.Item>
-                  );
-                })
-              : null}
-            <Pagination.Next
-              onClick={() => {
-                currentPN < totalSlicedPageArray.length - 1
-                  ? setCurrentPN(currentPN + 1)
-                  : setCurrentPN(currentPN);
-                setCurrentPageArray(totalSlicedPageArray[currentPN]);
-              }}
-            />
-            <Pagination.Last disabled />
-          </Pagination>
-        </div>
-      </Box>
-    </Box>
+      <div
+        className="pagination-bar"
+        style={{ display: "flex", width: "100%", justifyContent: "center" }}
+      >
+        <Pagination>
+          <Pagination.First />
+          <Pagination.Prev
+            onClick={() => {
+              currentPN > 0
+                ? setCurrentPN(currentPN - 1)
+                : setCurrentPN(currentPN);
+              setCurrentPageArray(totalSlicedPageArray[currentPN]);
+            }}
+          />
+          {currentPageArray
+            ? currentPageArray.map((m, idx) => {
+                return (
+                  <Pagination.Item
+                    key={idx}
+                    onClick={() => {
+                      //페이지 api 불러오기
+                      setCurrentPage(m);
+                    }}
+                  >
+                    {m}
+                  </Pagination.Item>
+                );
+              })
+            : null}
+          <Pagination.Next
+            onClick={() => {
+              currentPN < totalSlicedPageArray.length - 1
+                ? setCurrentPN(currentPN + 1)
+                : setCurrentPN(currentPN);
+              setCurrentPageArray(totalSlicedPageArray[currentPN]);
+            }}
+          />
+          <Pagination.Last disabled />
+        </Pagination>
+      </div>
+    </>
   );
 }
 
