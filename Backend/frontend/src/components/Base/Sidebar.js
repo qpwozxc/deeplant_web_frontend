@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
@@ -29,69 +29,30 @@ import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
+import { red } from "@mui/material/colors";
 
-const mainListItems = (
-  <React.Fragment>
-    <ListItemButton component={Link} to="/Home">
-      <ListItemIcon>
-        <HomeIcon />
-      </ListItemIcon>
-      <Button>
-        <ListItemText primary="홈" />
-      </Button>
-    </ListItemButton>
-    <ListItemButton component={Link} to="/DataManage">
-      <ListItemIcon>
-        <DataThresholdingIcon />
-      </ListItemIcon>
-      <Button>
-        <ListItemText primary="데이터 관리" />
-      </Button>
-    </ListItemButton>
-    <ListItemButton component={Link} to="/stats">
-      <ListItemIcon>
-        <StackedLineChartIcon />
-      </ListItemIcon>
-      <Button>
-        <ListItemText primary="통계 조회" />
-      </Button>
-    </ListItemButton>
-    <ListItemButton component={Link} to="/UserManagement">
-      <ListItemIcon>
-        <GroupIcon />
-      </ListItemIcon>
-      <Button>
-        <ListItemText primary="사용자관리" />
-      </Button>
-    </ListItemButton>
-  </React.Fragment>
-);
-
-const secondaryListItems = (
-  <React.Fragment>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </React.Fragment>
-);
+const mainListItems = [
+  {
+    label: "홈",
+    icon: <HomeIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    path: "/Home",
+  },
+  {
+    label: "데이터 관리",
+    icon: <DataThresholdingIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    path: "/DataManage",
+  },
+  {
+    label: "통계 조회",
+    icon: <StackedLineChartIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    path: "/stats",
+  },
+  {
+    label: "사용자 관리",
+    icon: <GroupIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    path: "/UserManagement",
+  },
+];
 
 const drawerWidth = 240;
 const defaultTheme = createTheme();
@@ -108,6 +69,7 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
+    backgroundColor: "#e0e2e4",
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
@@ -116,7 +78,7 @@ const Drawer = styled(MuiDrawer, {
       }),
       width: theme.spacing(7),
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
+        width: theme.spacing(8.3),
       },
     }),
   },
@@ -130,6 +92,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  backgroundColor: "#cfe0e8",
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -142,11 +105,12 @@ const AppBar = styled(MuiAppBar, {
 
 function Sidebar() {
   const [open, setOpen] = React.useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const navigate = useNavigate();
 
   const logout = async () => {
     try {
@@ -156,13 +120,12 @@ function Sidebar() {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {}, [location]);
+
   return (
     <ThemeProvider theme={defaultTheme}>
-      <AppBar
-        position="absolute"
-        open={open}
-        sx={{ backgroundColor: "#cfe0e8" }}
-      >
+      <AppBar position="absolute" open={open}>
         <Toolbar
           sx={{
             pr: "24px", // keep right padding when drawer closed
@@ -218,9 +181,22 @@ function Sidebar() {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {mainListItems}
-          <Divider sx={{ my: 1 }} />
-          {secondaryListItems}
+          {mainListItems.map((item) => (
+            <ListItemButton
+              key={item.label}
+              component={Link}
+              to={item.path}
+              selected={location.pathname === item.path}
+              sx={{
+                marginBottom: 1, // 상하 간격을 10px로 설정
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <Button>
+                <ListItemText primary={item.label} />
+              </Button>
+            </ListItemButton>
+          ))}
         </List>
       </Drawer>
     </ThemeProvider>

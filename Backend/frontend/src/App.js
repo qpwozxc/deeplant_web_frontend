@@ -90,7 +90,6 @@ function App() {
                           alignItems: "center",
                           justifyContent: "center",
                           flexDirection: "column",
-                          marginTop: 8,
                         }}
                       >
                         {route.component}

@@ -46,16 +46,7 @@ export function DataLoad() {
     setItems([json]);
     setIsLoaded(true);
 
-    const getData = async () => {
-      const json = await (
-        await fetch(`http://localhost:8080/meat?id=${id}`)
-      ).json();
-      console.log("connected!!");
-      console.log(json);
-      setItems([json]);
-      setIsLoaded(true);
-
-      /*const response = await (fetch('/meat').catch(handleError));
+    /*const response = await (fetch('/meat').catch(handleError));
         if (response.ok){
             const json = await(response).json();
             setItems(json);
@@ -66,7 +57,7 @@ export function DataLoad() {
             setError();
             return Promise.reject(response);
         }*/
-      /*
+    /*
         await fetch(
             'http://localhost:8080/meat'
             //`https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year`
@@ -93,78 +84,72 @@ export function DataLoad() {
           setError(error);
         });
         */
-    };
-    useEffect(() => {
-      //getData();
-      console.log("get data");
-    }, []);
-
-    useEffect(() => {
-      setItems(samples);
-      setIsLoaded(true);
-    }, []);
-
-    useEffect(() => {
-      setItems(samples);
-      setIsLoaded(true);
-    }, []);
-
-    //api json변환
-    const convertToApiData = (
-      butcheryPlaceNm,
-      butcheryYmd,
-      farmAddr,
-      gradeNm,
-      l_division,
-      s_division,
-      species,
-      traceNumber
-    ) => {
-      const apiData = {
-        butcheryPlaceNm: butcheryPlaceNm,
-        butcheryYmd: butcheryYmd,
-        farmAddr: farmAddr,
-        gradeNm: gradeNm,
-        l_division: l_division,
-        s_division: s_division,
-        species: species,
-        traceNumber: traceNumber,
-      };
-      return apiData;
-    };
-
-    if (error) {
-      console.log("error!");
-      return <>{error.message}</>;
-    }
-    if (!isLoaded) {
-      console.log("null data");
-      return null;
-    }
-    const apiData = convertToApiData(
-      sample.butcheryPlaceNm,
-      sample.butcheryYmd,
-      sample.farmAddr,
-      sample.gradeNm,
-      sample.l_division,
-      sample.s_division,
-      sample.species,
-      sample.traceNumber
-    );
-    const data = {
-      id: sample.id,
-      email: sample.email,
-      deepAging: sample.deepAging,
-      fresh_data: sample.fresh,
-      heated_data: sample.heated,
-      lab_data: sample.lab_data,
-      saveTime: sample.saveTime,
-      tongue_data: sample.tongue,
-      api_data: apiData,
-    };
-    console.log("data", data);
-    return data;
   };
+  useEffect(() => {
+    //getData();
+    console.log("get data");
+  }, []);
+
+  useEffect(() => {
+    setItems(samples);
+    setIsLoaded(true);
+  }, []);
+
+  //api json변환
+  const convertToApiData = (
+    butcheryPlaceNm,
+    butcheryYmd,
+    farmAddr,
+    gradeNm,
+    l_division,
+    s_division,
+    species,
+    traceNumber
+  ) => {
+    const apiData = {
+      butcheryPlaceNm: butcheryPlaceNm,
+      butcheryYmd: butcheryYmd,
+      farmAddr: farmAddr,
+      gradeNm: gradeNm,
+      l_division: l_division,
+      s_division: s_division,
+      species: species,
+      traceNumber: traceNumber,
+    };
+    return apiData;
+  };
+
+  if (error) {
+    console.log("error!");
+    return <>{error.message}</>;
+  }
+  if (!isLoaded) {
+    console.log("null data");
+    return null;
+  }
+  const apiData = convertToApiData(
+    sample.butcheryPlaceNm,
+    sample.butcheryYmd,
+    sample.farmAddr,
+    sample.gradeNm,
+    sample.l_division,
+    sample.s_division,
+    sample.species,
+    sample.traceNumber
+  );
+  const data = {
+    id: sample.id,
+    email: sample.email,
+    deepAging: sample.deepAging,
+    fresh_data: sample.fresh,
+    heated_data: sample.heated,
+    lab_data: sample.lab_data,
+    saveTime: sample.saveTime,
+    tongue_data: sample.tongue,
+    api_data: apiData,
+  };
+  console.log("data", data);
+  return data;
 }
 
 //data 받는 쪽에서 props 검사

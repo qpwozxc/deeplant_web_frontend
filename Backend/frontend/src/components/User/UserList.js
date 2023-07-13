@@ -38,11 +38,11 @@ function UserList() {
   const users1CollectionRef = collection(db, "users_1");
   const users2CollectionRef = collection(db, "users_2");
   const columns = [
-    { field: "name", headerName: "이름", width: 150, editable: false },
+    { field: "name", headerName: "이름", width: 130, editable: false },
     { field: "id", headerName: "아이디", width: 200, editable: false },
-    { field: "user", headerName: "권한", width: 100, editable: true },
-    { field: "company", headerName: "회사", width: 100, editable: false },
-    { field: "position", headerName: "직책", width: 100, editable: false },
+    { field: "user", headerName: "권한", width: 120, editable: true },
+    { field: "company", headerName: "회사", width: 120, editable: false },
+    { field: "position", headerName: "직책", width: 120, editable: false },
     {
       field: "lastLogin",
       headerName: "최근 로그인",
@@ -52,7 +52,7 @@ function UserList() {
     {
       field: "manage",
       headerName: "관리",
-      width: 150,
+      width: 90,
       editable: false,
       renderCell: (params) => (
         <Button variant="success" onClick={() => handleEditShow(params.row)}>
