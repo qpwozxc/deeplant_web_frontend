@@ -6,9 +6,9 @@ import StatsTabs from "../components/Stats/StatsTabs";
 function Stats() {
   return (
     <div style={{ display: "flex", width: "100%" }}>
-      <div style={{ paddingTop: "80px", width: "100%" }}>
+      <div style={{ marginTop: "40px", width: "100%" }}>
         <SearchFilter />
-        <StatsTabs />
+        <StatsTabs/>
       </div>
     </div>
   );
