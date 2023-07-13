@@ -1,6 +1,5 @@
 import {useState, useEffect} from "react"
 import { useParams } from 'react-router-dom';
-import Search from "./Search";
 
 //관리번호에 대한 고기 정보 api에서 가져와서 data edit으로 넘겨주기
 

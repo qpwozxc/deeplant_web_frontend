@@ -5,8 +5,6 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import Sidebar from "../components/Base/Sidebar";
-import Base from "../components/Base/BaseCmp";
 import { Box, Typography} from '@mui/material';
 import { DataLoad } from "../components/Meat/SingleDataLoad";
 import PropTypes from "prop-types";
@@ -121,8 +119,6 @@ const DataEdit=()=>{
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Base />
       <div>
         <Typography variant="h4" style={{ paddingTop: "70px" }}>
           Edit Meat Datas
@@ -154,9 +150,9 @@ const DataEdit=()=>{
             </Card.Body>
           </Card>
 
-            <div style={{margin:'0px 20px'}}>
-                <Tabs defaultActiveKey="ID" id="uncontrolled-tab-example" className="mb-3">
-                <Tab eventKey="ID" title="ID">
+            <div style={{margin:'0px 20px', backgroundColor:'white'}}>
+                <Tabs defaultActiveKey="ID" id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white'}}>
+                <Tab eventKey="ID" title="ID" style={{backgroundColor:'white'}}>
                     <div class="container">
                         <div class="row">
                         <div class="col" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>관리번호</div>
@@ -175,8 +171,8 @@ const DataEdit=()=>{
                 {
                 tabFields.map((t,index) =>{
                     return(
-                        <Tab eventKey={jsonFields[index]} title={tabTitles[index]}>
-                        <div key={index} class="container">
+                        <Tab eventKey={jsonFields[index]} title={tabTitles[index]} style={{backgroundColor:'white'}}>
+                        <div key={index} class="container"  >
                         {
                         t.map((f, idx)=>{
                         return(
@@ -188,32 +184,6 @@ const DataEdit=()=>{
                                     <input  key={index+'-'+idx+'input'} name={f} value={inputText[f]} placeholder={datas[index]===null?"null":datas[index][f]} onChange={onChangeInput}/>:
                                     inputText[f] ? inputText[f] : "null"
                                 }
-                            </div>
-                            <div
-                              key={index + "-" + idx + "col2"}
-                              class="col-7"
-                              style={{
-                                height: "30px",
-                                borderBottom: "0.8px solid #e0e0e0",
-                              }}
-                            >
-                              {edited ? (
-                                <input
-                                  key={index + "-" + idx + "input"}
-                                  name={f}
-                                  value={inputText[f]}
-                                  placeholder={
-                                    datas[index] === null
-                                      ? "null"
-                                      : datas[index][f]
-                                  }
-                                  onChange={onChangeInput}
-                                />
-                              ) : inputText[f] ? (
-                                inputText[f]
-                              ) : (
-                                "null"
-                              )}
                             </div>
                           </div>
                         );
