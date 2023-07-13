@@ -5,56 +5,37 @@ import ImageListItem from "@mui/material/ImageListItem";
 
 export default function Profile() {
   return (
-    <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          marginTop: 8,
-        }}
-      >
-        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-          {itemData.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div style={{ marginRight: "20px" }}>
-            <div>경기도 고양시 덕양구 무원로 36번길 58, B1</div>
-            <div>58 Muwon-ro36beon-gil #B1</div>
-            <div>Deogyang-gu, Goyang-si, Gyeonggi-do</div>
-            <div>Republic of Korea</div>
-            <div>CEO 김철범</div>
-            <div>BUSINESS NO. 315-87-01386</div>
-          </div>
-
-          <div>
-            <div>E. info@deeplant.com</div>
-            <div>T. +82-31-994-2665</div>
-            <div>F. +82-2-6280-2665</div>
-            <div>© 2022 DEEPLANT all rights reserved</div>
-          </div>
+    <>
+      <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+        {itemData.map((item) => (
+          <ImageListItem key={item.img}>
+            <img
+              src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+              srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+              alt={item.title}
+              loading="lazy"
+            />
+          </ImageListItem>
+        ))}
+      </ImageList>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ marginRight: "20px" }}>
+          <div>경기도 고양시 덕양구 무원로 36번길 58, B1</div>
+          <div>58 Muwon-ro36beon-gil #B1</div>
+          <div>Deogyang-gu, Goyang-si, Gyeonggi-do</div>
+          <div>Republic of Korea</div>
+          <div>CEO 김철범</div>
+          <div>BUSINESS NO. 315-87-01386</div>
         </div>
-      </Box>
-    </Box>
+
+        <div>
+          <div>E. info@deeplant.com</div>
+          <div>T. +82-31-994-2665</div>
+          <div>F. +82-2-6280-2665</div>
+          <div>© 2022 DEEPLANT all rights reserved</div>
+        </div>
+      </div>
+    </>
   );
 }
 

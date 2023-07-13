@@ -75,69 +75,47 @@ function Home() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
-        <Sidebar />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 4,
-          }}
-        >
-          <Container maxWidth="md">
-            <Grid container spacing={5}>
-              {cards.map((card) => (
-                <Grid item xs={12} sm={4} md={4} lg={4} key={card}>
-                  <Box
-                    sx={{
-                      maxWidth: 300,
-                      margin: "0 auto",
-                      border: "1px solid #e0e0e0",
-                      borderRadius: "4px",
-                      overflow: "hidden",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <CardActionArea onClick={() => handleCardClick(card.link)}>
-                      <CardMedia
-                        sx={{
-                          ...card.imageSize,
-                          margin: "0 auto",
-                        }}
-                        image={card.image}
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {card.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {card.description}
-                        </Typography>
-                      </CardContent>
-                      {/* <CardActions>
+    <Container maxWidth="md">
+      <Grid container spacing={5}>
+        {cards.map((card) => (
+          <Grid item xs={12} sm={4} md={4} lg={4} key={card}>
+            <Box
+              sx={{
+                maxWidth: 300,
+                margin: "0 auto",
+                border: "1px solid #e0e0e0",
+                borderRadius: "4px",
+                overflow: "hidden",
+                backgroundColor: "white",
+              }}
+            >
+              <CardActionArea onClick={() => handleCardClick(card.link)}>
+                <CardMedia
+                  sx={{
+                    ...card.imageSize,
+                    margin: "0 auto",
+                  }}
+                  image={card.image}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {card.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {card.description}
+                  </Typography>
+                </CardContent>
+                {/* <CardActions>
                       <Typography variant="body2" color="green">
                         {card.sub_description}
                       </Typography>
                     </CardActions> */}
-                    </CardActionArea>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </Box>
-      </Box>
-    </ThemeProvider>
+              </CardActionArea>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 }
 

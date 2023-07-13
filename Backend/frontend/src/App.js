@@ -10,6 +10,13 @@ import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import UserManagement from "./routes/UserManagement";
 
+import Box from "@mui/material/Box";
+import Sidebar from "./components/Base/Sidebar";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import BackGroundImage from "./src_assets/BackGround.jpg";
+const defaultTheme = createTheme();
+
 function App() {
   const routes = [
     {
@@ -66,7 +73,37 @@ function App() {
                 <Helmet>
                   <title>{route.title}</title>
                 </Helmet>
-                {route.component}
+                <ThemeProvider theme={defaultTheme}>
+                  {route.path === "/" ? (
+                    route.component
+                  ) : (
+                    <Box sx={{ display: "flex" }}>
+                      <Sidebar />
+                      <Box
+                        component="main"
+                        sx={{
+                          backgroundImage: `url(${BackGroundImage})`,
+                          backgroundSize: "cover",
+                          backgroundRepeat: "no-repeat",
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === "light"
+                              ? theme.palette.grey[100]
+                              : theme.palette.grey[900],
+                          flexGrow: 1,
+                          height: "100vh",
+                          overflow: "auto",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexDirection: "column",
+                          marginTop: 3,
+                        }}
+                      >
+                        {route.component}
+                      </Box>
+                    </Box>
+                  )}
+                </ThemeProvider>
               </>
             }
           />
