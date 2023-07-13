@@ -35,12 +35,7 @@ const DataEdit=(props)=>{
 
     //input text (that handles multiple inputs with same Handle function)
     const [inputText, setInput] = useState({});
-    /**
-     *  flavor:"",juiciness:"",tenderness:"",umami:"",palability:"",marbling:"",color:"",texture:"",surfaceMoisture:"",total:"",
-        sourness:"",color:"",texture:"",surfaceMoisture:"",total:"",sourness:"",bitterness:"",umami:"",richness:"",
-        L:"",a:"",b:"",DL:"",CL:"",RW:"",ph:"", WBSF:"", cardepsin_activity:"",MFI:"",traceNumber:"",species:"",
-        l_division:"",s_division:"",gradeNm:"",farmAddr:"",butcheryPlaceNm:"",butcheryYmd:"",
-     */
+
     // multiple input에 대해서 input field를 value prop으로 만들기
     useEffect(()=>{
         tabFields.map((t,index)=>{
@@ -63,7 +58,6 @@ const DataEdit=(props)=>{
 
     // 버튼 토글을 위한 수정 여부
     const [edited, setIsEdited] = useState(false);
-    //const editInputRef = useRef(null);
 
     // 수정 버튼, 클릭 시 text field가 input field로 변환
     const onClickEditBtn = ()=>{
@@ -174,8 +168,8 @@ const DataEdit=(props)=>{
                         t.map((f, idx)=>{
                         return(
                             <div key={index+'-'+idx} class="row">
-                            <div key={index+'-'+idx+'col1'} class="col-5" style={{borderRight: '1px solid rgb(174, 168, 168)'}}>{f}</div>
-                            <div key={index+'-'+idx+'col2'} class="col-7">
+                            <div key={index+'-'+idx+'col1'} class="col-5" style={{backgroundColor:'#eeeeee',height:'30px',borderRight: '1px solid rgb(174, 168, 168)', borderBottom:'1px solid #fafafa'}}>{f}</div>
+                            <div key={index+'-'+idx+'col2'} class="col-7" style={{height:'30px', borderBottom:'0.8px solid #e0e0e0'}}>
                                 {
                                     
                                     edited?

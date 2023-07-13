@@ -1,9 +1,10 @@
 import {useState, useEffect} from "react"
 import { useParams } from 'react-router-dom';
-import Meat from "./Meat";
+import Meat from "./dataFetch";
 import Search from "./Search";
 import styles from "./SingleDataLoad.module.css"
 
+//관리번호에 대한 고기 정보 api에서 가져와서 data edit으로 넘겨주기
 
 function DataLoad(){
     const sample = {
