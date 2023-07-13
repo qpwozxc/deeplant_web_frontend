@@ -39,8 +39,13 @@ const DataEdit=()=>{
     //이미지 파일
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    const fileReader = new fileReader();
-    
+    const styles = {
+        img:{
+            width:'200px'
+        }
+      };
+    const [previewImage, setPreviewImage] = useState(meatImg);
+
     //input text (that handles multiple inputs with same Handle function)
     const [inputText, setInput] = useState({});
 
@@ -78,9 +83,23 @@ const DataEdit=()=>{
     return localStorage.getItem("userEmail");
   };
 
+  //변경한 이미지 파일 화면에 나타내기  
+  useEffect(() => {
+    if (imgFile) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        setPreviewImage(reader.result);
+      };
+
+      reader.readAsDataURL(imgFile);
+    }
+  }, [imgFile]);
+
   //api respoonse data로 보낼 json data 만들기
   const onClickSubmitBtn = () => {
     setIsEdited(false);
+        
     // 수정 시간
     const date = new Date();
     //데이터 업데이트
@@ -129,7 +148,7 @@ const DataEdit=()=>{
         <Search/>
         <div style={{width: "",padding: "20px 50px",paddingBottom: "0px",display: "flex",justifyContent: "space-between", backgroundColor:'white', borderTopLeftRadius:'10px' , borderTopRightRadius:'10px'}}>
           <Card style={{ width: "20rem"}}>
-            <Card.Img variant="top" src={meatImg} />
+            <Card.Img variant="top" src={previewImage} />
             <Card.Body>
               <Card.Text>
                 <ListGroup variant="flush">
@@ -137,11 +156,19 @@ const DataEdit=()=>{
                   <ListGroup.Item>email: {email}</ListGroup.Item>
                   <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>       
                   <ListGroup.Item>
-                    <button type="button" class="btn btn-success" style={{height:"50px"}}>
+                    <button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>
+                        {}
+                    }>
                     {
                     edited?
                     <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
-                    onChange={(e) => {setImgFile(e.target.files[0]); console.log(imgFile)}} style={{ marginRight: "20px" }}/>  
+                    onChange={(e) => {
+                        setImgFile(e.target.files[0]); 
+                        console.log('file set', imgFile);
+                        //setImg();
+                        
+                        
+                    }} style={{ marginRight: "20px" }}/>  
                     :
                     <span>이미지 업로드</span>
                     }
@@ -196,12 +223,6 @@ const DataEdit=()=>{
               })}
             </Tabs>         
             </div>
-            <div>
-                {imgFile
-                
-                
-                }
-                </div>
         </div>    
         <div style={{padding:"5px 10px",paddingTop:'0px',width:'100%' , display:'flex',justifyContent:'end', backgroundColor:'white', marginTop:'auto', borderBottomLeftRadius:'10px', borderBottomRightRadius:'10px'}}>
             { 

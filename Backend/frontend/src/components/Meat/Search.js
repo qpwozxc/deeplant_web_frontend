@@ -4,24 +4,14 @@ import {FaMagnifyingGlass} from "react-icons/fa6";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
-import {
-  Card,
-  InputAdornment,
-  OutlinedInput,
-  SvgIcon,
-  Typography,
-} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
+import {  Card ,IconButton,TextField} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
 
 function Search() {
   const [search, setSearch] = useState("");
@@ -68,13 +58,14 @@ function Search() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: "20px",
+        marginBottom: "10px",
+        marginTop:'70px',
         width: "500px",
         height: "80px",
       }}
     >
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel>검색</InputLabel>
+      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="sm" >
+       
         <Select value={value} onChange={handleChange} label="검색 설정">
           <MenuItem
             value="user_based"
@@ -93,7 +84,7 @@ function Search() {
       {isDate ? (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DatePicker"]} sx={{ mx: "auto" }}>
-            <DatePicker label="날짜를 선택하세요" />
+            <DatePicker label="날짜를 선택하세요" slotProps={{ textField: { size: 'small' } }} />
           </DemoContainer>
         </LocalizationProvider>
       ) : (
@@ -103,6 +94,7 @@ function Search() {
           label="사용자명을 입력하세요"
           placeholder="사용자명을 입력하세요"
           onChange={onChange}
+          size="small"
         />
       )}
       <IconButton>

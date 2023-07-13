@@ -8,7 +8,7 @@ const topic = [{label:"전체"},{label:"출생"} ,{label:"사육"} ,{label:"도�
 const tableTopic = [{label:"지역별/소의 성별 수"},{label:"지역별/소의 등급 수"} ]
 export default function SearchFilter() {
   return (
-    <div style={{display: 'flex', width:'100%', borderBottom:'1px solid grey'}} >
+    <div style={{marginTop:'70px',display: 'flex', width:'100%', borderBottom:'1px solid grey', backgroundColor:'white',  borderRadius:'5px', }} >
     <Autocomplete
       disablePortal
       id="combo-box-demo"

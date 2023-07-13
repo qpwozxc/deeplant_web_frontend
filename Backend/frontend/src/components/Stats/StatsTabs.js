@@ -1,9 +1,9 @@
 import { useState } from "react"
 import PropTypes from 'prop-types';
 import {Tabs, Tab, Box, Button,useTheme}from '@mui/material';
-import BarChart from './barChart';
-import PieChart from './pieChart';
-import AreaChart from './areaChart';
+import BarChart from './Charts/barChart';
+import PieChart from './Charts/pieChart';
+import AreaChart from './Charts/areaChart';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -15,9 +15,10 @@ function CustomTabPanel(props) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      style={{backgroundColor:'white'}}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3 }} >
           {children}
         </Box>
       )}
@@ -48,8 +49,8 @@ export default function StatsTabs() {
 
     
     return (
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ width: '70%', paddingTop:'10px' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' ,backgroundColor:'white'}}>
         <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary" aria-label="secondary tabs example">
           <Tab label="Item One"{...a11yProps(0)} />
           <Tab label="Item Two" {...a11yProps(1)}/>
