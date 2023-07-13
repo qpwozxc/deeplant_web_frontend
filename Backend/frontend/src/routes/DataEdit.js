@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useRef} from "react";
 import { useParams, useLocation } from "react-router-dom";
 import meatImg from "../src_assets/meat.jpeg";
 import Card from "react-bootstrap/Card";
@@ -7,6 +7,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Box, Typography} from '@mui/material';
 import { DataLoad } from "../components/Meat/SingleDataLoad";
+import Search from "../components/Meat/Search";
 import PropTypes from "prop-types";
 import "bootstrap/dist/css/bootstrap.css"; 
 const DataEdit=()=>{
@@ -35,8 +36,13 @@ const DataEdit=()=>{
     const jsonFields = ['heated', 'fresh', 'tongue', 'api', 'lab'];
     const jsonField = ['heatedmeat', 'freshmeat', 'tongue', 'api', 'lab'];
 
-  //input text (that handles multiple inputs with same Handle function)
-  const [inputText, setInput] = useState({});
+    //이미지 파일
+    const [imgFile, setImgFile] = useState(null);
+    const fileRef = useRef(null);
+    const fileReader = new fileReader();
+    
+    //input text (that handles multiple inputs with same Handle function)
+    const [inputText, setInput] = useState({});
 
     // multiple input에 대해서 input field를 value prop으로 만들기
     useEffect(()=>{
@@ -118,31 +124,27 @@ const DataEdit=()=>{
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex"}}>
       <div>
-        <Typography variant="h4" style={{ paddingTop: "70px" }}>
-          Edit Meat Datas
-        </Typography>
-        <div
-          style={{
-            width: "",
-            padding: "80px 60px",
-            paddingBottom: "0px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <Card style={{ width: "20rem" }}>
+        <Search/>
+        <div style={{width: "",padding: "20px 50px",paddingBottom: "0px",display: "flex",justifyContent: "space-between", backgroundColor:'white', borderTopLeftRadius:'10px' , borderTopRightRadius:'10px'}}>
+          <Card style={{ width: "20rem"}}>
             <Card.Img variant="top" src={meatImg} />
             <Card.Body>
               <Card.Text>
                 <ListGroup variant="flush">
                   <ListGroup.Item>관리번호: {id}</ListGroup.Item>
                   <ListGroup.Item>email: {email}</ListGroup.Item>
-                  <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>
+                  <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>       
                   <ListGroup.Item>
-                    <button type="button" class="btn btn-success">
-                      이미지 업로드
+                    <button type="button" class="btn btn-success" style={{height:"50px"}}>
+                    {
+                    edited?
+                    <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
+                    onChange={(e) => {setImgFile(e.target.files[0]); console.log(imgFile)}} style={{ marginRight: "20px" }}/>  
+                    :
+                    <span>이미지 업로드</span>
+                    }
                     </button>
                   </ListGroup.Item>
                 </ListGroup>
@@ -192,22 +194,24 @@ const DataEdit=()=>{
                   </Tab>
                 );
               })}
-            </Tabs>
-                       
+            </Tabs>         
             </div>
-            
-            </div>
-            <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
+            <div>
+                {imgFile
+                
+                
+                }
+                </div>
+        </div>    
+        <div style={{padding:"5px 10px",paddingTop:'0px',width:'100%' , display:'flex',justifyContent:'end', backgroundColor:'white', marginTop:'auto', borderBottomLeftRadius:'10px', borderBottomRightRadius:'10px'}}>
             { 
                 edited?
                 <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
                 <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
             }
             </div>
-           
-            </div>
-        
-        </Box>
+    </div>    
+    </Box>
     );
 }
 

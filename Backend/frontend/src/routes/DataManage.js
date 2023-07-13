@@ -2,16 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
-//import Button from '@mui/material/Button';
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
 import excelController from "../components/DataView/excelController";
 import { ExcelRenderer, OutTable } from "react-excel-renderer";
 import Papa from "papaparse";
-import Sidebar from "../components/Base/Sidebar";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import {
   Box,
   Button,
@@ -174,17 +171,8 @@ function DataManage() {
           class="mb-3"
           style={{ display: "flex", width: "70%", marginTop: "40px" }}
         >
-          <input
-            class="form-control"
-            accept=".csv,.xlsx,.xls"
-            type="file"
-            id="formFile"
-            ref={fileRef}
-            onChange={(e) => {
-              setExcelFile(e.target.files[0]);
-            }}
-            style={{ marginRight: "20px" }}
-          />
+          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
+            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ marginRight: "20px" }}/>
 
           <Button
             color="inherit"

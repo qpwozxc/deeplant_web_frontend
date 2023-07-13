@@ -1,10 +1,5 @@
-import { FaTrashCan } from "react-icons/fa6";
-import Button from '@mui/material/Button';
 import { useState, useEffect } from "react"
 import {Link as RouterLink} from "react-router-dom";
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import style from './DataList.module.css';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 // material-ui
