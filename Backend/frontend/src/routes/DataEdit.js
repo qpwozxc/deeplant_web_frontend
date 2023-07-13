@@ -10,9 +10,12 @@ import Sidebar from "../components/Base/Sidebar";
 import Base from "../components/Base/BaseCmp";
 import { Box, Typography} from '@mui/material';
 
+
 const DataEdit=(props)=>{
     // props 받아오기 
     const location = useLocation();
+    //현재 로그인한 유저 이메일
+    const [currentUser, setCurrUser] = useState("admin@admin.com");
     const { id, email, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = location.state.data;
     //관리번호 받아오기
     const {editId} = useParams();
@@ -67,37 +70,49 @@ const DataEdit=(props)=>{
         setIsEdited(true);
     }
     // 수정 완료 버튼, 클릭 시 수정된 data api로 전송 
-    const [heatedArr, setHeatedArr] =useState({});
-    const [respArr, setRespArr] = useState({});
+    const [reqJson, setReqJson] = useState({});
+    
+    const getCookieToken = () => {
+        return localStorage.getItem('userEmail');
+    }
 
     //api respoonse data로 보낼 json data 만들기
-    // 관리번호 추가!!!
     const onClickSubmitBtn=()=>{
         setIsEdited(false);
+        // 수정 시간 
+        const date = new Date();
         //데이터 업데이트 
-        jsonFields.map((j, index)=>{
-            //리셋
-            setHeatedArr(heatedArr=>{});
-            console.log('tab', tabFields[index]);
-            // tab별 response json 만들기
-            tabFields[index].forEach((f)=>(
-                setHeatedArr(heatedArr=>({
-                    ...heatedArr, 
-                    [f] : inputText[f]
-                }))
+        jsonFields.map((j, index)=>{            
+            // tab별 request json 만들기
+            let temp = [];
+            tabFields[index].map((f)=>(
+                temp.push({[f]:inputText[f]})
             ));
-            // 전부다 lab data field 로 나오는 문제
-            console.log('dataField', heatedArr);
-            // response에 한번에 정리
-            setRespArr(respArr=>({
-                ...respArr,
-                [j] : heatedArr
-            }))
+            
+            // temp array 를 json으로 바꾸기
+            let combinedJson = temp.reduce((acc, obj) => {
+                return { ...acc, ...obj };
+            }, {});
+
+            // request에 한번에 정리
+            setReqJson((reqJson)=>({
+                ...reqJson,
+                [j] : combinedJson,
+            }));
         })
-        
-        console.log("result json",respArr);
+        setReqJson((reqJson)=>({
+            ...reqJson,
+            ['id'] : id,
+            ['userId'] : currentUser,
+            ['createdAt'] : date,
+            ////임시 
+            ['freshmeat_seqno'] : 2,
+        }))
+
+        console.log("result json",reqJson); 
+        const res = JSON.stringify(reqJson);
         // api 전송 
-        console.log('input rerendered:', inputText)
+        console.log('input rerendered:', inputText);
     }
 
     // 수정한 값에 맞춰서 input field 값 수정 
@@ -133,7 +148,7 @@ const DataEdit=(props)=>{
             </Card>
 
             <div className={styles.meat_info_container} style={{margin:'0px 20px'}}>
-                <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+                <Tabs defaultActiveKey="ID" id="uncontrolled-tab-example" className="mb-3">
                 <Tab eventKey="ID" title="ID">
                     <div class="container">
                         <div class="row">
@@ -170,8 +185,7 @@ const DataEdit=(props)=>{
                             </div>
                             </div>
                         );
-                        })
-                        }
+                        })}
                         </div>
                     </Tab>
                     );

@@ -2,7 +2,6 @@ import {useState, useEffect} from "react"
 import { useParams } from 'react-router-dom';
 import Meat from "./Meat";
 import Search from "./Search";
-import SearchFilter from "./SearchFilter";
 import styles from "./SingleDataLoad.module.css"
 
 
@@ -133,7 +132,6 @@ useEffect(()=>{
         <div>
             <div className={`${styles.search_container}`}>
                 <Search/>
-                <SearchFilter/>
             </div>
             {
             isLoaded 
