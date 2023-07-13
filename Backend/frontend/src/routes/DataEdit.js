@@ -8,15 +8,20 @@ import Tabs from 'react-bootstrap/Tabs';
 import Sidebar from "../components/Base/Sidebar";
 import Base from "../components/Base/BaseCmp";
 import { Box, Typography} from '@mui/material';
-
-
-const DataEdit=(props)=>{
-    // props 받아오기 
-    const location = useLocation();
+import { DataLoad } from "../components/Meat/SingleDataLoad";
+import PropTypes from "prop-types";
+import "bootstrap/dist/css/bootstrap.css"; 
+const DataEdit=()=>{
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
-    const { id, email, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = location.state.data;
-    //관리번호 받아오기
+
+    //데이터 받아오기 
+    const resp = DataLoad();
+    console.log("resp",resp);
+
+    const { id, email, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = resp;
+
+    //로그인한 관리자의 관리번호 받아오기
     const {editId} = useParams();
     //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
     const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
@@ -52,7 +57,7 @@ const DataEdit=(props)=>{
                 }
             })
         })
-    },[])
+    },[]);
 
 
     // 버튼 토글을 위한 수정 여부
@@ -170,7 +175,6 @@ const DataEdit=(props)=>{
                             <div key={index+'-'+idx+'col1'} class="col-5" style={{backgroundColor:'#eeeeee',height:'30px',borderRight: '1px solid rgb(174, 168, 168)', borderBottom:'1px solid #fafafa'}}>{f}</div>
                             <div key={index+'-'+idx+'col2'} class="col-7" style={{height:'30px', borderBottom:'0.8px solid #e0e0e0'}}>
                                 {
-                                    
                                     edited?
                                     <input  key={index+'-'+idx+'input'} name={f} value={inputText[f]} placeholder={datas[index]===null?"null":datas[index][f]} onChange={onChangeInput}/>:
                                     inputText[f] ? inputText[f] : "null"
@@ -189,14 +193,14 @@ const DataEdit=(props)=>{
                        
             </div>
             
-        </div>
-        <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
-           { 
-            edited?
-            <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
-            <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
-           }
-        </div>
+            </div>
+            <div style={{width:'100%' , display:'flex', justifyContent:'end'}}>
+            { 
+                edited?
+                <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
+                <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
+            }
+            </div>
            
             </div>
         
@@ -205,3 +209,61 @@ const DataEdit=(props)=>{
 }
 
 export default DataEdit;
+
+/***
+ * 
+    resp.propTypes={
+    id: PropTypes.string.isRequired,
+    deepAging: PropTypes.arrayOf(PropTypes.string), 
+    email: PropTypes.string.isRequired, 
+
+    fresh: PropTypes.shape({
+        marbling: PropTypes.number,
+        color:  PropTypes.number,
+        texture:  PropTypes.number,
+        surfaceMoisture: PropTypes.number,
+        total: PropTypes.number,
+      }), 
+
+    heated: PropTypes.shape({
+        flavor: PropTypes.number,
+        juiciness:  PropTypes.number,
+        tenderness:  PropTypes.number,
+        umami: PropTypes.number,
+        palability: PropTypes.number,
+      }), 
+    lab_data: PropTypes.shape({
+        L: PropTypes.number,
+        a:  PropTypes.number,
+        b:  PropTypes.number,
+        DL: PropTypes.number,
+        CL: PropTypes.number,
+        RW: PropTypes.number,
+        ph:  PropTypes.number,
+        WBSF:  PropTypes.number,
+        Cardepsin_activity: PropTypes.number,
+        MFI: PropTypes.number,
+      }), 
+
+    saveTime: PropTypes.string.isRequired, 
+
+    tongue: PropTypes.shape({
+        sourness: PropTypes.number,
+        bitterness:  PropTypes.number,
+        umami: PropTypes.number,
+        richness: PropTypes.number,
+      }), 
+    
+    apiData: PropTypes.shape({
+      butcheryPlaceNm: PropTypes.string.isRequired,
+      butcheryYmd: PropTypes.string.isRequired, 
+      farmAddr: PropTypes.string.isRequired, 
+      gradeNm: PropTypes.string.isRequired,
+      l_division: PropTypes.string.isRequired,
+      s_division: PropTypes.string.isRequired, 
+      species: PropTypes.string.isRequired, 
+      traceNumber: PropTypes.string.isRequired,
+    })
+}
+ * 
+ */
