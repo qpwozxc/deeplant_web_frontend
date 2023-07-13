@@ -42,7 +42,3 @@ const TabBtns= ({
 }
 
 export default TabBtns;
-
-/*
-
-*/

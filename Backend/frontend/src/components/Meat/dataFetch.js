@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
-import { useEffect, useState,useRef } from "react";
-import {Link,useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate } from "react-router-dom";
 import {FaRegPenToSquare} from "react-icons/fa6";
 import MeatTab from "./MeatTab";
 import meatImg from "../../src_assets/meat.jpeg"
-import Button from '@mui/material/Button';
-import styles from "./Meat.module.css";
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 // 고기 데이터를 받아서 조회/수정 
@@ -25,7 +23,7 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
     };
 
     return (
-    <div className={styles.meat}>
+    <div style={{ border: '1px solid gray',display: 'flex',padding: '10px 150px',justifyContent: 'space-around' }}>
         <Card style={{ width: '30rem' }}>
       <Card.Img variant="top" src={meatImg} />
       <Card.Body>
@@ -45,7 +43,7 @@ function Meat({id,deepAging, email, fresh, heated, lab_data , saveTime, tongue, 
           tongue={tongue}
           apiData = {apiData}
         />
-        <div className={styles.button_wrapper}>
+        <div style={{display: 'flex',alignItems: 'end'}}>
         <button type="button" class="btn btn-outline-success" style={{width: '100px'}} onClick={()=>{navigate(`/dataEdit/${id}`, {state: { data}})}}>
           수정
           <FaRegPenToSquare/>
