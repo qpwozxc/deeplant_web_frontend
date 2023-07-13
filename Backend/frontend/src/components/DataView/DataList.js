@@ -150,7 +150,7 @@ function DataList({meatList}){
                     
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                    <Link color="secondary" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
+                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
                         {content}
                     </Link>
                     </TableCell>
@@ -158,7 +158,7 @@ function DataList({meatList}){
                         <OrderStatus status={(index==3||index==5)?2: 1} />
                     </TableCell>
                     <TableCell align="right" style={{padding:"5px"}}>
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" color="primary">
                             <DeleteIcon />
                         </IconButton>
                     </TableCell>
