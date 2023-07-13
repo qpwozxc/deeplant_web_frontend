@@ -1,6 +1,5 @@
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState} from "react";
 import { useParams,useLocation } from "react-router-dom";
-import styles from "../components/Meat/Meat.module.css"
 import meatImg from "../src_assets/meat.jpeg"
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -123,7 +122,7 @@ const DataEdit=(props)=>{
             <Typography variant="h4"  style={{paddingTop: '70px'}}>
                Edit Meat Datas
             </Typography>
-            <div className={styles.meat} style={{width:'',padding: '80px 60px', paddingBottom:'0px' ,display:'flex',justifyContent:'space-between'}}>
+            <div style={{width:'',padding: '80px 60px', paddingBottom:'0px' ,display:'flex',justifyContent:'space-between'}}>
         
             <Card style={{ width: '20rem' }}>
             <Card.Img variant="top" src={meatImg} />
@@ -141,7 +140,7 @@ const DataEdit=(props)=>{
             </Card.Body>
             </Card>
 
-            <div className={styles.meat_info_container} style={{margin:'0px 20px'}}>
+            <div style={{margin:'0px 20px'}}>
                 <Tabs defaultActiveKey="ID" id="uncontrolled-tab-example" className="mb-3">
                 <Tab eventKey="ID" title="ID">
                     <div class="container">

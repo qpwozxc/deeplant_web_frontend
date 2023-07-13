@@ -2,7 +2,6 @@ import {useState, useEffect} from "react"
 import { useParams } from 'react-router-dom';
 import Meat from "./dataFetch";
 import Search from "./Search";
-import styles from "./SingleDataLoad.module.css"
 
 //관리번호에 대한 고기 정보 api에서 가져와서 data edit으로 넘겨주기
 
@@ -34,6 +33,7 @@ function DataLoad(){
     //관리번호 받아오기 (url 이름과 변수명 통일 )
     const {id} = useParams();
     console.log('id from param', id);
+    
     const getData = async() => {
         
         const json = await(
@@ -131,12 +131,12 @@ useEffect(()=>{
    
     return (
         <div>
-            <div className={`${styles.search_container}`}>
+            <div style={{padding: '10px 160px'}}>
                 <Search/>
             </div>
             {
             isLoaded 
-            ? (<div className={styles.meat_container}> 
+            ? (<div style={{  alignItems: 'center',justifyContent: 'center',backgroundColor: 'white'}}> 
                 {items.map((item) =>
                 // API관련 데이터 JSON으로 변환
                 {const apiData = convertToApiData(

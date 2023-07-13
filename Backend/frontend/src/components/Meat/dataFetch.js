@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
-import { useEffect, useState,useRef } from "react";
-import {Link,useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate } from "react-router-dom";
 import {FaRegPenToSquare} from "react-icons/fa6";
 import MeatTab from "./MeatTab";
 import meatImg from "../../src_assets/meat.jpeg"
-import Button from '@mui/material/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 // 고기 데이터를 받아서 조회/수정 
