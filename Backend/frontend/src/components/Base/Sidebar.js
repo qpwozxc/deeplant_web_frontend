@@ -183,7 +183,7 @@ function Sidebar() {
         <Divider />
         <List component="nav">
           {mainListItems.map((item) => (
-            <Tooltip title={item.label} placement="right">
+            <Tooltip title={item.label} placement="right" arrow>
               <ListItemButton
                 key={item.label}
                 component={Link}
