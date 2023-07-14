@@ -130,7 +130,7 @@ const DataEdit=()=>{
 
     console.log("result json", reqJson);
     const res = JSON.stringify(reqJson);
-    // api 전송
+    // api 전송(res)
     console.log("input rerendered:", inputText);
   };
 
@@ -160,11 +160,7 @@ const DataEdit=()=>{
                     {
                     edited?
                     <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
-                    onChange={(e) => {
-                        setImgFile(e.target.files[0]); 
-                        console.log('file set', imgFile);
-                        //setImg();
-                    }} style={{ marginRight: "20px" }}/>  
+                    onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px" }}/>  
                     :
                     <span>이미지 업로드</span>
                     }

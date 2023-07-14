@@ -4,7 +4,8 @@ import {Tabs, Tab, Box, Button,useTheme}from '@mui/material';
 import BarChart from './Charts/barChart';
 import PieChart from './Charts/pieChart';
 import AreaChart from './Charts/areaChart';
-
+import { IoBarChart , IoPieChart} from "react-icons/io5";
+import { FaChartLine } from "react-icons/fa6";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -52,15 +53,15 @@ export default function StatsTabs() {
       <Box sx={{ width: '60%' ,paddingTop:'10px' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' ,backgroundColor:'white'}}>
         <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary" aria-label="secondary tabs example">
-          <Tab label="Item One"{...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)}/>
-          <Tab label="Item Three" {...a11yProps(2)}/>
+          <Tab label={<IoBarChart size="24"/>}{...a11yProps(0)} />
+          <Tab label={<IoPieChart size="24"/>} {...a11yProps(1)}/>
+          <Tab label={<FaChartLine size="24"/>} {...a11yProps(2)}/>
         </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <BarChart/>
         </CustomTabPanel>
-        
+
         <CustomTabPanel value={value} index={1}>
           <PieChart 
             title="지역별 소 도축 수"

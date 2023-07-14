@@ -10,12 +10,9 @@ function Stats() {
     <Box sx={{ width: "100%", display:'flex', justifyContent:'center' }}>
       <SearchFilter />
     </Box>
-    <Box>
+    <Box sx={{ width: "100%", display:'flex', justifyContent:'center' }}>
     <StatsTabs/>
-    </Box>
-      
-    
-
+    </Box>  
   </Box>
 
 </Container>
