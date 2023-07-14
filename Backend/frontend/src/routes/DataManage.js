@@ -141,7 +141,52 @@ function DataManage() {
   };
   return (
     <>
-      <Search />
+    <Box sx={{display:'flex'}}>
+    <Search />
+      <div
+        className=""
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: "0px",
+          marginTop:'70px',
+          alignItems:'end',
+        }}
+      >
+        <div
+          class="mb-3"
+          style={{ display: "flex", width: "70%", marginTop: "40px" }}
+        >
+        <Box sx={{ display: 'flex', gap: 3}}>
+          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
+            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ }}/>
+
+          <Button color="info" startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowUpOnSquareIcon />
+              </SvgIcon>
+            } 
+            onClick={() => {handleExcelFile(excelFile);}} style={{ marginRight:'20px', }}>
+            Import
+          </Button>
+          <Button
+            color="primary"
+            startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowDownOnSquareIcon />
+              </SvgIcon>
+            }
+            style={{}}
+          >
+            Export
+          </Button>
+          </Box>
+        </div>
+       
+      </div>
+
+    </Box>
+      
       <div
         style={{
           textAlign: "center",
@@ -159,53 +204,8 @@ function DataManage() {
         )}
       </div>
 
-      <div
-        className=""
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          margin: "0px 40px",
-        }}
-      >
-        <div
-          class="mb-3"
-          style={{ display: "flex", width: "70%", marginTop: "40px" }}
-        >
-          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
-            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ marginRight: "20px" }}/>
-
-          <Button
-            color="inherit"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowUpOnSquareIcon />
-              </SvgIcon>
-            }
-            onClick={() => {
-              handleExcelFile(excelFile);
-            }}
-            style={{ margin: "0px 10px" }}
-          >
-            Import
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowDownOnSquareIcon />
-              </SvgIcon>
-            }
-            style={{ margin: "0px 10px" }}
-          >
-            Export
-          </Button>
-        </div>
-      </div>
-
-      <div
-        className="pagination-bar"
-        style={{ display: "flex", width: "100%", justifyContent: "center" }}
-      >
+      
+        <Box sx={{display:'flex', marginTop:'20px'}}>
         <Pagination>
           <Pagination.First />
           <Pagination.Prev
@@ -241,7 +241,8 @@ function DataManage() {
           />
           <Pagination.Last disabled />
         </Pagination>
-      </div>
+        </Box>
+     
     </>
   );
 }

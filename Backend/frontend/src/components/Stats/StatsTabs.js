@@ -49,7 +49,7 @@ export default function StatsTabs() {
 
     
     return (
-      <Box sx={{ width: '70%', paddingTop:'10px' }}>
+      <Box sx={{ width: '60%' ,paddingTop:'10px' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' ,backgroundColor:'white'}}>
         <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary" aria-label="secondary tabs example">
           <Tab label="Item One"{...a11yProps(0)} />
@@ -60,23 +60,33 @@ export default function StatsTabs() {
         <CustomTabPanel value={value} index={0}>
           <BarChart/>
         </CustomTabPanel>
+        
         <CustomTabPanel value={value} index={1}>
           <PieChart 
-            title="Current Visits"
+            title="지역별 소 도축 수"
             chartData={[
-              { label: 'America', value: 4344 },
-              { label: 'Asia', value: 5435 },
-              { label: 'Europe', value: 1443 },
-              { label: 'Africa', value: 4443 },
+              { label: '서울', value: 39 },
+              { label: '부산', value: 1763 },
+              { label: '대구', value: 13039 },
+              { label: '인천', value: 22324 },
+              { label: '광주', value: 4471 },
+              { label: '대전', value: 4795 },
+              { label: '울산', value: 39843 },
+              { label: '세종', value: 30549 },
             ]}
             chartColors={[
               theme.palette.primary.main,
               theme.palette.info.main,
               theme.palette.warning.main,
               theme.palette.error.main,
+              theme.palette.common.main,
+              theme.palette.augmentColor.main,
+              theme.palette.secondary.main,
+              theme.palette.grey.main,
             ]}
           />
         </CustomTabPanel>
+
         <CustomTabPanel value={value} index={2}>
         <AreaChart
               title="Website Visits"

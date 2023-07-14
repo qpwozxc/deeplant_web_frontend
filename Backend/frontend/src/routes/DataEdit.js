@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import { Box, Typography} from '@mui/material';
+import { Box, Typography, Button} from '@mui/material';
 import { DataLoad } from "../components/Meat/SingleDataLoad";
 import Search from "../components/Meat/Search";
 import PropTypes from "prop-types";
@@ -156,9 +156,7 @@ const DataEdit=()=>{
                   <ListGroup.Item>email: {email}</ListGroup.Item>
                   <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>       
                   <ListGroup.Item>
-                    <button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>
-                        {}
-                    }>
+                  <Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{}}>
                     {
                     edited?
                     <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
@@ -166,13 +164,12 @@ const DataEdit=()=>{
                         setImgFile(e.target.files[0]); 
                         console.log('file set', imgFile);
                         //setImg();
-                        
-                        
                     }} style={{ marginRight: "20px" }}/>  
                     :
                     <span>이미지 업로드</span>
                     }
-                    </button>
+                     
+                    </Button>
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Text>
@@ -228,7 +225,7 @@ const DataEdit=()=>{
             { 
                 edited?
                 <button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>:
-                <button type="button" class="btn btn-outline-success" onClick={onClickEditBtn}>수정</button>
+                <button type="button" class="btn btn-success" onClick={onClickEditBtn}>수정</button>
             }
             </div>
     </div>    

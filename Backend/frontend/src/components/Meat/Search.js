@@ -62,6 +62,7 @@ function Search() {
         marginTop:'70px',
         width: "500px",
         height: "80px",
+        borderRadius:'10px'
       }}
     >
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="sm" >
