@@ -18,12 +18,54 @@ import {
 function DataManage() {
   const [isLoaded, setIsLoaded] = useState(true);
   const [meatList, setMeatList] = useState([
-    "1-2-3-4-5",
-    "000189843795-cattle-chuck-chuck",
-    "000189843795-pig-boston_shoulder-boston_shoulder",
-    "000189843795-pig-tenderloin-foreshank",
-    "000189843795-cattle-sirloin-ribeye_roll",
-    "000189843795-cattle-striploin-strip_loin",
+    {
+      id:"000189843795-cattle-chuck-chuck",
+      userName:"김수현",
+      userType:'1',
+      company:'deeplant1',
+      meatCreatedAt:"7/13/2023",
+      farmAddr :"강원도 원주시 호저면 매호리"
+    },
+    {
+      id:"000189843795-cattle-chuck-chuck",
+      userName:"김",
+      userType:'1',
+      company:'deeplant2',
+      meatCreatedAt:"7/13/2023",
+      farmAddr :"강원도 철원군"
+    },
+    {
+      id:"000189843795-pig-boston_shoulder-boston_shoulder",
+      userName:"나",
+      userType:'3',
+      company:'deeplant1',
+      meatCreatedAt:"7/13/2023",
+      farmAddr :"강원도 홍천군"
+    },
+    {
+      id:"000189843795-pig-tenderloin-foreshank",
+      userName:"박",
+      userType:'2',
+      company:'gsUniv',
+      meatCreatedAt:"11/13/2021",
+      farmAddr :"경기도 김포시"
+    },
+    {
+      id:"000189843795-cattle-sirloin-ribeye_roll",
+      userName:"이",
+      userType:'3',
+      company:'deeplant2',
+      meatCreatedAt:"7/14/2022",
+      farmAddr :"경기도 안성시"
+    },
+    {
+      id:"000189843795-cattle-striploin-strip_loin",
+      userName:"최",
+      userType:'1',
+      company:'gsUniv',
+      meatCreatedAt:"7/14/2023",
+      farmAddr :"경기도 용인시 처인구"
+    },
   ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalData, setTotalData] = useState(78);
@@ -44,14 +86,11 @@ function DataManage() {
     const response = await fetch(
       `http://localhost:8080/meat?offset=${offset}&count=${count}`
     );
-    console.log("response");
-    console.log(response);
+    console.log("response",response);
     const json = await (
       await fetch(`http://localhost:8080/meat?offset=${offset}&count=${count}`)
     ).json();
-    console.log("data:");
-
-    console.log(json);
+    console.log("data:",json);
     //setMeatList(json);
     //setIsLoaded(true);
   };
@@ -101,9 +140,9 @@ function DataManage() {
         toJson["lab_data"] = labData;
         toJson["tongue"] = tongue;
         /*resp.rows[0].map((key, index)=>{
-                    index == 0? toJson[key] = resp.rows[1][index]:
-                    toJson[key] = resp.rows[1][index];
-                })*/
+            index == 0? toJson[key] = resp.rows[1][index]:
+            toJson[key] = resp.rows[1][index];
+        })*/
         console.log("cols: ", resp.cols, "rows: ", resp.rows);
         console.log('toJson', toJson)
         /*

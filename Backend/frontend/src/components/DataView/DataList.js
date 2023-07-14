@@ -18,10 +18,40 @@ function DataList({meatList}){
           label: 'No.'
         },
         {
-          id: 'name',
+          id: 'id',
           align: 'left',
           disablePadding: true,
           label: '관리번호'
+        },
+        {
+            id: 'farmAddr',
+            align: 'left',
+            disablePadding: true,
+            label: '농장주소'
+        },
+        {
+            id: 'userName',
+            align: 'left',
+            disablePadding: true,
+            label: '등록인'
+        },
+        {
+            id: 'userType',
+            align: 'left',
+            disablePadding: true,
+            label: '등록인 등급'
+        },
+        {
+            id: 'company',
+            align: 'left',
+            disablePadding: true,
+            label: '회사'
+        },
+        {
+            id: 'createdAt',
+            align: 'left',
+            disablePadding: true,
+            label: '생성 날짜'
         },
         {
           id: 'carbs',
@@ -71,15 +101,15 @@ function DataList({meatList}){
         switch (status) {
         case 0:
             color = 'warning';
-            title = 'warning';
+            title = '초기 상태';
             break;
         case 1:
             color = 'success';
-            title = 'Reviewed';
+            title = '검토 완료';
             break;
         case 2:
-            color = 'error';
-            title = 'Rejected';
+            color = 'secondary';
+            title = '진행 중';
             break;
         default:
             color = 'primary';
@@ -151,11 +181,26 @@ function DataList({meatList}){
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
                     <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
-                        {content}
+                        {content.id}
                     </Link>
                     </TableCell>
+                    <TableCell>
+                        {content.farmAddr}
+                    </TableCell>
+                    <TableCell>
+                        {content.userName }
+                    </TableCell>
+                    <TableCell>
+                        {content.userType }
+                    </TableCell>
+                    <TableCell>
+                        {content.company}
+                    </TableCell>
+                    <TableCell>
+                        {content.meatCreatedAt}
+                    </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        <OrderStatus status={(index==3||index==5)?2: 1} />
+                        <OrderStatus status={(index==3||index==5)?2: (index==0)?0:1} />
                     </TableCell>
                     <TableCell align="right" style={{padding:"5px"}}>
                         <IconButton aria-label="delete" color="primary">
