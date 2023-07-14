@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import deeplantLogo from "../src_assets/deeplant-logo.png";
-import MeatImage from "../src_assets/MeatImage.webp";
+import MeatImage from "../src_assets/Meat.png";
 import StatisticImage from "../src_assets/StatisticImage.avif";
 import CardActionArea from "@mui/material/CardActionArea";
 import UserImage from "../src_assets/UserImage2.png";
@@ -83,7 +83,7 @@ function Home() {
               sx={{
                 maxWidth: 300,
                 margin: "0 auto",
-                border: "1px solid #e0e0e0",
+                border: "3px solid #e0e0e0",
                 borderRadius: "4px",
                 overflow: "hidden",
                 backgroundColor: "white",

@@ -1,6 +1,6 @@
 import { useEffect, useState , useRef} from "react";
 import { useParams, useLocation } from "react-router-dom";
-import meatImg from "../src_assets/meat.jpeg";
+import meatImg from "../src_assets/Meat.png";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";

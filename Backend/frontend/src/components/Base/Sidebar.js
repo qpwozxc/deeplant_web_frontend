@@ -29,27 +29,28 @@ import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
+import Tooltip from "@mui/material/Tooltip";
 import { red } from "@mui/material/colors";
 
 const mainListItems = [
   {
     label: "홈",
-    icon: <HomeIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    icon: <HomeIcon sx={{ fontSize: 30 }} />,
     path: "/Home",
   },
   {
     label: "데이터 관리",
-    icon: <DataThresholdingIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    icon: <DataThresholdingIcon sx={{ fontSize: 30 }} />,
     path: "/DataManage",
   },
   {
     label: "통계 조회",
-    icon: <StackedLineChartIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    icon: <StackedLineChartIcon sx={{ fontSize: 30 }} />,
     path: "/stats",
   },
   {
     label: "사용자 관리",
-    icon: <GroupIcon sx={{ color: "#a2836e", fontSize: 30 }} />,
+    icon: <GroupIcon sx={{ fontSize: 30 }} />,
     path: "/UserManagement",
   },
 ];
@@ -182,20 +183,30 @@ function Sidebar() {
         <Divider />
         <List component="nav">
           {mainListItems.map((item) => (
-            <ListItemButton
-              key={item.label}
-              component={Link}
-              to={item.path}
-              selected={location.pathname === item.path}
-              sx={{
-                marginBottom: 1, // 상하 간격을 10px로 설정
-              }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <Button>
-                <ListItemText primary={item.label} />
-              </Button>
-            </ListItemButton>
+            <Tooltip title={item.label} placement="right">
+              <ListItemButton
+                key={item.label}
+                component={Link}
+                to={item.path}
+                selected={location.pathname === item.path}
+                sx={{
+                  marginBottom: 1,
+                  ...(location.pathname === item.path && {
+                    "& .MuiSvgIcon-root, .MuiTypography-root": {
+                      color: "#87bdd8",
+                    },
+                  }),
+                }}
+              >
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <Button>
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{ color: "textPrimary" }}
+                  />
+                </Button>
+              </ListItemButton>
+            </Tooltip>
           ))}
         </List>
       </Drawer>
