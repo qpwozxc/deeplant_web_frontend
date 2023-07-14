@@ -8,19 +8,16 @@ const topic = [{label:"전체"},{label:"출생"} ,{label:"사육"} ,{label:"도�
 const tableTopic = [{label:"지역별/소의 성별 수"},{label:"지역별/소의 등급 수"} ]
 export default function SearchFilter() {
   return (
-    <div style={{marginTop:'70px',display: 'flex', width:'100%', borderBottom:'1px solid grey', backgroundColor:'white',  borderRadius:'5px', }} >
-    <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={top100Films}
-      sx={{ marginLeft:2, width: 300 }}
+
+  <Box sx={{display:'flex' ,borderBottom:'1px solid grey', backgroundColor:'white',borderRadius:'5px',marginTop:'70px',justifyContent:'center', width:'75%'}}>
+    <Autocomplete disablePortal id="combo-box-demo" options={top100Films} sx={{ marginLeft:2, width: 200 }}
       renderInput={(params) => <TextField {...params} label="종류" />}
     />
     <Autocomplete
       disablePortal
       id="combo-box-demo"
       options={topic}
-      sx={{ marginLeft:2, width: 300 }}
+      sx={{ marginLeft:2, width: 250 }}
       renderInput={(params) => <TextField {...params} label="주제선택" />}
     />
     <Autocomplete
@@ -30,10 +27,11 @@ export default function SearchFilter() {
       sx={{ marginLeft:2,width: 300 }}
       renderInput={(params) => <TextField {...params} label="표선택" />}
     />
-    <Button variant="contained" color="success" sx={{ marginLeft:5 ,width: 150 }}>
+    <Button variant="contained" color="success" sx={{ marginLeft:4 ,width: 150 }}>
         조회
     </Button>
-    </div>
+  </Box>
+
 
   );
 }

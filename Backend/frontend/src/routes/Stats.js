@@ -6,15 +6,13 @@ import Box from '@mui/material/Box';
 function Stats() {
   return (
 <Container maxWidth="xl">
-  <Box sx={{
-        width: '80%',}}>
-  <div style={{ display: "flex", width: "100%" }}>
-  
-    <div style={{ width: "100%" }}>
+  <Box sx={{width: '100%',}}>
+    <Box sx={{ width: "100%", display:'flex', justifyContent:'center' }}>
       <SearchFilter />
-      <StatsTabs/>
-    </div>
-  </div>
+    </Box>
+    <Box sx={{ width: "100%", display:'flex', justifyContent:'center' }}>
+    <StatsTabs/>
+    </Box>  
   </Box>
 
 </Container>

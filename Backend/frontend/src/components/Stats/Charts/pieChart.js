@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader } from '@mui/material';
+import { Card, CardHeader, Typography } from '@mui/material';
 // utils
 import { fNumber } from './formatNumber';
 // components
@@ -10,8 +10,8 @@ import useChart from './useChart';
 
 // ----------------------------------------------------------------------
 
-const CHART_HEIGHT = 372;
-const LEGEND_HEIGHT = 72;
+const CHART_HEIGHT = 350;
+const LEGEND_HEIGHT = 50;
 
 const StyledChartWrapper = styled('div')(({ theme }) => ({
   height: CHART_HEIGHT,
@@ -67,11 +67,11 @@ export default function PieChart({ title, subheader, chartColors, chartData, ...
 
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
-
-      <StyledChartWrapper dir="ltr">
+  
+      <StyledChartWrapper dir="ltr" style={{marginTop:'20px'}}>
         <ReactApexChart type="pie" series={chartSeries} options={chartOptions} height={280} />
       </StyledChartWrapper>
     </Card>
   );
 }
+//    <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}/>

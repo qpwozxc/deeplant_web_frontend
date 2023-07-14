@@ -140,7 +140,7 @@ const BarChart = () => {
 
   return (
     <div id="chart" style={{backgroundColor:'white', borderRadius:'5px'}}>
-      <ReactApexChart options={options} series={series} type="bar" height={430} />
+      <ReactApexChart options={options} series={series} type="bar" height={350} />
     </div>
   );
 };

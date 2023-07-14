@@ -36,11 +36,12 @@ export default function AreaChart({ title, subheader, chartLabels, chartData, ..
 
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+     
 
-      <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-        <ReactApexChart type="line" series={chartData} options={chartOptions} height={364} />
+      <Box sx={{ p: 3, pb: 1, paddingTop:'0px' }} dir="ltr" >
+        <ReactApexChart type="line" series={chartData} options={chartOptions} height={350} />
       </Box>
     </Card>
   );
 }
+// <CardHeader title={title} style={{paddingBottom:'0px'}}/>

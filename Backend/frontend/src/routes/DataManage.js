@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import Form from "react-bootstrap/Form";
 import Search from "../components/Meat/Search";
 import DataList from "../components/DataView/DataList";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
-import excelController from "../components/DataView/excelController";
 import { ExcelRenderer, OutTable } from "react-excel-renderer";
-import Papa from "papaparse";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import {
@@ -79,31 +76,14 @@ function DataManage() {
   useEffect(() => {
     //getMeatList(page);
     setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
-    console.log("total page-array:", totalSlicedPageArray);
     setCurrentPageArray(totalSlicedPageArray[0]);
   }, [totalPages, limit]);
   useEffect(() => {
     setCurrentPageArray(totalSlicedPageArray[0]);
-    console.log("late total page-array:", totalSlicedPageArray);
   }, [totalSlicedPageArray]);
 
   //엑셀파일을 JSON 으로 변환
   const handleExcelFile = (file) => {
-    /*const csvToJson = Papa.parse(file, {
-            header: true,
-            encoding: 'EUC-KR',
-            complete: (results) =>{
-              console.log("Finished:", results.data);
-            }}
-          )*/
-    /*const reader = new FileReader();
-        reader.onload = () => {
-            csv.parse(reader.result, (err, data) => {
-                console.log(data);
-            });
-        };
-                const res = reader.readAsBinaryString(file);
-        console.log('res', res);*/
     ExcelRenderer(file, (err, resp) => {
       if (err) {
         console.log(err);
@@ -125,7 +105,8 @@ function DataManage() {
                     toJson[key] = resp.rows[1][index];
                 })*/
         console.log("cols: ", resp.cols, "rows: ", resp.rows);
-
+        console.log('toJson', toJson)
+        /*
         fetch(`http://localhost:8080/meat/update`, {
           method: "POST",
           headers: {
@@ -136,12 +117,55 @@ function DataManage() {
           },
           body: JSON.stringify(toJson),
         });
+        */
       }
     });
   };
   return (
     <>
-      <Search />
+    <Box sx={{display:'flex'}}>
+    <Search />
+      <div
+        className=""
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop:'70px',
+          alignItems:'end',
+          paddingBottom:'10px',
+        }}
+      >
+        
+        <Box sx={{ display: 'flex', gap: 5, width: "70%", marginTop: "0px" , backgroundColor:'white', paddingRight: "10px", borderRadius:'5px'}}>
+          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
+            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ }}/>
+
+          <Button color="info" startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowUpOnSquareIcon />
+              </SvgIcon>
+            } 
+            onClick={() => {handleExcelFile(excelFile);}} style={{  width:'auto'}}>
+            Import
+          </Button>
+          <Button
+            color="primary"
+            startIcon={
+              <SvgIcon fontSize="small">
+                <ArrowDownOnSquareIcon />
+              </SvgIcon>
+            }
+            style={{}}
+          >
+            Export
+          </Button>
+          </Box>
+        
+       
+      </div>
+
+    </Box>
+      
       <div
         style={{
           textAlign: "center",
@@ -159,53 +183,8 @@ function DataManage() {
         )}
       </div>
 
-      <div
-        className=""
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          margin: "0px 40px",
-        }}
-      >
-        <div
-          class="mb-3"
-          style={{ display: "flex", width: "70%", marginTop: "40px" }}
-        >
-          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
-            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ marginRight: "20px" }}/>
-
-          <Button
-            color="inherit"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowUpOnSquareIcon />
-              </SvgIcon>
-            }
-            onClick={() => {
-              handleExcelFile(excelFile);
-            }}
-            style={{ margin: "0px 10px" }}
-          >
-            Import
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowDownOnSquareIcon />
-              </SvgIcon>
-            }
-            style={{ margin: "0px 10px" }}
-          >
-            Export
-          </Button>
-        </div>
-      </div>
-
-      <div
-        className="pagination-bar"
-        style={{ display: "flex", width: "100%", justifyContent: "center" }}
-      >
+      
+        <Box sx={{display:'flex', marginTop:'20px'}}>
         <Pagination>
           <Pagination.First />
           <Pagination.Prev
@@ -241,7 +220,8 @@ function DataManage() {
           />
           <Pagination.Last disabled />
         </Pagination>
-      </div>
+        </Box>
+     
     </>
   );
 }
