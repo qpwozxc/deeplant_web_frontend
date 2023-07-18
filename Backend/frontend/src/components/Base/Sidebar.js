@@ -31,6 +31,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
 import Tooltip from "@mui/material/Tooltip";
 import { red } from "@mui/material/colors";
+import { HiOutlineChip } from "react-icons/hi";
 
 const mainListItems = [
   {
@@ -39,9 +40,14 @@ const mainListItems = [
     path: "/Home",
   },
   {
-    label: "데이터 관리",
+    label: "대쉬보드",
     icon: <DataThresholdingIcon sx={{ fontSize: 30 }} />,
     path: "/DataManage",
+  },
+  {
+    label: "데이터 예측",
+    icon: <HiOutlineChip style={{ fontSize: 30 }} />,
+    path: "/PA",
   },
   {
     label: "통계 분석",
