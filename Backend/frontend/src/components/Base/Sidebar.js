@@ -44,7 +44,7 @@ const mainListItems = [
     path: "/DataManage",
   },
   {
-    label: "통계 조회",
+    label: "통계 분석",
     icon: <StackedLineChartIcon sx={{ fontSize: 30 }} />,
     path: "/stats",
   },

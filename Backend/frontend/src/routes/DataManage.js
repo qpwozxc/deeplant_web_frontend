@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Search from "../components/Meat/Search";
+import Search from "../components/Search/Search";
 import DataList from "../components/DataView/DataList";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
@@ -72,7 +72,7 @@ function DataManage() {
   const [currentPN, setCurrentPN] = useState(1);
   const [currentPageArray, setCurrentPageArray] = useState([]);
   const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
-  const [excelFile, setExcelFile] = useState("");
+  //const [excelFile, setExcelFile] = useState("");
   const fileRef = useRef(null);
 
   const offset = 0;
@@ -121,6 +121,11 @@ function DataManage() {
     setCurrentPageArray(totalSlicedPageArray[0]);
   }, [totalSlicedPageArray]);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    // Perform action after file selection
+    handleExcelFile(file);
+  };
   //엑셀파일을 JSON 으로 변환
   const handleExcelFile = (file) => {
     ExcelRenderer(file, (err, resp) => {
@@ -143,6 +148,7 @@ function DataManage() {
             index == 0? toJson[key] = resp.rows[1][index]:
             toJson[key] = resp.rows[1][index];
         })*/
+        console.log(file)
         console.log("cols: ", resp.cols, "rows: ", resp.rows);
         console.log('toJson', toJson)
         /*
@@ -162,7 +168,7 @@ function DataManage() {
   };
   return (
     <>
-    <Box sx={{display:'flex'}}>
+    <Box sx={{display:'flex', width:'80%',justifyContent:'space-between'}}>
     <Search />
       <div
         className=""
@@ -174,29 +180,32 @@ function DataManage() {
           paddingBottom:'10px',
         }}
       >
-        
-        <Box sx={{ display: 'flex', gap: 5, width: "70%", marginTop: "0px" , backgroundColor:'white', paddingRight: "10px", borderRadius:'5px'}}>
+        <Box sx={{ display: 'flex', gap: 1, width: "100%", marginTop: "0px" , backgroundColor:'white', marginLeft:'10px',borderRadius:'5px'}}>
           <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
-            onChange={(e) => {setExcelFile(e.target.files[0]);}} style={{ }}/>
-
-          <Button color="info" startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowUpOnSquareIcon />
+            onChange={(e) => {handleFileChange(e);}} style={{display:'none' }}/>
+          <Button color="info" 
+            onClick={()=>{fileRef.current.click();}}
+            >
+               <div style={{display:'flex'}}>
+            <SvgIcon fontSize="small">
+            <ArrowUpOnSquareIcon />
               </SvgIcon>
-            } 
-            onClick={() => {handleExcelFile(excelFile);}} style={{  width:'auto'}}>
-            Import
+              <span>Import</span>
+            </div>
+            
           </Button>
           <Button
             color="primary"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <ArrowDownOnSquareIcon />
-              </SvgIcon>
-            }
+            
             style={{}}
           >
-            Export
+            <div style={{display:'flex'}}>
+            <SvgIcon fontSize="small">
+                <ArrowDownOnSquareIcon />
+              </SvgIcon>
+              <span>Export</span>
+            </div>
+            
           </Button>
           </Box>
         
@@ -209,7 +218,7 @@ function DataManage() {
         style={{
           textAlign: "center",
           width: "100%",
-          padding: "0px 200px",
+          padding: "0px 100px",
           paddingBottom: "0",
         }}
       >

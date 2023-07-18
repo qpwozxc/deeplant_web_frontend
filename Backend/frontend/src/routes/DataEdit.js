@@ -7,7 +7,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Box, Typography, Button} from '@mui/material';
 import { DataLoad } from "../components/Meat/SingleDataLoad";
-import Search from "../components/Meat/Search";
+import Search from "../components/Search/Search";
 import PropTypes from "prop-types";
 import "bootstrap/dist/css/bootstrap.css"; 
 const DataEdit=()=>{

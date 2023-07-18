@@ -36,8 +36,8 @@ const cards = [
     link: "/DataManage",
   },
   {
-    title: "통계 조회",
-    description: "통계 조회.",
+    title: "통계 분석",
+    description: "통계 분석",
     sub_description: "",
     image: StatisticImage,
     imageSize: { height: 140, width: "100%" },

@@ -37,13 +37,13 @@ function DataList({meatList}){
         },
         {
             id: 'userType',
-            align: 'left',
+            align: 'center',
             disablePadding: true,
-            label: '등록인 등급'
+            label: '등록인 타입'
         },
         {
             id: 'company',
-            align: 'left',
+            align: 'center',
             disablePadding: true,
             label: '회사'
         },
@@ -219,14 +219,5 @@ function DataList({meatList}){
   
 }
 
-/*
-                {  
-                isReviewed ? 
-                <Button size="small" className={style.list_buttons_button} variant="contained" disabled>Review</Button> : 
-                <Button size="small" className={style.list_buttons_button} variant="contained" onClick={()=>{setIsReviewed(true)}}>Review</Button>
-                } 
-  
-
-*/
 
 export default DataList;
