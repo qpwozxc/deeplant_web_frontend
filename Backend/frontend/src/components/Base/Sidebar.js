@@ -1,6 +1,5 @@
-import React, {useEffect, useRef, useState } from "react";
+import React, {useEffect} from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,9 +10,7 @@ import Typography from "@mui/material/Typography";
 import ListItemText from "@mui/material/ListItemText";
 import Badge from "@mui/material/Badge";
 import MuiDrawer from "@mui/material/Drawer";
-import ListSubheader from "@mui/material/ListSubheader";
 import MenuIcon from "@mui/icons-material/Menu";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import List from "@mui/material/List";
 import MuiAppBar from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
