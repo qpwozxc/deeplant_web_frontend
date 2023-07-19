@@ -40,6 +40,7 @@ function a11yProps(index) {
   };
 }
 
+
 export default function StatsTabs(props) {
     const {pieChartData} = props;
     const [value, setValue] = useState(0);
@@ -50,6 +51,7 @@ export default function StatsTabs(props) {
     };
 
     const pieChartColors  = [ 
+lette.success.light,
       theme.palette.secondary.dark,
       theme.palette.success.light,
       theme.palette.primary.main,
@@ -70,6 +72,7 @@ export default function StatsTabs(props) {
     ];
     //console.log('chart colors',pieChartColors.slice(0,chartDatas.pieChart.chartColorsNum));
     return (
+
       <Box sx={{ width: 'fit-content' ,paddingTop:'0px' }}>
         <PieChart 
             title= {pieChartData.title}

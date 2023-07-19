@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
+
 import { Card, CardHeader, Autocomplete, TextField, Select, MenuItem ,FormControl } from '@mui/material';
 // utils
 import { fNumber } from './formatNumber';
@@ -67,6 +68,7 @@ export default function PieChart({ title, subheader, chartColors, chartData, isF
 console.log('chartcolors:', chartColors, chartLabels, chartData);
   return (
     <Card {...other}>
+  
       <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}></CardHeader>
       {isFilter?
       <div style={{display:'flex'}}>

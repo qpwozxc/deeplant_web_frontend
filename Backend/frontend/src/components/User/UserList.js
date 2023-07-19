@@ -240,3 +240,33 @@ function UserList() {
 }
 
 export default UserList;
+
+
+
+
+
+
+// CREATE TABLE user ( -- 유저 데이터 저장 DB   
+//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
+//   lastLogin VARCHAR NOT NULL, -- 최근 로그인 이력 (ISO 8601 형식)
+//   name VARCHAR NOT NULL, -- 유저 이름
+//   company VARCHAR, -- 유저 회사 정보
+//   position VARCHAR, -- 유저 직함 정보
+//   type VARCHAR(50) -- 유저 타입 ("normal" - 일반 사용자, "researcher" - 연구원, "manager" - 관리자)
+// );
+
+// CREATE TABLE normal ( -- "일반 사용자" 데이터 저장 DB
+//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
+//   FOREIGN KEY (id) REFERENCES "user" (id)
+// );
+
+// CREATE TABLE researcher ( -- "연구원" 데이터 저장 DB
+//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
+//   FOREIGN KEY (id) REFERENCES "user" (id)
+// );
+
+// CREATE TABLE manager ( -- "관리자" 데이터 저장 DB
+//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
+//   pwd VARCHAR NOT NULL, -- 관리자 비밀번호 (hashlib의 SHA256방식 암호화 이용)
+//   FOREIGN KEY (id) REFERENCES "user" (id)
+// );
