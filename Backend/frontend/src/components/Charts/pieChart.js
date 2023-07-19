@@ -2,7 +2,12 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
+<<<<<<< HEAD
 import { Card, CardHeader, } from '@mui/material';
+=======
+
+import { Card, CardHeader, Autocomplete, TextField, Select, MenuItem ,FormControl } from '@mui/material';
+>>>>>>> 06d0714c5291a759763933fdee7a594b85c1e2ae
 // utils
 import { fNumber } from './formatNumber';
 // components
@@ -67,7 +72,11 @@ export default function PieChart({ title, subheader, chartColors, chartData, isF
 console.log('chartcolors:', chartColors, chartLabels, chartData);
   return (
     <Card {...other}>
+<<<<<<< HEAD
  
+=======
+  
+>>>>>>> 06d0714c5291a759763933fdee7a594b85c1e2ae
       <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}></CardHeader>
       <StyledChartWrapper dir="ltr" style={{marginTop:'20px'}}>
         <ReactApexChart type="pie" series={chartSeries} options={chartOptions} height={280} />
@@ -83,3 +92,7 @@ console.log('chartcolors:', chartColors, chartLabels, chartData);
 
 
 
+<<<<<<< HEAD
+=======
+const meatType  = [{label:"소"},{label:"돼지"} ]
+>>>>>>> 06d0714c5291a759763933fdee7a594b85c1e2ae
