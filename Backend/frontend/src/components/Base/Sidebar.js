@@ -1,6 +1,5 @@
-import React, {useEffect, useRef, useState } from "react";
+import React, {useEffect} from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -11,9 +10,7 @@ import Typography from "@mui/material/Typography";
 import ListItemText from "@mui/material/ListItemText";
 import Badge from "@mui/material/Badge";
 import MuiDrawer from "@mui/material/Drawer";
-import ListSubheader from "@mui/material/ListSubheader";
 import MenuIcon from "@mui/icons-material/Menu";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import List from "@mui/material/List";
 import MuiAppBar from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
@@ -31,6 +28,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
 import Tooltip from "@mui/material/Tooltip";
 import { red } from "@mui/material/colors";
+import { HiOutlineChip } from "react-icons/hi";
 
 const mainListItems = [
   {
@@ -39,12 +37,17 @@ const mainListItems = [
     path: "/Home",
   },
   {
-    label: "데이터 관리",
+    label: "대쉬보드",
     icon: <DataThresholdingIcon sx={{ fontSize: 30 }} />,
     path: "/DataManage",
   },
   {
-    label: "통계 조회",
+    label: "데이터 예측",
+    icon: <HiOutlineChip style={{ fontSize: 30 }} />,
+    path: "/PA",
+  },
+  {
+    label: "통계 분석",
     icon: <StackedLineChartIcon sx={{ fontSize: 30 }} />,
     path: "/stats",
   },
@@ -105,7 +108,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function Sidebar() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
