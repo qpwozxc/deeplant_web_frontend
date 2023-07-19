@@ -70,11 +70,12 @@ export default function StatsTabs(props) {
     ];
     //console.log('chart colors',pieChartColors.slice(0,chartDatas.pieChart.chartColorsNum));
     return (
-      <Box sx={{ width: 'fit-content' ,paddingTop:'0px' }}>
+      <Box sx={{ width: '100%' ,paddingTop:'0px',marginLeft:'16px'}}>
         <PieChart 
             title= {pieChartData.title}
             chartData={pieChartData.chartData}
             chartColors={pieChartColors.slice(0,pieChartData.chartColorsNum)}
+            isFilter={pieChartData.isFilter}
           />
         
       </Box>

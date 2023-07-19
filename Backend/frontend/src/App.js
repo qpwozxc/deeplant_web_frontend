@@ -81,7 +81,8 @@ function App() {
                       <Box
                         component="main"
                         sx={{
-                          backgroundImage: `url(${BackGroundImage})`,
+                          //backgroundImage: `url(${BackGroundImage})`,
+                          backgroundColor:"#FAFAFB",
                           backgroundSize: "cover",
                           backgroundRepeat: "no-repeat",
                           backgroundColor: (theme) =>

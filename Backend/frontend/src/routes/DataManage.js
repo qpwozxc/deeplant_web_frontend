@@ -1,23 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import Search from "../components/Search/Search";
 import SearchFilterBar from "../components/Search/SearchFilterBar";
 import DataList from "../components/DataView/DataList";
 import Pagination from "react-bootstrap/Pagination";
 import StatsTabs from "../components/Charts/StatsTabs";
+import Map from "../components/Charts/choroplethMap/Map";
 import Spinner from "react-bootstrap/Spinner";
 import { ExcelRenderer, OutTable } from "react-excel-renderer";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import {
-  Box,
-  Button,
-  Container,
-  Stack,
-  SvgIcon,
-  Typography,
-} from "@mui/material";
-
-
+import { Box, Button,  Autocomplete, TextField, Select, MenuItem ,FormControl,SvgIcon,InputLabel} from "@mui/material";
+import ExcelController from "../components/Meat/excelContr";
 function DataManage() {
   const [isLoaded, setIsLoaded] = useState(true);
   const [meatList, setMeatList] = useState(sampleMeatList);
@@ -26,8 +18,13 @@ function DataManage() {
   const [currentPN, setCurrentPN] = useState(1);
   const [currentPageArray, setCurrentPageArray] = useState([]);
   const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
-  //const [excelFile, setExcelFile] = useState("");
-  const fileRef = useRef(null);
+  
+  //목록/ 통계 토글
+  const [isList, setList] = useState(true);
+// 통계 autocomplete category
+  const [meatType, setMeatType] = useState('total');
+  // 소 / 돼지 부위 
+  const [meatCat, setMeatCat] = useState(null);
 
   const offset = 0;
   const count = 6; // 한페이지당 보여줄 개수
@@ -75,138 +72,135 @@ function DataManage() {
     setCurrentPageArray(totalSlicedPageArray[0]);
   }, [totalSlicedPageArray]);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    // Perform action after file selection
-    handleExcelFile(file);
-  };
-  //엑셀파일을 JSON 으로 변환
-  const handleExcelFile = (file) => {
-    ExcelRenderer(file, (err, resp) => {
-      if (err) {
-        console.log(err);
-      } else {
-        const toJson = {};
-        const labData = {};
-        const tongue = {};
-        for (let i = 1; i < 11; i++) {
-          labData[resp.rows[0][i]] = resp.rows[1][i];
-        }
-        for (let i = 11; i < resp.rows[0].length; i++) {
-          tongue[resp.rows[0][i]] = resp.rows[1][i];
-        }
-        toJson[resp.rows[0][0]] = resp.rows[1][0];
-        toJson["lab_data"] = labData;
-        toJson["tongue"] = tongue;
-        /*resp.rows[0].map((key, index)=>{
-            index == 0? toJson[key] = resp.rows[1][index]:
-            toJson[key] = resp.rows[1][index];
-        })*/
-        console.log(file)
-        console.log("cols: ", resp.cols, "rows: ", resp.rows);
-        console.log('toJson', toJson)
-        /*
-        fetch(`http://localhost:8080/meat/update`, {
-          method: "POST",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Request-Headers": "Content-Type",
-            "Access-Control-Request-Method": "POST",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(toJson),
-        });
-        */
-      }
-    });
-  };
   return (
     <div style={{overflow: 'overlay', width:'100%', marginTop:'140px'}}>
     <Box sx={styles.fixed}>
       <SearchFilterBar/>
       <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-        <Box sx={{ display: 'flex', gap: 1, width: "100%", marginTop: "0px" , backgroundColor:'white',border:'1px solid #cfd8dc', marginLeft:'10px',borderRadius:'5px'}}>
-          <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
-            onChange={(e) => {handleFileChange(e);}} style={{display:'none' }}/>
-          <Button color="info" onClick={()=>{fileRef.current.click();}}>
-            <div style={{display:'flex'}}>
-              <SvgIcon fontSize="small">
-                <ArrowUpOnSquareIcon />
-              </SvgIcon>
-            <span>Import</span>
-            </div>  
-          </Button>
-          <Button color="primary">
-            <div style={{display:'flex'}}>
-              <SvgIcon fontSize="small">
-                  <ArrowDownOnSquareIcon />
-              </SvgIcon>
-            <span>Export</span>
-            </div>
-          </Button>
+        <ExcelController/>
+      </div>
+    </Box>
+
+    <Box sx={styles.fixedTab}>
+      <Button  style = {isList? {} : styles.tabBtn} variant="outlined" onClick={()=>{setList(true)}}>목록</Button>
+      <Button  style = {isList? styles.tabBtn: {}} variant="outlined" onClick={()=>{setList(false)}}>통계</Button>
+    </Box >
+
+    {
+      isList
+      ?
+      <div>
+        <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
+        {isLoaded ? (
+          //데이터가 로드된 경우 데이터 목록 반환
+          <DataList meatList={meatList} />
+        ) : (
+          // 데이터가 로드되지 않은 경우 로딩중 반환
+          <Spinner animation="border" />
+        )}
+        </div>
+          
+        <Box sx={{display:'flex', marginTop:'40px'}}>
+        <Pagination>
+          <Pagination.First />
+          <Pagination.Prev
+            onClick={() => {
+              currentPN > 0
+                ? setCurrentPN(currentPN - 1)
+                : setCurrentPN(currentPN);
+              setCurrentPageArray(totalSlicedPageArray[currentPN]);
+            }}
+          />
+          {currentPageArray
+            ? currentPageArray.map((m, idx) => {
+                return (
+                  <Pagination.Item
+                    key={idx}
+                    onClick={() => {
+                      //페이지 api 불러오기
+                      setCurrentPage(m);
+                    }}
+                  >
+                    {m}
+                  </Pagination.Item>
+                );
+              })
+            : null}
+          <Pagination.Next
+            onClick={() => {
+              currentPN < totalSlicedPageArray.length - 1
+                ? setCurrentPN(currentPN + 1)
+                : setCurrentPN(currentPN);
+              setCurrentPageArray(totalSlicedPageArray[currentPN]);
+            }}
+          />
+          <Pagination.Last disabled />
+        </Pagination>
         </Box>
       </div>
-    </Box>
-
+    :
+    <Box sx={{display:'flex', width:"100%", marginBottom:'10px', marginTop:'60px', padding:'0px 50px'}}>
     
-    <Box sx={{display:'flex', width:"100%", marginBottom:'10px', marginTop:'20px', padding:'0px 50px'}}>
-      <StatsTabs pieChartData = {pieChartD1}/>
       <div style={{display:'flex', width:"100%"}}>
-        <StatsTabs pieChartData = {pieChartD2}/>
-        <div>지도</div>
-      </div>
-    </Box>
-    
-    
-    <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-      {isLoaded ? (
-        //데이터가 로드된 경우 데이터 목록 반환
-        <DataList meatList={meatList} />
-      ) : (
-        // 데이터가 로드되지 않은 경우 로딩중 반환
-        <Spinner animation="border" />
-      )}
-    </div>
-
-      
-    <Box sx={{display:'flex', marginTop:'20px'}}>
-      <Pagination>
-        <Pagination.First />
-        <Pagination.Prev
-          onClick={() => {
-            currentPN > 0
-              ? setCurrentPN(currentPN - 1)
-              : setCurrentPN(currentPN);
-            setCurrentPageArray(totalSlicedPageArray[currentPN]);
-          }}
-        />
-        {currentPageArray
-          ? currentPageArray.map((m, idx) => {
-              return (
-                <Pagination.Item
-                  key={idx}
-                  onClick={() => {
-                    //페이지 api 불러오기
-                    setCurrentPage(m);
-                  }}
-                >
-                  {m}
-                </Pagination.Item>
+      <div>
+        <div style={{display:'flex', marginBottom:'20px'}}>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <InputLabel id="demo-select-small-label">주제선택</InputLabel>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={meatType}
+            label="주제선택"
+            onChange={(e)=>{setMeatType(e.target.value)}}
+          >
+            {
+              meatCategory.map((m)=>{
+              return(
+                <MenuItem value={m.value}>{m.label}</MenuItem>
               );
-            })
-          : null}
-        <Pagination.Next
-          onClick={() => {
-            currentPN < totalSlicedPageArray.length - 1
-              ? setCurrentPN(currentPN + 1)
-              : setCurrentPN(currentPN);
-            setCurrentPageArray(totalSlicedPageArray[currentPN]);
-          }}
-        />
-        <Pagination.Last disabled />
-      </Pagination>
+              })
+            }
+          </Select>
+        </FormControl>
+            {
+            meatType === 'total'
+            ?<div></div>
+            :
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+            <InputLabel id="demo-select-small-label"> { meatType === 'cow'?'소':'돼지'}</InputLabel>
+            <Select
+              labelId="demo-select-small-label"
+              id="demo-select-small"
+              value={meatCat}
+              label="소"
+              onChange={(e)=>{setMeatCat(e.target.value)}}
+            >
+              { meatType === 'cow'
+                ?cowCategory.map((m)=>{
+                return(
+                  <MenuItem value={m.value}>{m.label}</MenuItem>
+                );
+                })
+                :pigCategory.map((m)=>{
+                  return(
+                    <MenuItem value={m.value}>{m.label}</MenuItem>
+                  );
+                  })
+
+              }
+            </Select>
+          </FormControl>
+          }
+        </div>
+        <StatsTabs pieChartData = {pieChartD2} sx={{marginLeft:'76px'}}/>
+      </div>
+      <div style={{marginLeft:'20px'}}><Map/></div>
+      </div>
+      <StatsTabs pieChartData = {pieChartD1}/>
     </Box>
-    
+
+    }
+  
     </div>
   );
 }
@@ -244,8 +238,51 @@ const styles={
     display:'flex',
     justifyContent:'space-between',
     backgroundColor:'white',
+  },
+  fixedTab:{
+    position: 'fixed', 
+    top:'120px',
+    right:'0',
+    left:'0px',
+    width:'100%',
+    borderRadius:'0',
+    backgroundColor:'',
+    display:'flex', 
+    justifyContent:'end' ,
+    marginBottom:'10px', 
+    marginTop:'30px', 
+    padding:'0px 100px', 
+    //borderBottom:'1px solid grey'
+  },
+  tabBtn:{
+    border:'none',
+    color:'#9e9e9e',
   }
 }
+
+const meatCategory  = [{value:"total", label:"전체"},{value:"cow",label:"소"},{value:"pig",label:"돼지"} ];
+const cowCategory = [
+  { value: "tenderloin", label: "안심" },
+  { value: "sirloin", label: "등심" },
+  { value: "striploin", label: "채끝" },
+  { value: "chuck", label: "목심" },
+  { value: "blade", label: "앞다리" },
+  { value: "round", label: "우둔" },
+  { value: "bottom_round", label: "설도" },
+  { value: "brisket", label: "양지" },
+  { value: "shank", label: "사태" },
+  { value: "rib", label: "갈비" },
+]; 
+const pigCategory = [
+  { value: "tenderloin", label: "안심" },
+  { value: "loin", label: "등심" },
+  { value: "boston_shoulder", label: "목심" },
+  { value: "picinc_shoulder", label: "앞다리" },
+  { value: "spare_ribs", label: "갈비" },
+  { value: "belly", label: "삼겹살" },
+  { value: "ham", label: "뒷다리" },
+];
+
 const sampleMeatList = [
   {
     id:"000189843795-cattle-chuck-chuck",
@@ -296,3 +333,4 @@ const sampleMeatList = [
     farmAddr :"경기도 용인시 처인구"
   },
 ];
+

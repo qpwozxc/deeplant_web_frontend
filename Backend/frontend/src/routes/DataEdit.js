@@ -1,15 +1,16 @@
 import { useEffect, useState , useRef} from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation ,Link } from "react-router-dom";
 import meatImg from "../src_assets/Meat.png";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import { Box, Typography, Button} from '@mui/material';
+import { Box, Typography, Button, IconButton} from '@mui/material';
 import { DataLoad } from "../components/Meat/SingleDataLoad";
-import Search from "../components/Search/Search";
-import PropTypes from "prop-types";
+import ExcelController from "../components/Meat/excelContr";
 import "bootstrap/dist/css/bootstrap.css"; 
+
+import { FaAngleDoubleLeft } from "react-icons/fa";
 const DataEdit=()=>{
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
@@ -39,11 +40,7 @@ const DataEdit=()=>{
     //이미지 파일
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    const styles = {
-        img:{
-            width:'200px'
-        }
-      };
+  
     const [previewImage, setPreviewImage] = useState(meatImg);
 
     //input text (that handles multiple inputs with same Handle function)
@@ -144,8 +141,22 @@ const DataEdit=()=>{
 
   return (
     <Box sx={{ display: "flex"}}>
+      <Box sx={style.fixed}>
+        <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
+          <Link to={{pathname : '/DataManage'}} >
+            <IconButton  size="large">
+            <FaAngleDoubleLeft/>
+            </IconButton>
+          </Link>
+        </div>
+        
+       
+        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
+          <ExcelController/>
+        </div>
+      </Box>
       <div>
-        <Search/>
+      
         <div style={{width: "",padding: "20px 50px",paddingBottom: "0px",display: "flex",justifyContent: "space-between", backgroundColor:'white', borderTopLeftRadius:'10px' , borderTopRightRadius:'10px'}}>
           <Card style={{ width: "20rem"}}>
             <Card.Img variant="top" src={previewImage} />
@@ -231,6 +242,22 @@ const DataEdit=()=>{
 
 export default DataEdit;
 
+const style={
+  fixed:{
+    position: 'fixed', 
+    top:'70px',
+    right:'0',
+    left:'65px',
+    zIndex: 1,
+    width:'100%',
+    borderRadius:'0',
+    display:'flex',
+    justifyContent:'space-between',
+    backgroundColor:'white',
+    height: "70px",
+  },
+
+}
 /***
  * 
     resp.propTypes={
