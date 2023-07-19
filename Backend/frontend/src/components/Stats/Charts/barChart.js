@@ -9,43 +9,48 @@ import ReactApexChart from 'react-apexcharts';
 // chart options
 const columnChartOptions = {
   chart: {
-    type: 'bar',
+    type: "bar",
     height: 430,
     toolbar: {
-      show: false
-    }
+      show: false,
+    },
   },
   plotOptions: {
     bar: {
-      columnWidth: '30%',
-      borderRadius: 4
-    }
+      columnWidth: "30%",
+      borderRadius: 4,
+    },
   },
   dataLabels: {
-    enabled: false
+    enabled: false,
   },
   stroke: {
     show: true,
     width: 8,
-    colors: ['transparent']
+    colors: ["transparent"],
   },
   xaxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    categories: [
+      "Sourness(신맛)",
+      "Bitterness(진한맛)",
+      "Umami(감칠맛)",
+      "Richness(후미)",
+    ],
   },
   yaxis: {
     title: {
-      text: '$ (thousands)'
-    }
+      text: "$ (thousands)",
+    },
   },
   fill: {
-    opacity: 1
+    opacity: 1,
   },
   tooltip: {
     y: {
       formatter(val) {
         return `$ ${val} thousands`;
-      }
-    }
+      },
+    },
   },
   legend: {
     show: true,
@@ -53,30 +58,30 @@ const columnChartOptions = {
     offsetX: 10,
     offsetY: 10,
     labels: {
-      useSeriesColors: false
+      useSeriesColors: false,
     },
     markers: {
       width: 16,
       height: 16,
-      radius: '50%',
+      radius: "50%",
       offsexX: 2,
-      offsexY: 2
+      offsexY: 2,
     },
     itemMargin: {
       horizontal: 15,
-      vertical: 50
-    }
+      vertical: 50,
+    },
   },
   responsive: [
     {
       breakpoint: 600,
       options: {
         yaxis: {
-          show: false
-        }
-      }
-    }
-  ]
+          show: false,
+        },
+      },
+    },
+  ],
 };
 
 // ==============================|| SALES COLUMN CHART ||============================== //
@@ -93,13 +98,13 @@ const BarChart = () => {
 
   const [series] = useState([
     {
-      name: 'Net Profit',
-      data: [180, 90, 135, 114, 120, 145]
+      name: "신선육",
+      data: [180, 90, 135, 114, 120, 145],
     },
     {
-      name: 'Revenue',
-      data: [120, 45, 78, 150, 168, 99]
-    }
+      name: "숙성육",
+      data: [120, 45, 78, 150, 168, 99],
+    },
   ]);
 
   const [options, setOptions] = useState(columnChartOptions);
@@ -111,36 +116,48 @@ const BarChart = () => {
       xaxis: {
         labels: {
           style: {
-            colors: [secondary, secondary, secondary, secondary, secondary, secondary]
-          }
-        }
+            colors: [
+              secondary,
+              secondary,
+              secondary,
+              secondary,
+              secondary,
+              secondary,
+            ],
+          },
+        },
       },
       yaxis: {
         labels: {
           style: {
-            colors: [secondary]
-          }
-        }
+            colors: [secondary],
+          },
+        },
       },
       grid: {
-        borderColor: line
+        borderColor: line,
       },
       tooltip: {
-        theme: 'light'
+        theme: "light",
       },
       legend: {
-        position: 'top',
-        horizontalAlign: 'right',
+        position: "top",
+        horizontalAlign: "right",
         labels: {
-          colors: 'grey.500'
-        }
-      }
+          colors: "grey.500",
+        },
+      },
     }));
   }, [primary, secondary, line, warning, primaryMain, successDark]);
 
   return (
-    <div id="chart" style={{backgroundColor:'white', borderRadius:'5px'}}>
-      <ReactApexChart options={options} series={series} type="bar" height={350} />
+    <div id="chart" style={{ backgroundColor: "white", borderRadius: "5px" }}>
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="bar"
+        height={350}
+      />
     </div>
   );
 };
