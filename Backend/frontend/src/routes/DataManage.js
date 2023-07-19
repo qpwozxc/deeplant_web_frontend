@@ -149,10 +149,10 @@ function DataManage() {
     </Box>
 
     
-    <Box sx={{display:'flex', width:"100%", marginBottom:'10px', marginTop:'20px'}}>
-      <StatsTabs/>
+    <Box sx={{display:'flex', width:"100%", marginBottom:'10px', marginTop:'20px', padding:'0px 50px'}}>
+      <StatsTabs pieChartData = {pieChartD1}/>
       <div style={{display:'flex', width:"100%"}}>
-        <StatsTabs/>
+        <StatsTabs pieChartData = {pieChartD2}/>
         <div>지도</div>
       </div>
     </Box>
@@ -212,6 +212,25 @@ function DataManage() {
 }
 
 export default DataManage;
+
+const pieChartD1 = {
+  title :'신선육/숙성육',
+  chartData : [
+    {label:'신선육', value:520},
+    {label:'숙성육', value:1520}
+  ],
+  chartColorsNum:2,
+  isFilter:false,
+}
+const pieChartD2 = {
+  title :'소/돼지',
+  chartData : [
+    {label:'소', value:1520},
+    {label:'돼지', value:220}
+  ],
+  chartColorsNum:2,
+  isFilter:true,
+}
 
 const styles={
   fixed:{
