@@ -4,7 +4,7 @@ import LogIn from "./routes/LogIn";
 import Home from "./routes/Home";
 import DataManage from "./routes/DataManage";
 import Stats from "./routes/Stats";
-
+import PA from "./routes/PA";
 import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import UserManagement from "./routes/UserManagement";
@@ -37,6 +37,11 @@ function App() {
       path: "/dataView/:id",
       title: "DataView | DeePlant",
       component: <DataEdit />,
+    },
+    {
+      path: "/PA",
+      title: "PA | DeePlant",
+      component: <PA />,
     },
     {
       path: "/stats",

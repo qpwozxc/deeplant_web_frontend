@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader, Typography } from '@mui/material';
+
+import { Card, CardHeader, Autocomplete, TextField, Select, MenuItem ,FormControl } from '@mui/material';
 // utils
 import { fNumber } from './formatNumber';
 // components
@@ -38,7 +39,7 @@ PieChart.propTypes = {
   chartData: PropTypes.array,
 };
 
-export default function PieChart({ title, subheader, chartColors, chartData, ...other }) {
+export default function PieChart({ title, subheader, chartColors, chartData, isFilter,...other }) {
   const theme = useTheme();
 
   const chartLabels = chartData.map((i) => i.label);
@@ -68,10 +69,32 @@ console.log('chartcolors:', chartColors, chartLabels, chartData);
   return (
     <Card {...other}>
   
+      <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}></CardHeader>
+      {isFilter?
+      <div style={{display:'flex'}}>
+          <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={meatType}
+          sx={{ marginLeft:2, width: 150 }}
+          renderInput={(params) => <TextField {...params} label="주제선택" />}
+          />
+          <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={meatType}
+          sx={{ marginLeft:2, width: 150 }}
+          renderInput={(params) => <TextField {...params} label="분류 선택" />}
+          />
+      </div>:
+      <div></div>
+      }
       <StyledChartWrapper dir="ltr" style={{marginTop:'20px'}}>
         <ReactApexChart type="pie" series={chartSeries} options={chartOptions} height={180} />
       </StyledChartWrapper>
     </Card>
   );
 }
-//    <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}/>
+//    
+
+const meatType  = [{label:"소"},{label:"돼지"} ]

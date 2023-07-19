@@ -40,7 +40,9 @@ function a11yProps(index) {
   };
 }
 
-export default function StatsTabs() {
+
+export default function StatsTabs(props) {
+    const {pieChartData} = props;
     const [value, setValue] = useState(0);
     const [slot, setSlot] = useState('week');
     const theme = useTheme();
@@ -49,12 +51,13 @@ export default function StatsTabs() {
     };
 
     const pieChartColors  = [ 
-      theme.palette.primary.main,
-      theme.palette.info.main,
-      theme.palette.warning.main,
-      theme.palette.error.main,
+lette.success.light,
       theme.palette.secondary.dark,
       theme.palette.success.light,
+      theme.palette.primary.main,
+      theme.palette.warning.main,
+      theme.palette.info.main,
+      theme.palette.error.main,
       theme.palette.info.light,
       theme.palette.secondary.main,
       theme.palette.warning.light,
@@ -69,11 +72,12 @@ export default function StatsTabs() {
     ];
     //console.log('chart colors',pieChartColors.slice(0,chartDatas.pieChart.chartColorsNum));
     return (
-      <Box sx={{ width: '60%' ,paddingTop:'10px' }}>
+
+      <Box sx={{ width: 'fit-content' ,paddingTop:'0px' }}>
         <PieChart 
-            title= {chartDatas.pieChart.title}
-            chartData={chartDatas.pieChart.chartData}
-            chartColors={pieChartColors.slice(0,chartDatas.pieChart.chartColorsNum)}
+            title= {pieChartData.title}
+            chartData={pieChartData.chartData}
+            chartColors={pieChartColors.slice(0,pieChartData.chartColorsNum)}
           />
         
       </Box>

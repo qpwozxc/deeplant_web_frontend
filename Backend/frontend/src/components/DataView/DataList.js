@@ -9,34 +9,6 @@ import PropTypes from 'prop-types';
 function DataList({meatList}){
     const [isReviewed, setIsReviewed] = useState(false);
     const id = 1;
-    // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
-    const headCells = [
-        {
-          id: 'trackingNo',
-          align: 'left',
-          disablePadding: false,
-          label: 'No.'
-        },
-        {
-          id: 'name',
-          align: 'left',
-          disablePadding: true,
-          label: '관리번호'
-        },
-        {
-          id: 'carbs',
-          align: 'left',
-          disablePadding: false,
-      
-          label: '검토 상태'
-        },
-        {
-          id: 'protein',
-          align: 'right',
-          disablePadding: false,
-          label: '삭제'
-        }
-      ];
     // ==============================|| ORDER TABLE - HEADER ||============================== //
 
     function OrderTableHead({ order, orderBy }) {
@@ -62,41 +34,7 @@ function DataList({meatList}){
         order: PropTypes.string,
         orderBy: PropTypes.string
     };
-    // ==============================|| ORDER TABLE - STATUS ||============================== //
-
-    const OrderStatus = ({ status }) => {
-        let color;
-        let title;
-    
-        switch (status) {
-        case 0:
-            color = 'warning';
-            title = 'warning';
-            break;
-        case 1:
-            color = 'success';
-            title = 'Reviewed';
-            break;
-        case 2:
-            color = 'error';
-            title = 'Rejected';
-            break;
-        default:
-            color = 'primary';
-            title = 'None';
-        }
-    
-        return (
-        <Stack direction="row" spacing={1} alignItems="center">
-            <Dot color={color} />
-            <Typography>{title}</Typography>
-        </Stack>
-        );
-    };
-    
-    OrderStatus.propTypes = {
-        status: PropTypes.number
-    };
+ 
     // ==============================|| ORDER TABLE ||============================== //
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
@@ -151,11 +89,26 @@ function DataList({meatList}){
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
                     <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
-                        {content}
+                        {content.id}
                     </Link>
                     </TableCell>
+                    <TableCell>
+                        {content.farmAddr}
+                    </TableCell>
+                    <TableCell>
+                        {content.userName }
+                    </TableCell>
+                    <TableCell>
+                        {content.userType }
+                    </TableCell>
+                    <TableCell>
+                        {content.company}
+                    </TableCell>
+                    <TableCell>
+                        {content.meatCreatedAt}
+                    </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        <OrderStatus status={(index==3||index==5)?2: 1} />
+                        <OrderStatus status={(index==3||index==5)?2: (index==0)?0:1} />
                     </TableCell>
                     <TableCell align="right" style={{padding:"5px"}}>
                         <IconButton aria-label="delete" color="primary">
@@ -174,14 +127,100 @@ function DataList({meatList}){
   
 }
 
-/*
-                {  
-                isReviewed ? 
-                <Button size="small" className={style.list_buttons_button} variant="contained" disabled>Review</Button> : 
-                <Button size="small" className={style.list_buttons_button} variant="contained" onClick={()=>{setIsReviewed(true)}}>Review</Button>
-                } 
-  
-
-*/
 
 export default DataList;
+
+// ==============================|| ORDER TABLE - HEADER CELL ||============================== //
+const headCells = [
+    {
+      id: 'trackingNo',
+      align: 'left',
+      disablePadding: false,
+      label: 'No.'
+    },
+    {
+      id: 'id',
+      align: 'left',
+      disablePadding: true,
+      label: '관리번호'
+    },
+    {
+        id: 'farmAddr',
+        align: 'left',
+        disablePadding: true,
+        label: '농장주소'
+    },
+    {
+        id: 'userName',
+        align: 'left',
+        disablePadding: true,
+        label: '등록인'
+    },
+    {
+        id: 'userType',
+        align: 'center',
+        disablePadding: true,
+        label: '등록인 타입'
+    },
+    {
+        id: 'company',
+        align: 'center',
+        disablePadding: true,
+        label: '회사'
+    },
+    {
+        id: 'createdAt',
+        align: 'left',
+        disablePadding: true,
+        label: '생성 날짜'
+    },
+    {
+      id: 'carbs',
+      align: 'left',
+      disablePadding: false,
+  
+      label: '검토 상태'
+    },
+    {
+      id: 'protein',
+      align: 'right',
+      disablePadding: false,
+      label: '삭제'
+    }
+  ];
+
+    // ==============================|| ORDER TABLE - STATUS ||============================== //
+
+    const OrderStatus = ({ status }) => {
+    let color;
+    let title;
+
+    switch (status) {
+    case 0:
+        color = 'warning';
+        title = '초기 상태';
+        break;
+    case 1:
+        color = 'success';
+        title = '검토 완료';
+        break;
+    case 2:
+        color = 'secondary';
+        title = '진행 중';
+        break;
+    default:
+        color = 'primary';
+        title = 'None';
+    }
+
+    return (
+    <Stack direction="row" spacing={1} alignItems="center">
+        <Dot color={color} />
+        <Typography>{title}</Typography>
+    </Stack>
+    );
+};
+
+OrderStatus.propTypes = {
+    status: PropTypes.number
+};
