@@ -4,12 +4,7 @@ import PieChart from './pieChart';
 
 export default function StatsTabs(props) {
     const {pieChartData} = props;
-    const [value, setValue] = useState(0);
-    const [slot, setSlot] = useState('week');
     const theme = useTheme();
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
 
     const pieChartColors  = [ 
       theme.palette.success.light,
@@ -43,19 +38,3 @@ export default function StatsTabs(props) {
     );
 }
 
-const chartDatas = {
-  pieChart:{
-    title:"지역별 소 도축 수",
-    chartData : [
-      { label: '서울', value: 39 },
-      { label: '부산', value: 1763 },
-      { label: '대구', value: 13039 },
-      { label: '인천', value: 22324 },
-      { label: '광주', value: 4471 },
-      { label: '대전', value: 4795 },
-      { label: '울산', value: 39843 },
-      { label: '세종', value: 30549 },
-    ],
-    chartColorsNum :8,
-  },
- };

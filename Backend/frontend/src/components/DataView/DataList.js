@@ -166,7 +166,7 @@ const headCells = [
         id: 'company',
         align: 'center',
         disablePadding: true,
-        label: '회사'
+        label: '소속'
     },
     {
         id: 'createdAt',
