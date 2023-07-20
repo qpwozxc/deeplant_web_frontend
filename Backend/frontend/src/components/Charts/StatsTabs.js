@@ -51,7 +51,7 @@ export default function StatsTabs(props) {
     };
 
     const pieChartColors  = [ 
-lette.success.light,
+      theme.palette.success.light,
       theme.palette.secondary.dark,
       theme.palette.success.light,
       theme.palette.primary.main,
@@ -72,12 +72,8 @@ lette.success.light,
     ];
     //console.log('chart colors',pieChartColors.slice(0,chartDatas.pieChart.chartColorsNum));
     return (
-<<<<<<< HEAD
       <Box sx={{ width: '100%' ,paddingTop:'0px',marginLeft:'16px'}}>
-=======
 
-      <Box sx={{ width: 'fit-content' ,paddingTop:'0px' }}>
->>>>>>> 06d0714c5291a759763933fdee7a594b85c1e2ae
         <PieChart 
             title= {pieChartData.title}
             chartData={pieChartData.chartData}
