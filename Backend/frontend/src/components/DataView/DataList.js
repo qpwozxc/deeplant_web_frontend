@@ -108,7 +108,7 @@ function DataList({meatList}){
                         {content.meatCreatedAt}
                     </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        <OrderStatus status={(index==3||index==5)?2: (index==0)?0:1} />
+                        <OrderStatus status={(index===3||index===5)?2: (index===0)?0:1} />
                     </TableCell>
                     <TableCell align="right" style={{padding:"5px"}}>
                         <IconButton aria-label="delete" color="primary">
@@ -179,7 +179,7 @@ const headCells = [
       align: 'left',
       disablePadding: false,
   
-      label: '검토 상태'
+      label: '승인 여부'
     },
     {
       id: 'protein',
@@ -197,16 +197,16 @@ const headCells = [
 
     switch (status) {
     case 0:
-        color = 'warning';
-        title = '초기 상태';
+        color = 'error';
+        title = '반려';
         break;
     case 1:
         color = 'success';
-        title = '검토 완료';
+        title = '승인';
         break;
     case 2:
         color = 'secondary';
-        title = '진행 중';
+        title = '대기';
         break;
     default:
         color = 'primary';

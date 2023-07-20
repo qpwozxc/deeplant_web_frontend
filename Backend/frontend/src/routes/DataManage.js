@@ -2,13 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import SearchFilterBar from "../components/Search/SearchFilterBar";
 import DataList from "../components/DataView/DataList";
 import Pagination from "react-bootstrap/Pagination";
-import StatsTabs from "../components/Charts/StatsTabs";
+import StatsTabs from "../components/Charts/PieChart/StatsTabs";
 import Map from "../components/Charts/choroplethMap/Map";
 import Spinner from "react-bootstrap/Spinner";
-import { ExcelRenderer, OutTable } from "react-excel-renderer";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import { Box, Button,  Autocomplete, TextField, Select, MenuItem ,FormControl,SvgIcon,InputLabel} from "@mui/material";
+import { Box, Button,  Autocomplete, TextField, Select, MenuItem ,FormControl,SvgIcon,InputLabel,Divider} from "@mui/material";
 import ExcelController from "../components/Meat/excelContr";
 function DataManage() {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -100,7 +97,7 @@ function DataManage() {
         )}
         </div>
           
-        <Box sx={{display:'flex', marginTop:'40px'}}>
+        <Box sx={{display:'flex', marginTop:'40px', width:'100%', justifyContent:'center'}}>
         <Pagination>
           <Pagination.First />
           <Pagination.Prev
@@ -139,64 +136,66 @@ function DataManage() {
         </Box>
       </div>
     :
-    <Box sx={{display:'flex', width:"100%", marginBottom:'10px', marginTop:'60px', padding:'0px 50px'}}>
-    
-      <div style={{display:'flex', width:"100%"}}>
-      <div>
-        <div style={{display:'flex', marginBottom:'20px'}}>
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-          <InputLabel id="demo-select-small-label">주제선택</InputLabel>
-          <Select
-            labelId="demo-select-small-label"
-            id="demo-select-small"
-            value={meatType}
-            label="주제선택"
-            onChange={(e)=>{setMeatType(e.target.value)}}
-          >
-            {
-              meatCategory.map((m)=>{
-              return(
-                <MenuItem value={m.value}>{m.label}</MenuItem>
-              );
-              })
-            }
-          </Select>
-        </FormControl>
-            {
-            meatType === 'total'
-            ?<div></div>
-            :
+    <Box sx={{display:'flex', width:"100vw", marginBottom:'10px', marginTop:'65px', justifyContent:'center', alignItems:'center'}}>   
+      <div style={{width:'500px'}}>
+        <StatsTabs pieChartData = {pieChartD1} />
+        <Divider variant="middle" style={{marginTop:'20px',backgroundColor:'#9e9e9e',width:'100%'}}  />
+        <div>
+            <div style={{display:'flex', marginTop:'30px',marginBottom:'10px'}}>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel id="demo-select-small-label"> { meatType === 'cow'?'소':'돼지'}</InputLabel>
-            <Select
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              value={meatCat}
-              label="소"
-              onChange={(e)=>{setMeatCat(e.target.value)}}
-            >
-              { meatType === 'cow'
-                ?cowCategory.map((m)=>{
-                return(
-                  <MenuItem value={m.value}>{m.label}</MenuItem>
-                );
-                })
-                :pigCategory.map((m)=>{
+              <InputLabel id="demo-select-small-label">주제선택</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={meatType}
+                label="주제선택"
+                onChange={(e)=>{setMeatType(e.target.value)}}
+              >
+                {
+                  meatCategory.map((m)=>{
                   return(
                     <MenuItem value={m.value}>{m.label}</MenuItem>
                   );
                   })
+                }
+              </Select>
+            </FormControl>
+                {
+                meatType === 'total'
+                ?<div></div>
+                :
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small-label"> { meatType === 'cow'?'소 부위':'돼지 부위'}</InputLabel>
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  value={meatCat}
+                  label="소"
+                  onChange={(e)=>{setMeatCat(e.target.value)}}
+                >
+                  { meatType === 'cow'
+                    ?cowCategory.map((m)=>{
+                    return(
+                      <MenuItem value={m.value}>{m.label}</MenuItem>
+                    );
+                    })
+                    :pigCategory.map((m)=>{
+                      return(
+                        <MenuItem value={m.value}>{m.label}</MenuItem>
+                      );
+                      })
 
+                  }
+                </Select>
+              </FormControl>
               }
-            </Select>
-          </FormControl>
-          }
+            </div>
+            <StatsTabs pieChartData = {pieChartD2} />
         </div>
-        <StatsTabs pieChartData = {pieChartD2} sx={{marginLeft:'76px'}}/>
-      </div>
-      <div style={{marginLeft:'20px'}}><Map/></div>
-      </div>
-      <StatsTabs pieChartData = {pieChartD1}/>
+      </div>  
+      <div style={{marginRight:'50px', marginLeft:'150px'}}><Map/></div>
+      
+      
     </Box>
 
     }
@@ -236,7 +235,7 @@ const styles={
     width:'100%',
     borderRadius:'0',
     display:'flex',
-    justifyContent:'space-between',
+    justifyContent:'center',
     backgroundColor:'white',
   },
   fixedTab:{
@@ -248,11 +247,14 @@ const styles={
     borderRadius:'0',
     backgroundColor:'',
     display:'flex', 
-    justifyContent:'end' ,
-    marginBottom:'10px', 
+    justifyContent:'start' ,
+   // marginBottom:'10px', 
     marginTop:'30px', 
     padding:'0px 100px', 
-    //borderBottom:'1px solid grey'
+    borderBottom:'solid rgba(0, 0, 0, 0.12)',
+    borderBottomWidth: 'thin',
+    marginLeft: '16px',
+    marginRight: '16px',
   },
   tabBtn:{
     border:'none',

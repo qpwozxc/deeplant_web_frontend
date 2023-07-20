@@ -28,9 +28,9 @@ const cards = [
     link: "/Home",
   },
   {
-    title: "데이터 관리",
-    description: "육류 데이터 관리/검토",
-    sub_description: "육류 데이터 관리/검토 ",
+    title: "대시보드",
+    description: "대시보드",
+    sub_description: "대시보드",
     image: MeatImage,
     imageSize: { height: 140, width: "100%" },
     link: "/DataManage",

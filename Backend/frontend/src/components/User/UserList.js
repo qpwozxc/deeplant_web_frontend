@@ -5,14 +5,7 @@ import UserRegister from "./UserRegister";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { db } from "../../firebase-config";
-import {
-  collection,
-  getDocs,
-  getDoc,
-  addDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import {collection, getDocs, getDoc, addDoc, deleteDoc, doc,} from "firebase/firestore";
 import InputBase from "@mui/material/InputBase";
 import { ButtonGroup } from "react-bootstrap";
 import Grid from "@mui/material/Grid";
@@ -161,7 +154,7 @@ function UserList() {
   return (
     <div>
       <Toolbar />
-      <Container maxWidth="lg" sx={{ mt: 20, mb: 4 }}>
+      <Container maxWidth="lg" sx={{  mb: 4 }}>
         <Paper
           sx={{
             p: 2,

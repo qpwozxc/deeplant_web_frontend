@@ -37,7 +37,7 @@ const mainListItems = [
     path: "/Home",
   },
   {
-    label: "대쉬보드",
+    label: "대시보드",
     icon: <DataThresholdingIcon sx={{ fontSize: 30 }} />,
     path: "/DataManage",
   },
@@ -156,7 +156,7 @@ function Sidebar() {
               <PersonIcon />
             </Badge>
             <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
-              프로필
+              박수현님
             </Typography>
           </IconButton>
 

@@ -24,7 +24,7 @@ const ChoroplethMap = ({data})=>{
             weight: 1,
             opacity: 1,
             color: 'white',
-            fillOpacity: 0.7
+            fillOpacity: 0.9
           };
         };
 
@@ -43,14 +43,23 @@ const ChoroplethMap = ({data})=>{
    
  
     return (
-        <div style={{width:'500px', height:'600px'}}>
+        
             <MapContainer center={[35.8754 , 128.5823]}style={{height:'600px'}} zoom={7}/* scrollWheelZoom={false}*/>      
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"  />
+                <TileLayer style={styles.customTileLayer} url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"  />
                 <GeoJSON data={data} style={style} onEachFeature={onEachFeature} />               
             </MapContainer>
-        </div>
+        
    
     );
 }
 //
 export default ChoroplethMap;
+const styles = {
+  customTileLayer : {
+    /* Add your custom styles here */
+    /* For example: */
+    border: '5px solid #ccc',
+    borderRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+  }
+}

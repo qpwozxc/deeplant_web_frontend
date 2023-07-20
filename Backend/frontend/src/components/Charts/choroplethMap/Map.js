@@ -5,9 +5,9 @@ import ChoroplethMap from './ChoroplethMap';
 console.log(geojsonData);
 function Map(){
     return(
-        <>
+        <div style={{width:'500px', height:'600px'}}>
         <ChoroplethMap data={geojsonData}/>
-        </>
+        </div>
     );
 }
 
