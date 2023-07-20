@@ -1,24 +1,45 @@
 import { useEffect, useState } from 'react';
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
-
 // third-party
 import ReactApexChart from 'react-apexcharts';
 
 // chart options
 const columnChartOptions = {
   chart: {
-    type: "bar",
-    height: 430,
+    type: 'bar',
+    height: 350,
+    stacked: true,
     toolbar: {
-      show: false,
+      show: true
     },
+    zoom: {
+      enabled: true
+    }
   },
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      legend: {
+        position: 'bottom',
+        offsetX: -10,
+        offsetY: 0
+      }
+    }
+  }],
   plotOptions: {
     bar: {
-      columnWidth: "30%",
-      borderRadius: 4,
+      horizontal: false,
+      borderRadius: 10,
+      dataLabels: {
+        total: {
+          enabled: true,
+          style: {
+            fontSize: '13px',
+            fontWeight: 900
+          }
+        }
+      }
     },
   },
   dataLabels: {
@@ -31,10 +52,8 @@ const columnChartOptions = {
   },
   xaxis: {
     categories: [
-      "Sourness(신맛)",
-      "Bitterness(진한맛)",
-      "Umami(감칠맛)",
-      "Richness(후미)",
+      "소",
+      "돼지",
     ],
   },
   yaxis: {
@@ -42,8 +61,12 @@ const columnChartOptions = {
       text: "$ (thousands)",
     },
   },
+  legend: {
+    position: 'right',
+    offsetY: 40
+  },
   fill: {
-    opacity: 1,
+    opacity: 1
   },
   tooltip: {
     y: {
@@ -52,7 +75,7 @@ const columnChartOptions = {
       },
     },
   },
-  legend: {
+  /*legend: {
     show: true,
     fontFamily: `'Public Sans', sans-serif`,
     offsetX: 10,
@@ -72,16 +95,7 @@ const columnChartOptions = {
       vertical: 50,
     },
   },
-  responsive: [
-    {
-      breakpoint: 600,
-      options: {
-        yaxis: {
-          show: false,
-        },
-      },
-    },
-  ],
+  */
 };
 
 // ==============================|| SALES COLUMN CHART ||============================== //
@@ -91,19 +105,59 @@ const StackedBarChart = () => {
 
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
-
+  const stackColors  = [ 
+    theme.palette.primary.light,
+    theme.palette.secondary.dark,
+    theme.palette.success.light,
+    theme.palette.primary.main,
+    theme.palette.warning.main,
+    theme.palette.info.main,
+    theme.palette.error.main,
+    theme.palette.info.light,
+    theme.palette.secondary.main,
+    theme.palette.warning.light,
+    theme.palette.action.main,
+    theme.palette.success.main,
+    theme.palette.mode.main,
+    theme.palette.success.dark,
+    theme.palette.secondary.light,
+    theme.palette.error.light,
+    theme.palette.warning.dark,
+    theme.palette.secondary.dark,
+  ];
   const warning = theme.palette.warning.main;
   const primaryMain = theme.palette.primary.main;
   const successDark = theme.palette.success.dark;
 
   const [series] = useState([
+    
     {
-      name: "신선육",
-      data: [180, 90, 135, 114, 120, 145],
+      name: "등심",
+      data: [120, 45],
     },
     {
-      name: "숙성육",
-      data: [120, 45, 78, 150, 168, 99],
+      name: "삼겹살",
+      data: [0, 55],//값 넣을때 비율로 계산해서 넣기 
+    },
+    {
+      name: "채끝",
+      data: [110, 0],
+    },
+    {
+      name: "목심",
+      data: [180, 90],
+    },
+    {
+      name: "앞다리",
+      data: [180, 90],
+    },
+    {
+      name: "안심",
+      data: [180, 90],
+    },
+    {
+      name: "안심",
+      data: [180, 90],
     },
   ]);
 
@@ -112,25 +166,18 @@ const StackedBarChart = () => {
   useEffect(() => {
     setOptions((prevState) => ({
       ...prevState,
-      colors: [warning, primaryMain],
+      colors: stackColors,
       xaxis: {
         labels: {
           style: {
-            colors: [
-              secondary,
-              secondary,
-              secondary,
-              secondary,
-              secondary,
-              secondary,
-            ],
+            colors: stackColors,
           },
         },
       },
       yaxis: {
         labels: {
           style: {
-            colors: [secondary],
+            colors: stackColors,
           },
         },
       },
@@ -140,15 +187,9 @@ const StackedBarChart = () => {
       tooltip: {
         theme: "light",
       },
-      legend: {
-        position: "top",
-        horizontalAlign: "right",
-        labels: {
-          colors: "grey.500",
-        },
-      },
+      
     }));
-  }, [primary, secondary, line, warning, primaryMain, successDark]);
+  }, [stackColors]);
 
   return (
     <div id="chart" style={{ backgroundColor: "white", borderRadius: "5px" }}>
@@ -156,10 +197,37 @@ const StackedBarChart = () => {
         options={options}
         series={series}
         type="bar"
-        height={350}
+        height={450}
       />
     </div>
   );
 };
 
 export default StackedBarChart;
+
+const series=[
+  {
+    name:''
+  }
+]
+const cowCategory = [
+  { value: "tenderloin", label: "안심" },
+  { value: "sirloin", label: "등심" },
+  { value: "chuck", label: "목심" },
+  { value: "blade", label: "앞다리" },
+  { value: "rib", label: "갈비" },
+  { value: "striploin", label: "채끝" },
+  { value: "round", label: "우둔" },
+  { value: "bottom_round", label: "설도" },
+  { value: "brisket", label: "양지" },
+  { value: "shank", label: "사태" },
+]; 
+const pigCategory = [
+  { value: "tenderloin", label: "안심" },
+  { value: "loin", label: "등심" },
+  { value: "boston_shoulder", label: "목심" },
+  { value: "picinc_shoulder", label: "앞다리" },
+  { value: "spare_ribs", label: "갈비" },
+  { value: "belly", label: "삼겹살" },
+  { value: "ham", label: "뒷다리" },
+];

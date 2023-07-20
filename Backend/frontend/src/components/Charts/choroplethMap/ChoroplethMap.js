@@ -44,7 +44,7 @@ const ChoroplethMap = ({data})=>{
  
     return (
         
-            <MapContainer center={[35.8754 , 128.5823]}style={{height:'600px'}} zoom={7}/* scrollWheelZoom={false}*/>      
+            <MapContainer center={[35.8754 , 128.5823]}style={{height:'350px'}} zoom={6} scrollWheelZoom={false}>      
                 <TileLayer style={styles.customTileLayer} url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"  />
                 <GeoJSON data={data} style={style} onEachFeature={onEachFeature} />               
             </MapContainer>

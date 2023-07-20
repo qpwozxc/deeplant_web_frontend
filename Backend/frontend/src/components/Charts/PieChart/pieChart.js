@@ -41,7 +41,26 @@ PieChart.propTypes = {
 
 export default function PieChart({ title, subheader, chartColors, chartData, isFilter,...other }) {
   const theme = useTheme();
-
+  const pieChartColors  = [ 
+    theme.palette.success.light,
+    theme.palette.secondary.dark,
+    theme.palette.success.light,
+    theme.palette.primary.main,
+    theme.palette.warning.main,
+    theme.palette.info.main,
+    theme.palette.error.main,
+    theme.palette.info.light,
+    theme.palette.secondary.main,
+    theme.palette.warning.light,
+    theme.palette.action.main,
+    theme.palette.success.main,
+    theme.palette.mode.main,
+    theme.palette.success.dark,
+    theme.palette.secondary.light,
+    theme.palette.error.light,
+    theme.palette.warning.dark,
+    theme.palette.secondary.dark,
+  ];
   const chartLabels = chartData.map((i) => i.label);
 
   const chartSeries = chartData.map((i) => i.value);
