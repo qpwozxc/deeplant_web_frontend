@@ -3,8 +3,8 @@ import { Box, Button,  Divider, useTheme, Tab ,TabContext ,TabList ,TabPanel} fr
 import DataList from "./DataList";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
-
-const DataListComp=()=>{
+import TransitionsModal from "./WarningComp";
+const RejectedDataListComp=()=>{
     const [isLoaded, setIsLoaded] = useState(true);
     const [meatList, setMeatList] = useState(sampleMeatList);
     const [currentPage, setCurrentPage] = useState(1);
@@ -57,18 +57,37 @@ const DataListComp=()=>{
     useEffect(() => {
       setCurrentPageArray(totalSlicedPageArray[0]);
     }, [totalSlicedPageArray]);  
+
+    // 삭제할 데이터 목록
+    const [deleteItems, setDeleteItems] = useState([]);
+    const [isDelClick, setIsDelClick] = useState(false);
+    const setDelete =(items)=>{
+        setDeleteItems(items);
+    }
+    // 삭제버튼 클릭
+    const handleDeleteBtn = () =>{
+        console.log('tow delete',deleteItems);
+        // 경고
+        setIsDelClick(true);
+        //console.log("iscliked", isDelClick);
+        // api 연결 
+    }
+    
+
     return(
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
         {isLoaded ? (
           //데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} isRJPg={false}/>
+          <DataList meatList={meatList} isRJPg={true} setDelete={setDeleteItems}/>
         ) : (
           // 데이터가 로드되지 않은 경우 로딩중 반환
-          <Spinner animation="border" />
+          <Spinner animation="border"/>
         )}
         </div>
-          
+          <Box sx={{display:'flex', margin:'20px 0', padding:'0px 100px', width:'100%', justifyContent:'start'}}>
+            <Button variant="contained" onClick={handleDeleteBtn}>삭제</Button>
+          </Box>
         <Box sx={{display:'flex', marginTop:'40px', width:'100%', justifyContent:'center'}}>
         <Pagination>
           <Pagination.First />
@@ -106,11 +125,16 @@ const DataListComp=()=>{
           <Pagination.Last disabled />
         </Pagination>
         </Box>
+        {
+            isDelClick       
+            ?<TransitionsModal id={deleteItems} setIsDelClick={setIsDelClick}/>
+            :<></>
+        }
       </div>
     );
 }
 
-export default DataListComp;
+export default RejectedDataListComp;
 
 const sampleMeatList = [
     {
@@ -123,75 +147,12 @@ const sampleMeatList = [
       accepted : 'rejected',
     },
     {
-      id:"000189843795-cattle-chuck-chuck",
-      userName:"김",
-      userType:'1',
-      company:'deeplant2',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 철원군",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-pig-boston_shoulder-boston_shoulder",
-      userName:"나",
-      userType:'3',
-      company:'deeplant1',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 홍천군",
-      accepted : 'rejected',
-    },
-    {
-      id:"000189843795-pig-tenderloin-foreshank",
-      userName:"박",
-      userType:'2',
-      company:'gsUniv',
-      meatCreatedAt:"11/13/2021",
-      farmAddr :"경기도 김포시",
-      accepted:'stand-by',
-    },
-    {
-      id:"000189843795-cattle-sirloin-ribeye_roll",
-      userName:"이",
-      userType:'3',
-      company:'deeplant2',
-      meatCreatedAt:"7/14/2022",
-      farmAddr :"경기도 안성시",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted:'stand-by',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
+        id:"000189843795-pig-boston_shoulder-boston_shoulder",
+        userName:"나",
+        userType:'3',
+        company:'deeplant1',
+        meatCreatedAt:"7/13/2023",
+        farmAddr :"강원도 홍천군",
+        accepted : 'rejected',
+      },
   ];

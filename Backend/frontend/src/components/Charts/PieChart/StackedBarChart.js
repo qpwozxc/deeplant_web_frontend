@@ -58,7 +58,7 @@ const columnChartOptions = {
   },
   yaxis: {
     title: {
-      text: "$ (thousands)",
+      text: "개",
     },
   },
   legend: {

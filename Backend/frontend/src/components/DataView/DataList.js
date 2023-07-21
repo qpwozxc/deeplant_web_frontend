@@ -1,30 +1,101 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import {Link as RouterLink} from "react-router-dom";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button,Checkbox } from '@mui/material';
 import Dot from "../Dot";
+import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
-function DataList({meatList}){
-    const [isReviewed, setIsReviewed] = useState(false);
-    const id = 1;
-    // ==============================|| ORDER TABLE - HEADER ||============================== //
+function DataList({meatList, isRJPg, setDelete}){
+    // 반려함 탭인지 목록 탭인지 확인 
+    const [isRejectPg, setIsRejectPg] = useState(false);
+    useEffect(()=>{
+        setIsRejectPg(isRJPg);
+    }, [isRJPg])
 
+    const id = 1;
+    // 삭제 체크박스
+    //checkboxItems에 체크박스 추가 
+    let checkboxes = {};
+    meatList.map((content)=>{   
+        checkboxes = {...checkboxes, [content.id] : false};
+    });
+    const [checkboxItems, setCheckboxItems] = useState(checkboxes);
+    const [selectAll , setSelectAll] = useState(false);
+
+    // 전체 선택을 누를 경우
+    const handleSelectAll=(e)=>{
+        const isChecked = e.target.checked;
+        setSelectAll(isChecked);
+        // 전체 체크박스의 체크 상태 한가지로 업데이트 
+        setCheckboxItems(
+            Object.keys(checkboxItems).reduce((acc, checkbox)=>{
+                acc[checkbox] = isChecked;
+                return acc;
+            },{})
+        );
+        
+    }
+
+    //한개 선택을 누를 경우
+    const handleCheckBoxChange = (event) => {
+        setCheckboxItems({...checkboxItems, [event.target.value]:event.target.checked,});
+    };
+     // 전체가 선택/해제되었을 경우 select all 체크박스 업데이트
+    useEffect(()=>{
+        const allChecked = Object.values(checkboxItems).every((value)=> value);
+        setSelectAll(allChecked);
+    },[checkboxItems]);
+
+    //부모로 삭제할 데이터 전달
+    useEffect(()=>{
+        let checkedList = [];
+        Object.entries(checkboxItems).map((c) => {
+            //return console.log(entrie[0]);
+            const id = c[0];
+            const checked = c[1];
+            checked? checkedList = ([...checkedList, c[0]]):checkedList = ([...checkedList])
+        })
+        if (typeof setDelete === 'function'){
+            console.log('fuction')
+            setDelete(checkedList);
+
+        }
+    }, [checkboxItems])
+
+    //리스트에 있는 삭제 버튼 클릭 시
+    const [isDelClick, setIsDelClick] = useState(false);
+    const [delId, setDelId] = useState(null);
+    const handleDelete = (id) =>{
+        // 경고
+        
+        setIsDelClick(true);
+        console.log("iscliked", isDelClick);
+        setDelId(id);
+    }
+
+  
+    // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
         return (
         <TableHead>
             <TableRow>
-            {headCells.map((headCell) => (
-                <TableCell
-                key={headCell.id}
-                align={headCell.align}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
-                >
-                {headCell.label}
+                {isRejectPg
+                ?<TableCell key={"checkbox"} align="center" padding="normal">
+                    <Checkbox checked={selectAll} label="전체선택" labelPlacement="top" onChange={(e)=>handleSelectAll(e)} inputProps={{ 'aria-label': 'controlled' }}/>
                 </TableCell>
-            ))}
+                :<></>}
+                {headCells.map((headCell) => (
+                    <TableCell
+                    key={headCell.id}
+                    align={headCell.align}
+                    padding={headCell.disablePadding ? 'none' : 'normal'}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                    {headCell.label}
+                    </TableCell>
+                ))}
             </TableRow>
         </TableHead>
         );
@@ -35,13 +106,14 @@ function DataList({meatList}){
         orderBy: PropTypes.string
     };
  
-    // ==============================|| ORDER TABLE ||============================== //
+    // 테이블 바디 
+    // 오름차순 내림차순 정렬
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
+    
     return (
         <Box style={{backgroundColor:"white", borderRadius:'5px'}}>
         <TableContainer
@@ -74,7 +146,11 @@ function DataList({meatList}){
                 {meatList.map((content, index) => {
                 const isItemSelected = isSelected(content);
                 const labelId = `enhanced-table-checkbox-${index}`;
-
+                
+                
+                const checkboxKey = content.id;
+                
+                
                 return (
                     <TableRow
                     hover
@@ -85,7 +161,10 @@ function DataList({meatList}){
                     key={index}
                     selected={isItemSelected}
                     >
-                    
+                    {isRejectPg
+                    ?<TableCell><Checkbox value={content.id} checked={checkboxItems[checkboxKey]} onChange={(e)=>handleCheckBoxChange(e)} inputProps={{ 'aria-label': 'controlled' }}  /></TableCell>
+                    : <></>
+                    }
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
                     <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
@@ -108,10 +187,20 @@ function DataList({meatList}){
                         {content.meatCreatedAt}
                     </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        <OrderStatus status={(index===3||index===5)?2: (index===0)?0:1} />
+                        {content.accepted === 'rejected' ?<OrderStatus status={0} />: <></> }
+                        {content.accepted === 'accepted' ?<OrderStatus status={1} />: <></> }
+                        {content.accepted === 'stand-by' ?<OrderStatus status={2} />: <></> }
                     </TableCell>
+                    {
+                    content.accepted === "accepted"
+                    ?<TableCell></TableCell>
+                    :<TableCell>
+                        <Button>검토</Button>
+                    </TableCell>
+                    }
+                    
                     <TableCell align="right" style={{padding:"5px"}}>
-                        <IconButton aria-label="delete" color="primary">
+                        <IconButton aria-label="delete" color="primary" onClick={()=>handleDelete(content.id)} >
                             <DeleteIcon />
                         </IconButton>
                     </TableCell>
@@ -122,6 +211,11 @@ function DataList({meatList}){
             </TableBody>
             </Table>
         </TableContainer>
+        {
+            isDelClick
+            ?<TransitionsModal id={delId} setIsDelClick={setIsDelClick}/>
+            :<></>
+        }
         </Box>
     );
   
@@ -130,7 +224,7 @@ function DataList({meatList}){
 
 export default DataList;
 
-// ==============================|| ORDER TABLE - HEADER CELL ||============================== //
+// 테이블 헤더 CELL
 const headCells = [
     {
       id: 'trackingNo',
@@ -170,17 +264,24 @@ const headCells = [
     },
     {
         id: 'createdAt',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: '생성 날짜'
     },
     {
-      id: 'carbs',
-      align: 'left',
+      id: 'accept',
+      align: 'center',
       disablePadding: false,
   
       label: '승인 여부'
     },
+    {
+        id: 'button',
+        align: 'center',
+        disablePadding: false,
+    
+        label: '검토'
+      },
     {
       id: 'protein',
       align: 'right',
@@ -189,8 +290,7 @@ const headCells = [
     }
   ];
 
-    // ==============================|| ORDER TABLE - STATUS ||============================== //
-
+    //테이블 상태 컴포넌트
     const OrderStatus = ({ status }) => {
     let color;
     let title;

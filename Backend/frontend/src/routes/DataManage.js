@@ -5,6 +5,8 @@ import SearchFilterBar from "../components/Search/SearchFilterBar";
 import DataListComp from "../components/DataView/DataListComp";
 // 목록 통계 컴포넌트
 import DataStat from "../components/Charts/DataStat";
+// 반려 데이터 목록 컴포넌트
+import RejectedDataListComp from "../components/DataView/RejectedDataListComp";
 // 엑셀 파일 export/ import 컴포넌트
 import ExcelController from "../components/Meat/excelContr";
 // mui 
@@ -35,7 +37,7 @@ function DataManage() {
 
     { value === "list" ? <DataListComp/> : <></>    }
     { value === "stat" ? <DataStat/> : <></> }
-    { value === "reject" ? <div>반려함</div> : <></>}
+    { value === "reject" ? <RejectedDataListComp/>: <></>}
     </div>
   );
 }
