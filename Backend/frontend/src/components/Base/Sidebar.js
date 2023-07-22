@@ -1,34 +1,26 @@
 import React, {useEffect} from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import ListItemButton from "@mui/material/ListItemButton";
-import Button from "@mui/material/Button";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import PersonIcon from "@mui/icons-material/Person";
-import Typography from "@mui/material/Typography";
-import ListItemText from "@mui/material/ListItemText";
-import Badge from "@mui/material/Badge";
+// import mui component
+import {ListItemButton ,Button,ListItemIcon,Typography, ListItemText, Badge, List,  Divider, IconButton, Toolbar, Tooltip } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
-import MenuIcon from "@mui/icons-material/Menu";
-import List from "@mui/material/List";
 import MuiAppBar from "@mui/material/AppBar";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
+// import icons
+import PersonIcon from "@mui/icons-material/Person";
+import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Toolbar from "@mui/material/Toolbar";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase-config";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
-import DeeplantLong from "../../src_assets/Deeplant_long.webp";
-import Tooltip from "@mui/material/Tooltip";
-import { red } from "@mui/material/colors";
 import { HiOutlineChip } from "react-icons/hi";
+
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase-config";
+
+import DeeplantLong from "../../src_assets/Deeplant_long.webp";
 
 const mainListItems = [
   {

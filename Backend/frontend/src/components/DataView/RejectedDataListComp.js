@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Button,  Divider, useTheme, Tab ,TabContext ,TabList ,TabPanel} from "@mui/material";
+// 데이터 목록 컴포넌트
 import DataList from "./DataList";
+// 삭제 경고창 컴포넌트
+import TransitionsModal from "./WarningComp";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
-import TransitionsModal from "./WarningComp";
+
 const RejectedDataListComp=()=>{
     const [isLoaded, setIsLoaded] = useState(true);
     const [meatList, setMeatList] = useState(sampleMeatList);

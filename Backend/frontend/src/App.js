@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import LogIn from "./routes/LogIn";
 import Home from "./routes/Home";
 import DataManage from "./routes/DataManage";
@@ -8,6 +9,7 @@ import PA from "./routes/PA";
 import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import UserManagement from "./routes/UserManagement";
+import DataConfirm from "./routes/DataConfirm";
 
 import Box from "@mui/material/Box";
 import Sidebar from "./components/Base/Sidebar";
@@ -34,6 +36,11 @@ function App() {
       component: <DataManage />,
     },
     {
+      path: "/DataConfirm",
+      title: "DataConfirm | Deeplant",
+      component: <DataConfirm/>,
+    },
+    {
       path: "/dataView/:id",
       title: "DataView | DeePlant",
       component: <DataEdit />,
@@ -55,7 +62,7 @@ function App() {
     },
     {
       path: "/UserManagement",
-      title: "UserManage | Deepl",
+      title: "UserManage | Deeplant",
       component: <UserManagement />,
     },
   ];

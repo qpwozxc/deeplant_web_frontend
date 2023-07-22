@@ -12,4 +12,3 @@ function Map(){
 }
 
 export default Map;
-// <ChoroplethMap data={geojsonData}/>

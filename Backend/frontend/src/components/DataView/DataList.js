@@ -195,7 +195,9 @@ function DataList({meatList, isRJPg, setDelete}){
                     content.accepted === "accepted"
                     ?<TableCell></TableCell>
                     :<TableCell>
-                        <Button>검토</Button>
+                        <Link color="#000000" component={RouterLink} to={{pathname : '/DataConfirm'}}>
+                            <Button>검토</Button>
+                        </Link>
                     </TableCell>
                     }
                     

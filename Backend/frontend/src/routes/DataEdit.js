@@ -11,7 +11,7 @@ import ExcelController from "../components/Meat/excelContr";
 import "bootstrap/dist/css/bootstrap.css"; 
 
 import { FaAngleDoubleLeft } from "react-icons/fa";
-const DataEdit=()=>{
+function DataEdit(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
 
@@ -84,11 +84,9 @@ const DataEdit=()=>{
   useEffect(() => {
     if (imgFile) {
       const reader = new FileReader();
-
       reader.onload = () => {
         setPreviewImage(reader.result);
       };
-
       reader.readAsDataURL(imgFile);
     }
   }, [imgFile]);
@@ -149,8 +147,6 @@ const DataEdit=()=>{
             </IconButton>
           </Link>
         </div>
-        
-       
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
           <ExcelController/>
         </div>
@@ -174,8 +170,7 @@ const DataEdit=()=>{
                     onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px" }}/>  
                     :
                     <span>이미지 업로드</span>
-                    }
-                     
+                    }               
                     </Button>
                   </ListGroup.Item>
                 </ListGroup>

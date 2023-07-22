@@ -18,26 +18,26 @@ function DataManage() {
 
   return (
     <div style={{overflow: 'overlay', width:'100%', marginTop:'140px'}}>
-    <Box sx={styles.fixed}>
-      <SearchFilterBar/>
-      <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
+      <Box sx={styles.fixed}>
+        <SearchFilterBar/>
+        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
         <ExcelController/>
-      </div>
-    </Box>
+        </div>
+      </Box>
 
-    <Box sx={styles.fixedTab}>
-      <div style={{display:'flex'}}>
-      <Button  style = {value === "list"? {} : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
-      <Button  style = {value === "stat"? {} : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
-      </div>
-      <div>
-      <Button  style = {value === "reject"? {} : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
-      </div>
-    </Box >
+      <Box sx={styles.fixedTab}>
+        <div style={{display:'flex'}}>
+          <Button  style = {value === "list"? {} : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
+          <Button  style = {value === "stat"? {} : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
+        </div>
+        <div>
+          <Button  style = {value === "reject"? {} : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
+        </div>
+      </Box >
 
-    { value === "list" ? <DataListComp/> : <></>    }
-    { value === "stat" ? <DataStat/> : <></> }
-    { value === "reject" ? <RejectedDataListComp/>: <></>}
+      { value === "list" ? <DataListComp/> : <></> }
+      { value === "stat" ? <DataStat/> : <></> }
+      { value === "reject" ? <RejectedDataListComp/>: <></>}
     </div>
   );
 }
