@@ -127,9 +127,10 @@ export function DataLoad() {
   // 3-2. 데이터를 json 객체로 만들기 
   const data = {
     id: sample.id,
-    email: sample.email,
+    userId: sample.userId,
     deepAging: sample.deepAging,
     fresh_data: sample.fresh,
+    /////////////////////
     heated_data: sample.heated,
     lab_data: sample.lab_data,
     saveTime: sample.saveTime,
@@ -142,10 +143,9 @@ export function DataLoad() {
 }
 
 const sample = {
-  butcheryPlaceNm: "도드람LPC",
+  birthYmd: "20000322",
   butcheryYmd: "20170920",
   deepAging: {
-   
       color: 2.3,
       marbling: 5.2,
       surfaceMoisture: 1,
@@ -154,11 +154,8 @@ const sample = {
       seqno: 1,
       minute: 290,
       date:'2021-12-15',
-  
-    
-    
   },
-  email: "example@example.com",
+  farmerNm: "전수현",
   farmAddr: "강원도 원주시 호저면 매호리",
   fresh: {
     color: 2.3,
@@ -170,13 +167,16 @@ const sample = {
   gradeNm: "3",
   heated: null,
   id: "1-2-3-4-5",
-  l_division: "rib",
+  primalValue: "sirloin",
   lab_data: null,
-  s_division: "chuck_short_rib",
+  secondaryValue: "ribeye_roll",
+  sexType: "거세",
   saveTime: "23:45",
   species: "cattle",
+  statusType: "승인",
   tongue: null,
-  traceNumber: "23",
+  traceNum: "23",
+  userId: "junsu0573@naver.com",
 };
 
 //data 받는 쪽에서 props 검사

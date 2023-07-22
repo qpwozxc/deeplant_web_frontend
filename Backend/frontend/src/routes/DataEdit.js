@@ -7,8 +7,8 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 
-import { DataLoad } from "../components/Meat/SingleDataLoad";
-import ExcelController from "../components/Meat/excelContr";
+import { DataLoad } from "../components/SingleData/SingleDataLoad";
+import ExcelController from "../components/SingleData/excelContr";
 import "bootstrap/dist/css/bootstrap.css"; 
 
 import { FaAngleDoubleLeft } from "react-icons/fa";
@@ -20,7 +20,7 @@ function DataEdit(){
     const resp = DataLoad();
     console.log("resp",resp);
 
-    const { id, email, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = resp;
+    const { id, userId, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = resp;
 
     //로그인한 관리자의 관리번호 받아오기
     const {editId} = useParams();
@@ -31,7 +31,7 @@ function DataEdit(){
     const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
     const tongueField = ['sourness','bitterness','umami_t','richness'];
     const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI'];
-    const apiField = ['traceNumber', 'species', 'l_division','s_division','gradeNm','farmAddr','butcheryPlaceNm','butcheryYmd'];
+    const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
     //탭 정보 
     const tabFields = [freshField, deepAgingField,heatedField, tongueField, labField, apiField,];
     const tabTitles = ["원육","처리육","가열육","전자혀","실험실","축산물 이력",]; 
@@ -52,6 +52,7 @@ function DataEdit(){
     // 데이터 수정 : multiple input에 대해서 input field를 value prop으로 만들기
     useEffect(()=>{
         tabFields.map((t,index)=>{
+          console.log('tab',t)
             t.forEach((f)=>{
                 if (datas[index] === null){
                     setInput((inputText)=>({
@@ -157,7 +158,7 @@ function DataEdit(){
               <Card.Text>
                 <ListGroup variant="flush">
                   <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                  <ListGroup.Item>email: {email}</ListGroup.Item>
+                  <ListGroup.Item>등록인: {userId}</ListGroup.Item>
                   <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>       
                   <ListGroup.Item>
                   <Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{}}>

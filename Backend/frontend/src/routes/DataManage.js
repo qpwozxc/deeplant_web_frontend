@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 // 검색 필터 컴포넌트
 import SearchFilterBar from "../components/Search/SearchFilterBar";
 // 목록 컴포넌트
-import DataListComp from "../components/DataView/DataListComp";
+import DataListComp from "../components/DataListView/DataListComp";
 // 목록 통계 컴포넌트
 import DataStat from "../components/Charts/DataStat";
 // 반려 데이터 목록 컴포넌트
-import RejectedDataListComp from "../components/DataView/RejectedDataListComp";
+import RejectedDataListComp from "../components/DataListView/RejectedDataListComp";
 // 엑셀 파일 export/ import 컴포넌트
-import ExcelController from "../components/Meat/excelContr";
+import ExcelController from "../components/SingleData/excelContr";
 // mui 
 import { Box, Button, } from "@mui/material";
 
