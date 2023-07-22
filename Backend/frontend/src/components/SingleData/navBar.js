@@ -1,28 +1,27 @@
-import { useState, useEffect, useRef } from "react";
 import { useParams,Link } from "react-router-dom";
 
-import DataView from "../components/SingleData/DataView";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import { FaAngleDoubleLeft } from "react-icons/fa";
+import ExcelController from "./excelContr";
 
-function DataConfirm(){
+function navBar(){
     return(
-        <Box sx={{ display: "flex"}}>
-        <Box sx={style.fixed}>
-          
+        <Box sx={{display:'flex', marginTop:'70px'}}>
+          <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
             <Link to={{pathname : '/DataManage'}} >
               <IconButton  size="large">
               <FaAngleDoubleLeft/>
               </IconButton>
             </Link>
-         
-        </Box>
-        <DataView page={"검토"}/>
+          </div>
+          <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
+            <ExcelController/>
+          </div>
         </Box>
     );
 }
 
-export default DataConfirm;
+export default navBar;
 
 const style={
     fixed:{
