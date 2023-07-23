@@ -7,12 +7,12 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
-function DataList({meatList, isRJPg, setDelete}){
-    // 반려함 탭인지 목록 탭인지 확인 
-    const [isRejectPg, setIsRejectPg] = useState(false);
+function DataList({meatList, pageProp, setDelete}){
+    // 반려함 탭인지 목록 탭인지 예측 탭인지 확인 
+    const [page, setPage] = useState('list');
     useEffect(()=>{
-        setIsRejectPg(isRJPg);
-    }, [isRJPg])
+        setPage(pageProp);
+    }, [pageProp])
 
     const id = 1;
     // 삭제 체크박스
@@ -81,7 +81,8 @@ function DataList({meatList, isRJPg, setDelete}){
         return (
         <TableHead>
             <TableRow>
-                {isRejectPg
+                {// 반려함 탭이나 예측 페이지인 경우 전체 선택 테이블 헤더 추가
+                page === 'reject' || page === 'pa'
                 ?<TableCell key={"checkbox"} align="center" padding="normal">
                     <Checkbox checked={selectAll} label="전체선택" labelPlacement="top" onChange={(e)=>handleSelectAll(e)} inputProps={{ 'aria-label': 'controlled' }}/>
                 </TableCell>
@@ -161,7 +162,8 @@ function DataList({meatList, isRJPg, setDelete}){
                     key={index}
                     selected={isItemSelected}
                     >
-                    {isRejectPg
+                    {//반려함인 경우 삭제 체크박스 추가
+                    page === 'reject'
                     ?<TableCell><Checkbox value={content.id} checked={checkboxItems[checkboxKey]} onChange={(e)=>handleCheckBoxChange(e)} inputProps={{ 'aria-label': 'controlled' }}  /></TableCell>
                     : <></>
                     }
@@ -290,10 +292,10 @@ const headCells = [
       disablePadding: false,
       label: '삭제'
     }
-  ];
+];
 
-    //테이블 상태 컴포넌트
-    const OrderStatus = ({ status }) => {
+//테이블 상태 컴포넌트
+const OrderStatus = ({ status }) => {
     let color;
     let title;
 

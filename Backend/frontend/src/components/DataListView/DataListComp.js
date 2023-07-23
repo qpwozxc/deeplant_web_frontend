@@ -63,7 +63,7 @@ const DataListComp=()=>{
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
         {isLoaded ? (
           //데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} isRJPg={false}/>
+          <DataList meatList={meatList} pageProp={'list'}/>
         ) : (
           // 데이터가 로드되지 않은 경우 로딩중 반환
           <Spinner animation="border" />
