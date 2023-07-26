@@ -52,12 +52,12 @@ const cards = [
     link: "/UserManagement",
   },
   {
-    title: "프로필",
-    description: "프로필 조회/수정",
-    sub_description: "프로필 조회/수정",
+    title: "데이터 예측",
+    description: "데이터 예측",
+    sub_description: "데이터 예측",
     image: ProfileImage,
     imageSize: { height: 140, width: "55%" },
-    link: "/Profile",
+    link: "/PA",
   },
   {
     title: "로그아웃",

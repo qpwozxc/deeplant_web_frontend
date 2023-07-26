@@ -23,9 +23,13 @@ function UserList() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
-
+  
   const handleRegisterClose = () => setRegisterShow(false);
   const handleRegisterShow = () => setRegisterShow(true);
+  const handleEditShow = (user) => {
+    setSelectedUser(user);
+    setEditShow(true);
+  };
   const handleEditClose = () => setEditShow(false);
 
   const users1CollectionRef = collection(db, "users_1");
@@ -93,10 +97,6 @@ function UserList() {
     }
   };
 
-  const handleEditShow = (user) => {
-    setSelectedUser(user);
-    setEditShow(true);
-  };
 
   const moveUserToAnotherCollection = async (
     sourceCollection,

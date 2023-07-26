@@ -58,54 +58,61 @@ const DataListComp=()=>{
       setCurrentPageArray(totalSlicedPageArray[0]);
     }, [totalSlicedPageArray]);  
     
-    return(
-        <div style={{marginTop:'70px'}}>
-        <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-        {isLoaded ? (
-          //데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} pageProp={'list'}/>
-        ) : (
-          // 데이터가 로드되지 않은 경우 로딩중 반환
-          <Spinner animation="border" />
-        )}
-        </div>
-          
-        <Box sx={{display:'flex', marginTop:'40px', width:'100%', justifyContent:'center'}}>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev
-            onClick={() => {
-              currentPN > 0
-                ? setCurrentPN(currentPN - 1)
-                : setCurrentPN(currentPN);
-              setCurrentPageArray(totalSlicedPageArray[currentPN]);
-            }}
-          />
-          {currentPageArray
-            ? currentPageArray.map((m, idx) => {
-                return (
-                  <Pagination.Item
-                    key={idx}
-                    onClick={() => {
-                      //페이지 api 불러오기
-                      setCurrentPage(m);
-                    }}
-                  >
-                    {m}
-                  </Pagination.Item>
-                );
-              })
-            : null}
-          <Pagination.Next
-            onClick={() => {
-              currentPN < totalSlicedPageArray.length - 1
-                ? setCurrentPN(currentPN + 1)
-                : setCurrentPN(currentPN);
-              setCurrentPageArray(totalSlicedPageArray[currentPN]);
-            }}
-          />
-          <Pagination.Last disabled />
-        </Pagination>
+    return (
+      <div style={{ marginTop: "70px" }}>
+        <Box>
+          {isLoaded ? (
+            //데이터가 로드된 경우 데이터 목록 반환
+            <DataList meatList={meatList} pageProp={"list"} />
+          ) : (
+            // 데이터가 로드되지 않은 경우 로딩중 반환
+            <Spinner animation="border" />
+          )}
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            marginTop: "40px",
+            width: "100%",
+            justifyContent: "center",
+          }}
+        >
+          <Pagination>
+            <Pagination.First />
+            <Pagination.Prev
+              onClick={() => {
+                currentPN > 0
+                  ? setCurrentPN(currentPN - 1)
+                  : setCurrentPN(currentPN);
+                setCurrentPageArray(totalSlicedPageArray[currentPN]);
+              }}
+            />
+            {currentPageArray
+              ? currentPageArray.map((m, idx) => {
+                  return (
+                    <Pagination.Item
+                      key={idx}
+                      onClick={() => {
+                        //페이지 api 불러오기
+                        setCurrentPage(m);
+                      }}
+                    >
+                      {m}
+                    </Pagination.Item>
+                  );
+                })
+              : null}
+            <Pagination.Next
+              onClick={() => {
+                currentPN < totalSlicedPageArray.length - 1
+                  ? setCurrentPN(currentPN + 1)
+                  : setCurrentPN(currentPN);
+                setCurrentPageArray(totalSlicedPageArray[currentPN]);
+              }}
+            />
+            <Pagination.Last disabled />
+          </Pagination>
         </Box>
       </div>
     );
