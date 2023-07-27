@@ -1,9 +1,21 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import PropTypes, { string } from "prop-types";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 // import mui component
-import {ListItemButton ,Button,ListItemIcon,Typography, ListItemText, Badge, List,  Divider, IconButton, Toolbar, Tooltip } from "@mui/material";
+import {
+  ListItemButton,
+  Button,
+  ListItemIcon,
+  Typography,
+  ListItemText,
+  Badge,
+  List,
+  Divider,
+  IconButton,
+  Toolbar,
+  Tooltip,
+} from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 // import icons
@@ -16,9 +28,6 @@ import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
 import { HiOutlineChip } from "react-icons/hi";
-
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase-config";
 
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
 
@@ -103,21 +112,36 @@ function Sidebar() {
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const userEmail = new URLSearchParams(location.search).get("userId");
+  const [username, setUsername] = useState("");
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
   const logout = async () => {
     try {
-      await signOut(auth);
+      console.log(userEmail);
+      fetch(`http://localhost:8080/user/logout?id=${userEmail}`);
       navigate("/");
     } catch (error) {
       console.log(error.message);
     }
   };
+  const TestFunction = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/user?userId=${userEmail}`
+      );
+      const user = await response.json();
+      setUsername(user.name); // Update the state with the username
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
-  useEffect(() => {}, [location]);
+  useEffect(() => {
+    TestFunction();
+  }, [location]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -147,9 +171,20 @@ function Sidebar() {
             <Badge color="secondary">
               <PersonIcon />
             </Badge>
-            <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
-              박수현님
-            </Typography>
+            {username ? (
+              <Typography
+                component="h1"
+                variant="h6"
+                noWrap
+                sx={{ flexGrow: 1 }}
+              >
+                {username}님
+              </Typography>
+            ) : (
+              <Typography component="span" variant="body1" sx={{ flexGrow: 1 }}>
+                Loading... {/* or any loading message */}
+              </Typography>
+            )}
           </IconButton>
 
           <IconButton onClick={logout}>
@@ -209,8 +244,8 @@ function Sidebar() {
   );
 }
 
-Sidebar.propTypes={
-    width: PropTypes.number,
-}
+Sidebar.propTypes = {
+  width: PropTypes.number,
+};
 
 export default Sidebar;

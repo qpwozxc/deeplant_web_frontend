@@ -4,6 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { Paper } from "@mui/material";
 const speciesOptions = [
   { value: "cow", label: "소" },
   { value: "pig", label: "돼지" },
@@ -146,8 +147,8 @@ export default function SearchFilter() {
   };
 
   return (
-    <Box sx={{ display: "flex", gap: "20px" }}>
-      <FormControl fullWidth sx={{ m: 1, width: 300 }}>
+    <Paper sx={{ display: "flex", gap: "20px" }}>
+      <FormControl fullWidth sx={{ m: 1, width: 100 }}>
         <InputLabel>고기 종류</InputLabel>
         <Select value={species} label="Species" onChange={handleSpeciesChange}>
           {speciesOptions.map((option) => (
@@ -158,7 +159,7 @@ export default function SearchFilter() {
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ m: 1, width: 300 }}>
+      <FormControl fullWidth sx={{ m: 1, width: 100 }}>
         <InputLabel>대분할</InputLabel>
         <Select value={primal} label="Primal" onChange={handlePrimalChange}>
           {primalOptions[species]?.map((option) => (
@@ -169,7 +170,7 @@ export default function SearchFilter() {
         </Select>
       </FormControl>
 
-      <FormControl fullWidth sx={{ m: 1, width: 300 }}>
+      <FormControl fullWidth sx={{ m: 1, width: 100 }}>
         <InputLabel>부위</InputLabel>
         {secondaryOptions[species]?.[primal]?.length > 0 && (
           <Select
@@ -185,6 +186,6 @@ export default function SearchFilter() {
           </Select>
         )}
       </FormControl>
-    </Box>
+    </Paper>
   );
 }
