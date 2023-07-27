@@ -38,18 +38,15 @@ function ExcelController(){
             console.log(file)
             console.log("cols: ", resp.cols, "rows: ", resp.rows);
             console.log('toJson', toJson)
-            /*
+            
             fetch(`http://localhost:8080/meat/update`, {
             method: "POST",
             headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Request-Headers": "Content-Type",
-                "Access-Control-Request-Method": "POST",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(toJson),
             });
-            */
+            
         }
         });
     };

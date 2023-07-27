@@ -65,7 +65,130 @@ function DataList({ meatList, pageProp, setDelete }) {
     if (typeof setDelete === "function") {
       setDelete(checkedList);
     }
-  }, [checkboxItems]);
+    
+    OrderTableHead.propTypes = {
+        order: PropTypes.string,
+        orderBy: PropTypes.string
+    };
+ 
+    // 테이블 바디 
+    // 오름차순 내림차순 정렬
+    const [order] = useState('asc');
+    const [orderBy] = useState('trackingNo');
+    const [selected] = useState([]);
+
+    const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+    
+    return (
+        <Box style={{backgroundColor:"white", borderRadius:'5px'}}>
+        <TableContainer
+            sx={{
+            width: '100%',
+            overflowX: 'auto',
+            position: 'relative',
+            display: 'block',
+            maxWidth: '100%',
+            '& td, & th': { whiteSpace: 'nowrap' },
+            padding:'10px',
+            boxShadow:1,
+            borderRadius:'5px',
+            }}
+        >
+            <Table
+            aria-labelledby="tableTitle"
+            sx={{
+                '& .MuiTableCell-root:first-of-type': {
+                pl: 2
+                },
+                '& .MuiTableCell-root:last-of-type': {
+                pr: 3
+                }
+            }}
+            >
+            <OrderTableHead />
+          
+            <TableBody>
+                {meatList.map((content, index) => {
+                const isItemSelected = isSelected(content);
+                const labelId = `enhanced-table-checkbox-${index}`;
+                
+                
+                const checkboxKey = content.id;
+                
+                
+                return (
+                    <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={index}
+                    selected={isItemSelected}
+                    >
+                    {//반려함인 경우 삭제 체크박스 추가
+                    page === 'reject'
+                    ?<TableCell><Checkbox value={content.id} checked={checkboxItems[checkboxKey]} onChange={(e)=>handleCheckBoxChange(e)} inputProps={{ 'aria-label': 'controlled' }}  /></TableCell>
+                    : <></>
+                    }
+                    <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
+                    <TableCell align="left" style={{padding:"5px"}}>
+                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
+                        {content.id}
+                    </Link>
+                    </TableCell>
+                    <TableCell>
+                        {content.farmAddr}
+                    </TableCell>
+                    <TableCell>
+                        {content.name}
+                    </TableCell>
+                    <TableCell>
+                        {content.type }
+                    </TableCell>
+                    <TableCell>
+                        {content.company}
+                    </TableCell>
+                    <TableCell>
+                        {content.createdAt}
+                    </TableCell>
+                    <TableCell align="left" style={{padding:"5px"}}>
+                        {content.statusType === 'rejected' ?<OrderStatus status={0} />: <></> }
+                        {content.statusType === '승인' ?<OrderStatus status={1} />: <></> }
+                        {content.statusType === '대기중' ?<OrderStatus status={2} />: <></> }
+                    </TableCell>
+                    {
+                    content.accepted === "accepted"
+                    ?<TableCell></TableCell>
+                    :<TableCell>
+                        <Link color="#000000" component={RouterLink} to={{pathname : '/DataConfirm'}}>
+                            <Button>검토</Button>
+                        </Link>
+                    </TableCell>
+                    }
+                    
+                    <TableCell align="right" style={{padding:"5px"}}>
+                        <IconButton aria-label="delete" color="primary" onClick={()=>handleDelete(content.id)} >
+                            <DeleteIcon />
+                        </IconButton>
+                    </TableCell>
+                    
+                    </TableRow>
+                );
+                })}
+            </TableBody>
+            </Table>
+        </TableContainer>
+        {
+            isDelClick
+            ?<TransitionsModal id={delId} setIsDelClick={setIsDelClick}/>
+            :<></>
+        }
+        </Box>
+    );
+  
+}
+
 
   // 리스트에 있는 삭제 버튼 클릭 시
   const [isDelClick, setIsDelClick] = useState(false);

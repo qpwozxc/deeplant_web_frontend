@@ -1,0 +1,70 @@
+{
+    "DB Total len": 6,
+    "meat_dict": {
+        "10c7eb1b2d73": {
+            "birthYmd": "20050722",
+            "butcheryYmd": "20080225",
+            "createdAt": "2023-07-25T10:28:27",
+            "company":"deeplant1",
+            "farmAddr": "강원특별자치도 횡성군 청일면",
+            "farmerNm": "이재명",
+            "gradeNum": "1+",
+            "id": "10c7eb1b2d73",
+            "imagePath": "https://deep-plant-image.s3.ap-northeast-2.amazonaws.com/qr_codes/10c7eb1b2d73.png",
+            "name": "정성훈",
+            "primalValue": "loin",
+            "secondaryValue": "sirloin",
+            "sexType": "거세",
+            "specieValue": "pig",
+            "statusType": "대기중",
+            "traceNum": "000189843795",
+            "type":"Researcher",
+            "userId": "junsu0573@naver.com"
+        },
+        "3c7174f57681": {
+            "birthYmd": "20050722",
+            "butcheryYmd": "20080225",
+            "company":"deeplant1",
+            "createdAt": "2023-07-25T10:44:00",
+            "farmAddr": "강원특별자치도 횡성군 청일면",
+            "farmerNm": "이재명",
+            "gradeNum": "1+",
+            "id": "3c7174f57681",
+            "imagePath": "https://deep-plant-image.s3.ap-northeast-2.amazonaws.com/qr_codes/3c7174f57681.png",
+            "name": "정성훈",
+            "primalValue": "sirloin",
+            "secondaryValue": "ribeye_roll",
+            "sexType": "거세",
+            "specieValue": "cattle",
+            "statusType": "대기중",
+            "traceNum": "000189843795",
+            "type":"Researcher",
+            "userId": "junsu0573@naver.com"
+        },
+        "e36d35271e08": {
+            "birthYmd": "20050722",
+            "butcheryYmd": "20080225",
+            "company":"deeplant1",
+            "createdAt": "2023-07-25T10:35:38",
+            "farmAddr": "강원특별자치도 횡성군 청일면",
+            "farmerNm": "이재명",
+            "gradeNum": "1+",
+            "id": "e36d35271e08",
+            "imagePath": "https://deep-plant-image.s3.ap-northeast-2.amazonaws.com/qr_codes/e36d35271e08.png",
+            "name": "정성훈",
+            "primalValue": "loin",
+            "secondaryValue": "sirloin",
+            "sexType": "거세",
+            "specieValue": "pig",
+            "statusType": "대기중",
+            "traceNum": "000189843795",
+            "type":"Researcher",
+            "userId": "junsu0573@naver.com"
+        }
+    },
+    "meat_id_list": [
+        "3c7174f57681",
+        "e36d35271e08",
+        "10c7eb1b2d73"
+    ]
+}
