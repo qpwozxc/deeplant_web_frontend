@@ -3,35 +3,70 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import { Box, Typography, Button, IconButton,ToggleButton, ToggleButtonGroup} from '@mui/material';
+import { Box, Typography, Button, IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 import { DataLoad } from "./SingleDataLoad";
-import meatImg from "../../src_assets/meat1.jpeg";
+
 
 function DataView({page, currentUser}){
     //데이터 받아오기 
-    const resp = DataLoad();
-    console.log("resp",resp);
-    //console.log(editable);
+    const { id, userId, createdAt,rawImagePath, raw_data, processedmeat, heated_data ,lab_data,api_data,  } = DataLoad();
 
-    const { id, userId, deepAging,fresh_data, heated_data, lab_data , saveTime, tongue_data, api_data } = resp;
-    //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
-    const freshField =['marbling','color','texture','surfaceMoisture','total'];
-    const deepAgingField = ['marbling','color','texture','surfaceMoisture','total', 'seqno', 'minute', 'date'];
-    const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
-    const tongueField = ['sourness','bitterness','umami_t','richness'];
-    const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI'];
-    const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
     //탭 정보 
-    const tabFields = [freshField, deepAgingField,heatedField, tongueField, labField, apiField,];
-    const tabTitles = ["원육","처리육","가열육","전자혀","실험실","축산물 이력",]; 
-    //데이터 정보
-    const datas = [ fresh_data, deepAging,heated_data, tongue_data , lab_data, api_data];
-    const jsonFields = [ 'fresh','deepAging','heated', 'tongue', 'lab', 'api'];
+    const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];
 
-     //이미지 파일
+    // 탭별 데이터 -> datas는 불변 , input text를 바꾸고 서버에 전송하고, db에서 바뀐 데이터를 받아서 datas에 저장 
+    let processed_data = processedmeat['1회'].sensory_eval;
+    const datas = [ raw_data, processed_data, heated_data, /*tongue_data ,*/ lab_data, api_data];
+
+    // 처리육 토글 버튼
+    const [toggle, setToggle] = useState(options[0]);
+    const [toggleValue, setToggleValue] = useState('');
+
+    // 수정 여부 버튼 토글
+    const [edited, setIsEdited] = useState(false);
+    
+    //onclick submit 뒤에 지우기
+    const [inputText, setInput] = useState({});
+    // "원육","처리육","가열육","실험실(/*전자혀,*/)","축산물 이력",별 수정 및 추가 input text
+    const [rawInput, setRawInput] = useState({});
+    const [processedInput, setProcessedInput] = useState({});
+    const [heatInput, setHeatInput] = useState({});
+    const [labInput , setLabInput] = useState({});
+    const [apiInput, setApiInput] = useState(api_data);
+    const setInputFields = [
+        { value: rawInput, setter: setRawInput },
+        { value: processedInput, setter: setProcessedInput },
+        { value: heatInput, setter: setHeatInput },
+        { value: labInput, setter: setLabInput },
+        { value: apiInput, setter: setApiInput }
+      ];
+
+
+    // 데이터 수정 : multiple input에 대해서 input field를 value prop으로 만들기
+    useEffect(()=>{
+        //setIsEditable(editable);'
+        tabFields.map((t,index)=>{
+            t.forEach((f)=>{
+                if (datas[index] === null){
+                    setInputFields[index].setter((currentField)=>({
+                        ...currentField,
+                        [f]:"",
+                    }));
+                }else{
+                    setInputFields[index].setter((currentField)=>({
+                        ...currentField,
+                        [f]:datas[index][f],
+                    }));
+                }
+            })
+        })
+        console.log('처리육',processedInput);
+    },[]);
+
+    //이미지 파일
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    const [previewImage, setPreviewImage] = useState(meatImg);
+    const [previewImage, setPreviewImage] = useState(rawImagePath);
     //변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
@@ -43,40 +78,7 @@ function DataView({page, currentUser}){
         }
     }, [imgFile]);
 
-    // 버튼 토글을 위한 수정 여부
-    const [edited, setIsEdited] = useState(false);
-    //input text (that handles multiple inputs with same Handle function)
-    const [inputText, setInput] = useState({});
-      // 수정한 값에 맞춰서 input field 값 수정
-    const onChangeInput = (e) => {
-        setInput({
-        ...inputText,
-        [e.target.name]: e.target.value,
-        });
-    };
-
-    // 데이터 수정 : multiple input에 대해서 input field를 value prop으로 만들기
-    useEffect(()=>{
-        //setIsEditable(editable);
-        tabFields.map((t,index)=>{
-            t.forEach((f)=>{
-                if (datas[index] === null){
-                    setInput((inputText)=>({
-                        ...inputText,
-                        [f]:""
-                    }));
-                }else{
-                    setInput((inputText)=>({
-                        ...inputText,
-                        [f]:datas[index][f]
-                    }));
-                }
-            })
-        })
-    },[]);
-
-
-      // 수정 버튼, 클릭 시 text field가 input field로 변환
+    // 수정 버튼, 클릭 시 text field가 input field로 변환
     const onClickEditBtn = () => {
         setIsEdited(true);
     };
@@ -139,8 +141,8 @@ function DataView({page, currentUser}){
                 <Card.Text>
                 <ListGroup variant="flush">
                     <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                    <ListGroup.Item>등록인: {userId}</ListGroup.Item>
-                    <ListGroup.Item>저장 시간: {saveTime}</ListGroup.Item>       
+                    <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
+                    <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
                     {page === '수정및조회'
                     ?<ListGroup.Item>
                         <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
@@ -163,6 +165,15 @@ function DataView({page, currentUser}){
                 tabFields.map((t,index) =>{
                 return(
                 <Tab eventKey={jsonFields[index]} title={tabTitles[index]} style={{backgroundColor:'white'}}>
+                    {
+                    tabTitles[index] === "원육" || tabTitles[index] === "축산물 이력"
+                    ?<></>
+                    :<>
+                        <Autocomplete value={toggle} onChange={(event, newValue) => {setToggle(newValue);}} inputValue={toggleValue} onInputChange={(event, newInputValue) => {setToggleValue(newInputValue);}}
+                        id="controllable-states-demo" options={options} sx={{ width: 300 }} renderInput={(params) => <TextField {...params} label="Controllable" />}
+                        />
+                    </>
+                    }
                     <div key={index} class="container">
                         {
                         t.map((f, idx)=>{
@@ -171,14 +182,16 @@ function DataView({page, currentUser}){
                             <div key={index+'-'+idx+'col1'} class="col-5" style={style.dataContainer}>{f}</div>
                             <div key={index+'-'+idx+'col2'} class="col-7" style={{height:'30px', borderBottom:'0.8px solid #e0e0e0'}}>
                             {
-                                edited
-                                ?<input key={index+'-'+idx+'input'} name={f} value={inputText[f]} placeholder={datas[index]===null?"null":datas[index][f]} onChange={onChangeInput}/>
-                                :inputText[f] ? inputText[f] : "null"
+                                tabTitles[index] != "원육" && edited
+                                ?<input key={index+'-'+idx+'input'} name={f} value={setInputFields[index].value[f]} placeholder={datas[index]===null?"null":datas[index][f]} 
+                                onChange={(e)=>{setInputFields[index].setter((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
+                                :setInputFields[index].value[f] ? setInputFields[index].value[f] : "null"
                             }
                             </div>
-                        </div>
-                        );
-                    })}
+
+                            </div>
+                            );
+                        })}
                     </div>
                 </Tab>
                 );
@@ -217,15 +230,30 @@ function DataView({page, currentUser}){
     </div>
     );
 }
-/**
- * <button type="button" class="btn btn-outline-success" >승인</button>
-                <button type="button" class="btn btn-success" >반려</button>
- */
+
 export default DataView;
+
+// 토글 버튼
+const options = ['원육',];
+const deep_options = [];
+
+
+//탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
+const rawField =['marbling','color','texture','surfaceMoisture','overall','deepAgingId','period'];
+const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall', 'seqno',];
+const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
+//const tongueField = ['sourness','bitterness','umami','richness'];
+const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness'];
+const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
+
+const tabTitles = ["원육","처리육","가열육",/*전자혀,*/"실험실","축산물 이력",]; 
+
+const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
 
 const style={
     singleDataWrapper:{
       width: "",
+      marginTop:'100px',
       padding: "20px 50px",
       paddingBottom: "0px",
       display: "flex",

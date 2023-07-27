@@ -76,7 +76,6 @@ const RejectedDataListComp=()=>{
         // api 연결 
     }
     
-
     return(
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
