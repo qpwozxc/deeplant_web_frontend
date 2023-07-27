@@ -10,59 +10,26 @@ import {
 } from "firebase/auth";
 
 function UserRegister({ handleClose }) {
-  const [newName, setNewName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newCompany, setNewCompany] = useState("");
-  const [newPosition, setNewPosition] = useState("");
-  const [newlastLogin, setNewlastLogin] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
-  const [emailExists, setEmailExists] = useState(false); // 이메일 중복 여부 상태 변수
-
-  const [users1, setUsers1] = useState([]);
-  const [users2, setUsers2] = useState([]);
-  const users1CollectionRef = collection(db, "users_1");
-  const users2CollectionRef = collection(db, "users_2");
-
-  const createUser = async () => {
-    const userData = {
-      name: newName,
-      email: newEmail,
-      company: newCompany,
-      position: newPosition,
-      lastLogin: newlastLogin,
-    };
-
-    if (selectedUser === "1") {
-      const docRef = doc(users1CollectionRef, newEmail);
-      await setDoc(docRef, userData);
-    } else if (selectedUser === "2") {
-      const docRef = doc(users2CollectionRef, newEmail);
-      await setDoc(docRef, userData);
-    }
-  };
-
-  useEffect(() => {
-    const getUsers1 = async () => {
-      const data = await getDocs(users1CollectionRef);
-      setUsers1(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    const getUsers2 = async () => {
-      const data = await getDocs(users2CollectionRef);
-      setUsers2(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    if (selectedUser === "1") {
-      getUsers1();
-    } else if (selectedUser === "2") {
-      getUsers2();
-    }
-  }, []);
+  const [userId, setuserId] = useState("");
+  const [createdAt, setCreatedAt] = useState(
+    new Date().toISOString().slice(0, -5)
+  ); // 초 정보를 제거한 현재 시간으로 초기화
+  const [updatedAt, setupdatedAt] = useState(
+    new Date().toISOString().slice(0, -5)
+  );
+  const [loginAt, setloginAt] = useState(new Date().toISOString().slice(0, -5));
+  const [password, setpassword] = useState("");
+  const [name, setname] = useState("");
+  const [company, setcompany] = useState("");
+  const [jobTitle, setjobTitle] = useState("");
+  const [homeAddr, sethomeAddr] = useState("");
+  const [alarm, setalarm] = useState("");
+  const [type, settype] = useState("");
 
   const [validated, setValidated] = useState(false);
-  const isEmailValid = (email) => {
+  const isEmailValid = (userId) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
+    return emailRegex.test(userId);
   };
 
   const isNameValid = (name) => {
@@ -90,7 +57,7 @@ function UserRegister({ handleClose }) {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
-    if (isNameValid(newName) && isEmailValid(newEmail) && selectedUser !== "") {
+    if (isNameValid(name) && isEmailValid(userId)) {
       try {
         // Generate a temporary password
         const tempPassword = generateTempPassword();
@@ -98,7 +65,7 @@ function UserRegister({ handleClose }) {
         // Register user email with Firebase Authentication
         const { user } = await createUserWithEmailAndPassword(
           auth,
-          newEmail,
+          userId,
           tempPassword
         );
         console.log("User registered with Firebase Authentication:", user);
@@ -106,9 +73,29 @@ function UserRegister({ handleClose }) {
         // Send verification email to the registered user's email address
         await sendEmailVerification(user);
 
-        // Create user document in Firestore
-        await createUser();
-        handleClose();
+        // Update the createdAt state to the current date and time
+        setCreatedAt(new Date().toISOString().slice(0, -5));
+
+        const toJson = {
+          userId: userId,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+          loginAt: loginAt,
+          password: password,
+          name: name,
+          company: company,
+          jobTitle: jobTitle,
+          homeAddr: homeAddr,
+          alarm: alarm,
+          type: type,
+        };
+        fetch(`http://localhost:8080/user/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(toJson),
+        });
       } catch (error) {
         // Handle any errors that occurred during registration
         console.error(
@@ -133,7 +120,7 @@ function UserRegister({ handleClose }) {
               placeholder="이름"
               onChange={(event) => {
                 const name = event.target.value;
-                setNewName(name);
+                setname(name);
                 if (!isNameValid(name)) {
                   event.target.setCustomValidity("올바른 이름을 입력하세요.");
                 } else {
@@ -154,7 +141,7 @@ function UserRegister({ handleClose }) {
               placeholder="이메일 입력"
               onChange={(event) => {
                 const email = event.target.value;
-                setNewEmail(email);
+                setuserId(email);
                 if (!isEmailValid(email)) {
                   event.target.setCustomValidity("올바른 이메일을 입력하세요.");
                 } else {
@@ -173,14 +160,14 @@ function UserRegister({ handleClose }) {
           <Form.Group className="mb-3">
             <Form.Select
               required
-              onChange={(event) => setSelectedUser(event.target.value)}
+              onChange={(event) => settype(event.target.value)}
               aria-describedby="userSelectionFeedback"
             >
               <option selected disabled value="">
                 *사용자 선택
               </option>
-              <option value="1">사용자1</option>
-              <option value="2">사용자2</option>
+              <option value="Normal">사용자1</option>
+              <option value="Researcher">사용자2</option>
             </Form.Select>
             <Form.Control.Feedback type="invalid">
               사용자를 선택하세요.
@@ -193,7 +180,7 @@ function UserRegister({ handleClose }) {
               type="text"
               placeholder="회사명 입력"
               onChange={(event) => {
-                setNewCompany(event.target.value);
+                setcompany(event.target.value);
               }}
             />
           </Form.Group>
@@ -203,7 +190,7 @@ function UserRegister({ handleClose }) {
               type="text"
               placeholder="직책 입력"
               onChange={(event) => {
-                setNewPosition(event.target.value);
+                setjobTitle(event.target.value);
               }}
             />
           </Form.Group>
