@@ -89,9 +89,9 @@ function App() {
                         component="main"
                         sx={{
                           //backgroundImage: `url(${BackGroundImage})`,
-                          backgroundColor:"#FAFAFB",
-                          backgroundSize: "cover",
-                          backgroundRepeat: "no-repeat",
+                          // backgroundColor:"#FAFAFB",
+                          // backgroundSize: "cover",
+                          // backgroundRepeat: "no-repeat",
                           backgroundColor: (theme) =>
                             theme.palette.mode === "light"
                               ? theme.palette.grey[100]

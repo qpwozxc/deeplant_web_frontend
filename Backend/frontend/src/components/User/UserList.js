@@ -4,13 +4,18 @@ import Modal from "react-bootstrap/Modal";
 import UserRegister from "./UserRegister";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
+import { format } from "date-fns";
 import { db } from "../../firebase-config";
-import {collection, getDocs, getDoc, addDoc, deleteDoc, doc,} from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import InputBase from "@mui/material/InputBase";
-import { ButtonGroup } from "react-bootstrap";
-import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { GridToolbarQuickFilter, DataGrid } from "@mui/x-data-grid";
@@ -22,139 +27,84 @@ function UserList() {
   const [editShow, setEditShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+
+  const [usersData, setUsersData] = useState({});
   const [searchedUsers, setSearchedUsers] = useState([]);
 
   const handleRegisterClose = () => setRegisterShow(false);
   const handleRegisterShow = () => setRegisterShow(true);
-  const handleEditClose = () => setEditShow(false);
-
-  const users1CollectionRef = collection(db, "users_1");
-  const users2CollectionRef = collection(db, "users_2");
-  const columns = [
-    { field: "name", headerName: "이름", width: 130, editable: false },
-    { field: "id", headerName: "아이디", width: 200, editable: false },
-    { field: "user", headerName: "권한", width: 120, editable: true },
-    { field: "company", headerName: "회사", width: 120, editable: false },
-    { field: "position", headerName: "직책", width: 120, editable: false },
-    {
-      field: "lastLogin",
-      headerName: "최근 로그인",
-      width: 300,
-      editable: false,
-    },
-    {
-      field: "manage",
-      headerName: "관리",
-      width: 90,
-      editable: false,
-      renderCell: (params) => (
-        <Button variant="success" onClick={() => handleEditShow(params.row)}>
-          수정
-        </Button>
-      ),
-    },
-  ];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data1 = await getDocs(users1CollectionRef);
-      const data2 = await getDocs(users2CollectionRef);
-
-      const users1 = data1.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-        user: "사용자1",
-      }));
-      const users2 = data2.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-        user: "사용자2",
-      }));
-
-      const allUsers = [...users1, ...users2];
-      setUsers(allUsers);
-      setSearchedUsers(allUsers);
-    };
-
-    fetchData();
-  }, []);
-
-  const handleSearch = (event) => {
-    const keyword = event.target.value.toLowerCase();
-    if (keyword === "") {
-      setSearchedUsers(users);
-    } else {
-      const results = users.filter(
-        (user) =>
-          user.name.toLowerCase().includes(keyword) ||
-          user.id.toLowerCase().includes(keyword)
-      );
-      setSearchedUsers(results);
-    }
-  };
-
   const handleEditShow = (user) => {
     setSelectedUser(user);
     setEditShow(true);
   };
 
-  const moveUserToAnotherCollection = async (
-    sourceCollection,
-    targetCollection,
-    userId
-  ) => {
-    // 원본 컬렉션에서 사용자 데이터 가져오기
-    const sourceDocRef = doc(db, sourceCollection, userId);
-    const sourceDocSnapshot = await getDoc(sourceDocRef);
-    const userData = sourceDocSnapshot.data();
+  const handleEditClose = () => setEditShow(false);
 
-    // 대상 컬렉션에 데이터 추가
-    const targetCollectionRef = collection(db, targetCollection);
-    await addDoc(targetCollectionRef, userData);
-
-    // 원본 컬렉션에서 데이터 삭제
-    await deleteDoc(sourceDocRef);
-  };
-
-  const handleEditCellChange = async ({ id, field, value }) => {
-    if (field === "user") {
-      const userToUpdate = searchedUsers.find((user) => user.id === id);
-      if (userToUpdate && userToUpdate.user !== value) {
-        try {
-          if (userToUpdate.user === "사용자1") {
-            await moveUserToAnotherCollection("users_1", "users_2", id);
-          } else if (userToUpdate.user === "사용자2") {
-            await moveUserToAnotherCollection("users_2", "users_1", id);
-          }
-          const updatedUsers = searchedUsers.map((user) =>
-            user.id === id ? { ...user, user: value } : user
-          );
-          setSearchedUsers(updatedUsers);
-          console.log("사용자 데이터 이동이 완료되었습니다.");
-        } catch (error) {
-          console.error("사용자 데이터 이동 중 오류가 발생했습니다.", error);
+  const columns = [
+    { field: "name", headerName: "이름", width: 100 },
+    { field: "userId", headerName: "아이디", width: 200 },
+    { field: "type", headerName: "권한", width: 120 },
+    { field: "company", headerName: "회사", width: 120 },
+    {
+      field: "createdAt",
+      headerName: "회원가입 날짜",
+      width: 300,
+      valueGetter: (params) => {
+        const createdAt = params.row.createdAt;
+        if (createdAt) {
+          // Parse the ISO date string and format it using date-fns
+          const parsedDate = new Date(createdAt);
+          return format(parsedDate, "Y년 M월 d일 a h시 m분 s초");
         }
+        return "";
+      },
+    },
+  ];
+  const fetchData = async () => {
+    // Fetch users list
+    const usersListResponse = await fetch("http://localhost:8080/user");
+    const usersData = await usersListResponse.json();
+    setUsersData(usersData);
+
+    // Fetch additional user data
+    const usersWithAdditionalData = [];
+    for (const userType in usersData) {
+      const users = usersData[userType];
+      for (const userId of users) {
+        const userDataResponse = await fetch(
+          `http://localhost:8080/user?userId=${userId}`
+        );
+        const userData = await userDataResponse.json();
+        usersWithAdditionalData.push({ ...userData, id: userId });
       }
     }
+    setAllUsers(usersWithAdditionalData);
   };
 
-  function QuickSearchToolbar() {
-    return (
-      <Box
-        sx={{
-          p: 0.5,
-          pb: 0,
-        }}
-      >
-        <GridToolbarQuickFilter />
-      </Box>
-    );
-  }
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleSearch = (event) => {
+    const keyword = event.target.value;
+    if (!allUsers || allUsers.length === 0) {
+      return; // Return early if allUsers is empty or not yet initialized
+    }
+    if (keyword === "") {
+      setSearchedUsers(allUsers); // Show all users if the search field is empty
+    } else {
+      const results = allUsers.filter(
+        (user) => user.name.includes(keyword) || user.userId.includes(keyword)
+      );
+      setSearchedUsers(results);
+    }
+  };
 
   return (
     <div>
       <Toolbar />
-      <Container maxWidth="lg" sx={{  mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mb: 4 }}>
         <Paper
           sx={{
             p: 2,
@@ -214,14 +164,17 @@ function UserList() {
             </IconButton>
           </Paper>
           <DataGrid
-            rows={searchedUsers}
+            rows={allUsers}
             columns={columns}
             initialState={{
-              pagination: { paginationModel: { pageSize: 5 } },
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
             }}
-            pageSizeOptions={[5, 10, 50]}
+            pageSizeOptions={[5]}
             disableRowSelectionOnClick
-            onEditCellChange={handleEditCellChange}
             sx={{
               minHeight: "370px", // 최소 높이 값 지정
             }}
@@ -233,33 +186,3 @@ function UserList() {
 }
 
 export default UserList;
-
-
-
-
-
-
-// CREATE TABLE user ( -- 유저 데이터 저장 DB   
-//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
-//   lastLogin VARCHAR NOT NULL, -- 최근 로그인 이력 (ISO 8601 형식)
-//   name VARCHAR NOT NULL, -- 유저 이름
-//   company VARCHAR, -- 유저 회사 정보
-//   position VARCHAR, -- 유저 직함 정보
-//   type VARCHAR(50) -- 유저 타입 ("normal" - 일반 사용자, "researcher" - 연구원, "manager" - 관리자)
-// );
-
-// CREATE TABLE normal ( -- "일반 사용자" 데이터 저장 DB
-//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
-//   FOREIGN KEY (id) REFERENCES "user" (id)
-// );
-
-// CREATE TABLE researcher ( -- "연구원" 데이터 저장 DB
-//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
-//   FOREIGN KEY (id) REFERENCES "user" (id)
-// );
-
-// CREATE TABLE manager ( -- "관리자" 데이터 저장 DB
-//   id VARCHAR PRIMARY KEY, -- 유저 id (현재 정책: 유저 email)
-//   pwd VARCHAR NOT NULL, -- 관리자 비밀번호 (hashlib의 SHA256방식 암호화 이용)
-//   FOREIGN KEY (id) REFERENCES "user" (id)
-// );
