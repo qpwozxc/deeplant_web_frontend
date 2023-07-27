@@ -14,6 +14,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Deeplant_big_logo from "../../src_assets/Deeplant_big_logo.png";
+import { id } from "date-fns/locale";
 
 const defaultTheme = createTheme();
 const LogInField = () => {
@@ -24,18 +25,15 @@ const LogInField = () => {
   const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false); // New state variable for "Remember Me" checkbox
 
   useEffect(() => {
-    const auth = getAuth();
-
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsLoggedIn(!!currentUser); // currentUser가 존재하면 true, 그렇지 않으면 false
-    });
-
-    return () => {
-      unsubscribe();
-    };
+    // Check if the email was stored in the local storage
+    const storedEmail = localStorage.getItem("rememberedEmail");
+    if (storedEmail) {
+      setLoginEmail(storedEmail);
+      setRememberMe(true);
+    }
   }, []);
 
   const register = async () => {
@@ -55,31 +53,41 @@ const LogInField = () => {
   const login = async () => {
     try {
       if (!loginEmail) {
+        //아이디가 입력되지 않았다면
         setLoginError("아이디를 입력해주세요.");
         return;
       }
       if (!loginPassword) {
+        //비밀번호가 입력되지 않았다면
         setLoginError("비밀번호를 입력해주세요.");
         return;
       }
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        loginEmail,
-        loginPassword
+      const response = await fetch(
+        `http://localhost:8080/user/login?id=${loginEmail}`
       );
-
-      navigate("/Home");
+      const user = await response.json();
+      console.log("response", response);
+      if (response.ok && user.password !== loginPassword) {
+        //비밀번호가 일치하지 않는다면
+        setLoginError("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+      if (response.status === 404) {
+        //아이디가 존재하지 않는다면
+        setLoginError("존재하지 않는 아이디입니다.");
+        return;
+      }
+      // Store the email in local storage if "Remember Me" is checked
+      if (rememberMe) {
+        localStorage.setItem("rememberedEmail", loginEmail);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
+      //로그인 성공 시 홈으로 이동
+      navigate("/Home?userId=" + encodeURIComponent(user.userId));
     } catch (error) {
       console.log(error.message);
       setLoginError("로그인에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -143,6 +151,7 @@ const LogInField = () => {
                     name="email"
                     autoComplete="email"
                     autoFocus
+                    value={loginEmail}
                     onChange={(event) => {
                       setLoginEmail(event.target.value);
                     }}
@@ -158,6 +167,7 @@ const LogInField = () => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    value={loginPassword}
                     onChange={(event) => {
                       setLoginPassword(event.target.value);
                     }}
@@ -181,7 +191,14 @@ const LogInField = () => {
                   로그인
                 </Button>
                 <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
+                  control={
+                    <Checkbox
+                      value={rememberMe}
+                      onChange={(event) => setRememberMe(event.target.checked)}
+                      color="primary"
+                      checked={rememberMe} // Set checked prop based on the "rememberMe" state
+                    />
+                  }
                   label="아이디 저장"
                 />
                 <Grid container>

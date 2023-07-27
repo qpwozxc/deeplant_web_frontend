@@ -108,6 +108,41 @@ function UserRegister({ handleClose }) {
     setValidated(true);
   };
 
+  const [isEmailAvailable, setIsEmailAvailable] = useState(true);
+
+  // Function to handle the "중복확인" button click
+  const handleDuplicateCheck = async () => {
+    const userI = userId;
+    if (isEmailValid(userI)) {
+      try {
+        // Send a GET request to check if the email is already registered
+        const response = await fetch(
+          `http://localhost:8080/user/duplicate_check?id=${userI}`
+        );
+
+        // Check if the response status is successful (200 OK)
+        if (response.ok) {
+          // Data is not JSON, but just a boolean value
+          const isAvailable = await response.json();
+
+          // Show the feedback message based on email availability
+          const emailInput = document.getElementById("emailInput"); // Replace "emailInput" with the actual ID of the email input element
+          if (!isAvailable) {
+            emailInput.setCustomValidity("이미 등록된 이메일입니다.");
+          } else {
+            emailInput.setCustomValidity("");
+          }
+        } else {
+          // Handle error response if needed
+          console.error("Server returned an error:", response.statusText);
+        }
+      } catch (error) {
+        // Handle fetch errors if any
+        console.error("Error checking email availability:", error);
+      }
+    }
+  };
+
   return (
     <div>
       <div>
@@ -147,14 +182,24 @@ function UserRegister({ handleClose }) {
                 } else {
                   event.target.setCustomValidity("");
                 }
+                setIsEmailAvailable(true); // Reset the email availability when user changes the email
               }}
             />
-            <Button variant="outline-secondary" id="button-addon2">
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              onClick={handleDuplicateCheck}
+            >
               중복 확인
             </Button>
             <Form.Control.Feedback type="invalid">
               올바른 이메일을 입력하세요.
             </Form.Control.Feedback>
+            {isEmailAvailable === false && (
+              <Form.Control.Feedback type="invalid">
+                이미 등록된 이메일입니다.
+              </Form.Control.Feedback>
+            )}
           </InputGroup>
 
           <Form.Group className="mb-3">
@@ -164,13 +209,13 @@ function UserRegister({ handleClose }) {
               aria-describedby="userSelectionFeedback"
             >
               <option selected disabled value="">
-                *사용자 선택
+                *권한 선택
               </option>
-              <option value="Normal">사용자1</option>
-              <option value="Researcher">사용자2</option>
+              <option value="Normal">Normal</option>
+              <option value="Researcher">Researcher</option>
             </Form.Select>
             <Form.Control.Feedback type="invalid">
-              사용자를 선택하세요.
+              권한을 선택하세요.
             </Form.Control.Feedback>
           </Form.Group>
 
