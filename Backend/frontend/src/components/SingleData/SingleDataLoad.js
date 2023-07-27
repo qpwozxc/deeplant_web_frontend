@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 //import json files 
 import processedMeat from './processedMeat.json';
+import rawMeat from './rawMeat.json';
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
 
 export function DataLoad() {
@@ -122,7 +123,22 @@ export function DataLoad() {
     sample.traceNum,
   );
   // 3-2. 처리육이 있는 경우 가열육, 실험실 추가 데이터 필요 -> 배열로 관리 , 기본 값은 원육 으로 
-  
+  let processedData = [];
+  let heatedData = [sample.rawmeat.heatedmeat_sensory_eval, ];// {0:sample.rawmeat.heatedmeat_sensory_eval, }
+  let labData = [sample.rawmeat.probexpt_data,];
+  let processedMinute = [];
+  //데이터 처리 횟수 parsing ex) 1회, 2회 ,...
+  let processedDataSeq = ['원육',];
+
+  for (let i in sample.processedmeat){
+    //processedDataSeq.push(i);
+    processedDataSeq = [...processedDataSeq, i];
+    processedData = [...processedData, sample.processedmeat[i].sensory_eval];
+    heatedData = [...heatedData, sample.processedmeat[i].heatedmeat_sensory_eval];
+    labData = [...labData, sample.processedmeat[i].probexpt_data];
+    processedMinute = [...processedMinute, sample.processedmeat[i].sensory_eval.deepaging_data.minute];
+  }
+
   // 3-3. 데이터를 json 객체로 만들기 
   const data = {
     id: sample.id,
@@ -130,15 +146,19 @@ export function DataLoad() {
     createdAt: sample.createdAt,
     rawImagePath: sample.imagePath,
     raw_data: sample.rawmeat.sensory_eval,
-    processedmeat: sample.processedmeat,
-    heated_data : sample.rawmeat.heatedmeat_sensory_eval,
-    lab_data: sample.rawmeat.probexpt_data,
+    processed_data: processedData,
+    heated_data : heatedData,
+    lab_data: labData,
     api_data: apiData,
+    processed_data_seq : processedDataSeq,
+    processed_minute : processedMinute,
   };
-  console.log("data", data);
+  //console.log("data", data);
   // 3-4. JSON객체 반환 
   return data;
 }
+// 처리육 포함 데이터
 const sample = processedMeat;
-
+// 처리육 없는 데이터
+//const sample = rawMeat;
 //data 받는 쪽에서 props 검사
