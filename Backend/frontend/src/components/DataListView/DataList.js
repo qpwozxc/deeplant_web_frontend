@@ -177,21 +177,21 @@ function DataList({meatList, pageProp, setDelete}){
                         {content.farmAddr}
                     </TableCell>
                     <TableCell>
-                        {content.userName }
+                        {content.name}
                     </TableCell>
                     <TableCell>
-                        {content.userType }
+                        {content.type }
                     </TableCell>
                     <TableCell>
                         {content.company}
                     </TableCell>
                     <TableCell>
-                        {content.meatCreatedAt}
+                        {content.createdAt}
                     </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        {content.accepted === 'rejected' ?<OrderStatus status={0} />: <></> }
-                        {content.accepted === 'accepted' ?<OrderStatus status={1} />: <></> }
-                        {content.accepted === 'stand-by' ?<OrderStatus status={2} />: <></> }
+                        {content.statusType === 'rejected' ?<OrderStatus status={0} />: <></> }
+                        {content.statusType === '승인' ?<OrderStatus status={1} />: <></> }
+                        {content.statusType === '대기중' ?<OrderStatus status={2} />: <></> }
                     </TableCell>
                     {
                     content.accepted === "accepted"

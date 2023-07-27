@@ -2,34 +2,61 @@ import { useState, useEffect, useRef } from "react";
 import { Box, Button,  Divider, useTheme, Tab ,TabContext ,TabList ,TabPanel} from "@mui/material";
 import DataList from "./DataList";
 import Pagination from "react-bootstrap/Pagination";
+import ListPagination from "./pagination";
 import Spinner from "react-bootstrap/Spinner";
-
+import pagination from './pagination.json'
 const DataListComp=()=>{
     const [isLoaded, setIsLoaded] = useState(true);
-    const [meatList, setMeatList] = useState(sampleMeatList);
+    const [meatList, setMeatList] = useState([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(78);
     const [currentPN, setCurrentPN] = useState(1);
     const [currentPageArray, setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
-    const offset = 0;
+    const offset = 0; // 페이지 인덱스 
     const count = 6; // 한페이지당 보여줄 개수
     const limit = 5;
     const page = 0;
+    // 나중에 prop으로 변경
+    const period = 7;
     const totalPages = Math.ceil(totalData / count); // 현재 9개
   
     //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
     const getMeatList = async (offset) => {
-      const response = await fetch(
-        `http://localhost:8080/meat?offset=${offset}&count=${count}`
-      );
-      console.log("response",response);
-      const json = await (
-        await fetch(`http://localhost:8080/meat?offset=${offset}&count=${count}`)
-      ).json();
-      console.log("data:",json);
+      
+      // 기간별 조회 안됨
+      //&period=${period}
+      /*const json = await (
+        await fetch(`http://localhost:8080/meat/get?offset=${offset}&count=${count}`)
+      ).json();*/
+      
+      const json = pagination;
+      console.log("data:",json.meat_dict);
+
+      // 전체 데이터 수
+      setTotalData(json["DB Total len"]);
+      // 데이터 
+      let data = [];
+      json.meat_id_list.map((m)=>{
+        console.log(m);
+        setMeatList([
+          ...meatList,
+          json.meat_dict[m],
+        ]
+        );
+        data = [
+          ...data,
+          json.meat_dict[m],
+        ]
+        console.log('meatlist',meatList);
+        console.log('json', data);
+        
+      });
+      setMeatList(data);
       //setMeatList(json);
-      //setIsLoaded(true);
+      // 데이터 로드 성공
+      setIsLoaded(true);
     };
   
     // 페이지별 데이터 불러오기
@@ -50,22 +77,25 @@ const DataListComp=()=>{
   
     //페이지네이션 배열 전체 초기화
     useEffect(() => {
-      //getMeatList(page);
+      getMeatList(page);
+      //setMeatList(meatList);
       setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
       setCurrentPageArray(totalSlicedPageArray[0]);
     }, [totalPages, limit]);
+
     useEffect(() => {
+      console.log(meatList);
       setCurrentPageArray(totalSlicedPageArray[0]);
     }, [totalSlicedPageArray]);  
     
     return(
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-        {isLoaded ? (
-          //데이터가 로드된 경우 데이터 목록 반환
+        {isLoaded 
+        ? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList meatList={meatList} pageProp={'list'}/>
-        ) : (
-          // 데이터가 로드되지 않은 경우 로딩중 반환
+        ) 
+        : (// 데이터가 로드되지 않은 경우 로딩중 반환
           <Spinner animation="border" />
         )}
         </div>
@@ -110,8 +140,23 @@ const DataListComp=()=>{
       </div>
     );
 }
-
+/**
+ * 
+ * 
+*/
 export default DataListComp;
+
+const apiList = [
+  {
+    id : '',
+    name:'',
+    type:"",
+    company:'',
+    createdAt:'',
+    farmAddr : '',
+    statusType:'',
+  }
+]
 
 const sampleMeatList = [
     {
