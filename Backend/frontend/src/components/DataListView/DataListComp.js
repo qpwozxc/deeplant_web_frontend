@@ -6,7 +6,7 @@ import ListPagination from "./pagination";
 import Spinner from "react-bootstrap/Spinner";
 import pagination from './pagination.json'
 const DataListComp=()=>{
-    const [isLoaded, setIsLoaded] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(true);// -> 삭제
     const [meatList, setMeatList] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -27,19 +27,19 @@ const DataListComp=()=>{
       
       // 기간별 조회 안됨
       //&period=${period}
-      /*const json = await (
+      const json = await (
         await fetch(`http://localhost:8080/meat/get?offset=${offset}&count=${count}`)
-      ).json();*/
+      ).json();
       
-      const json = pagination;
-      console.log("data:",json.meat_dict);
+      //const json = pagination;
+      //console.log("data:",json.meat_dict);
 
       // 전체 데이터 수
       setTotalData(json["DB Total len"]);
       // 데이터 
       let data = [];
       json.meat_id_list.map((m)=>{
-        console.log(m);
+        //console.log(m);
         setMeatList([
           ...meatList,
           json.meat_dict[m],
@@ -49,8 +49,8 @@ const DataListComp=()=>{
           ...data,
           json.meat_dict[m],
         ]
-        console.log('meatlist',meatList);
-        console.log('json', data);
+        //console.log('meatlist',meatList);
+        //console.log('json', data);
         
       });
       setMeatList(data);
@@ -78,7 +78,7 @@ const DataListComp=()=>{
     //페이지네이션 배열 전체 초기화
     useEffect(() => {
       getMeatList(page);
-      //setMeatList(meatList);
+      setMeatList(meatList);
       setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
       setCurrentPageArray(totalSlicedPageArray[0]);
     }, [totalPages, limit]);
@@ -91,7 +91,7 @@ const DataListComp=()=>{
     return(
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-        {isLoaded 
+        {meatList.length!==0 
         ? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList meatList={meatList} pageProp={'list'}/>
         ) 

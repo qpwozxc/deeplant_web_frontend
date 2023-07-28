@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 
@@ -6,31 +6,32 @@ import ExcelController from "../components/SingleData/excelContr";
 import DataView from "../components/SingleData/DataView";
 import "bootstrap/dist/css/bootstrap.css"; 
 import { FaAngleDoubleLeft } from "react-icons/fa";
+import { DataLoad } from "../components/SingleData/SingleDataLoad";
 function DataEdit(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
 
     //로그인한 관리자의 관리번호 받아오기
-    const {editId} = useParams();
+    //const {editId} = useParams();
+    //관리번호
+     const idParam  = useParams();
+
     return (
       <Box sx={{ display: "flex"}}>
         <Box sx={style.fixed}>
           <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
             <Link to={{pathname : '/DataManage'}} >
-              <IconButton  size="large">
+              <IconButton sx={{backgroundColor:'white'}} size="large">
               <FaAngleDoubleLeft/>
               </IconButton>
             </Link>
           </div>
-          <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-            <ExcelController/>
-          </div>
         </Box>
-        <DataView page={"수정및조회"} currentUser={currentUser}/>
+        {DataLoad(idParam.id, "수정및조회", currentUser)}
+        
       </Box>
     );
 }
-
 export default DataEdit;
 
 const style={
@@ -40,11 +41,11 @@ const style={
     right:'0',
     left:'65px',
     zIndex: 1,
-    width:'100%',
+    width:'fit-content',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    backgroundColor:'white',
+    backgroundColor:'#F5F5F5',
     height: "70px",
   },
 

@@ -169,7 +169,7 @@ function DataList({meatList, pageProp, setDelete}){
                     }
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content}`}}>
+                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content.id}`}}>
                         {content.id}
                     </Link>
                     </TableCell>

@@ -4,12 +4,15 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Box, Typography, Button, IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
-import { DataLoad } from "./SingleDataLoad";
+//import { DataLoad } from "./SingleDataLoad";
 
-function DataView({page, currentUser}){
+function DataView({page, currentUser ,dataProps}){
+    const [dataLoad, setDataLoad] = useState(null);
+ 
     //데이터 받아오기 -> props 로 전달로 변경
-    const { id, userId, createdAt,rawImagePath, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = DataLoad();
-
+    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
+    console.log('id data load',id)
+    const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
     const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];
     // 탭별 데이터 -> datas는 불변 , input text를 바꾸고 서버에 전송하고, db에서 바뀐 데이터를 받아서 datas에 저장 
@@ -18,9 +21,7 @@ function DataView({page, currentUser}){
     useEffect(()=>{
         options = processed_data_seq;
     },[])
-    const [toggle, setToggle] = useState(options[0]);
-    const [toggleValue, setToggleValue] = useState('');
-    const [processed_toggle, setProcessedToggle] = useState(options[1]);
+    const [processed_toggle, setProcessedToggle] = useState('1회');
     const [processedToggleValue, setProcessedToggleValue] = useState('');
     const [toggle3, setToggle3] = useState(options[0]);
     const [toggle3Value, setToggle3Value] = useState('');
@@ -58,15 +59,25 @@ function DataView({page, currentUser}){
     },[]); 
     // input 변화 감지
     const handleInputChange= (e, idx, valueIdx)=>{
+        const value = e.target.value;
         let temp = setInputFields[idx].value[valueIdx];
-        temp = {...temp, [e.target.name]:e.target.value};
-        setInputFields[idx].setter((currentField)=>({...currentField, [valueIdx]:temp}))
+        if (!isNaN(+value)){
+            temp = {...temp, [e.target.name]:value};
+            setInputFields[idx].setter((currentField)=>({...currentField, [valueIdx]:temp}));
+        }
+        
+    }
+    const handleMinuteInputChange = (e, index)=>{
+        const value = e.target.value;
+        if (!isNaN(+value)){
+            setProcessedMinute((prev)=>({...prev, [index] : value}))
+        }
     }
 
     //이미지 파일
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    const [previewImage, setPreviewImage] = useState(rawImagePath);
+    const [previewImage, setPreviewImage] = useState(raw_img_path);
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
@@ -124,7 +135,21 @@ function DataView({page, currentUser}){
         }
         // 처리육 관능검사 : /meat/add/deep_aging_data
         for (let i =0; i < len-1 ; i++){
-
+            let req = (processedInput[i]);
+            req = {
+                ...req,
+                ['id']: processed_data[i]['id'],
+                ['createdAt'] : processed_data[i]['createdAt'],
+                ['userId'] : processed_data[i]['userId'],
+                ['seqno'] : processed_data[i]['seqno'],
+                ['period'] : processed_data[i]['period'],
+                ['deepAging'] : {
+                    ['date'] : processed_data[i]['deepaging_data']['date'],
+                    ['minute'] : processedMinute[i],
+                }
+            }
+            console.log(i,req);
+            //api 연결 /meat/add/deep_aging_data
         }
     };
 
@@ -141,41 +166,408 @@ function DataView({page, currentUser}){
     return(
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
-            <Card style={{ width: "20rem"}}>
-            <Card.Img variant="top" src={previewImage} />
+            <Card style={{ width: "100%"}}>
+            <Card.Img variant="top" src={previewImage}style={{height:'350px',width:'auto'}} />
             <Card.Body>
-                <Card.Text>
-                <ListGroup variant="flush">
-                    <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                    <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
-                    <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
-                    {page === '수정및조회'
-                    ?<ListGroup.Item>
-                        <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
-                            onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
-                        {
-                        edited
-                        ?<Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
-                        :<Button type="button" class="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
+                
+                <Card.Text >
+                <div style={{display:'flex'}}>
+                    <div><img src={qrImagePath} style={{width:'150px'}}/></div>
+                    
+                    <ListGroup variant="flush">
+                        <ListGroup.Item>관리번호: {id}</ListGroup.Item>
+                        <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
+                        <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
+                        {page === '수정및조회'
+                        ?<ListGroup.Item>
+                            <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
+                                onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
+                            {
+                            edited
+                            ?<Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
+                            :<Button type="button" class="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
+                            }
+                        </ListGroup.Item>
+                        :<></>
                         }
-                    </ListGroup.Item>
-                    :<></>
-                    }
-                </ListGroup>
+                    </ListGroup>
+                </div>    
+                
+                    
                 </Card.Text>
             </Card.Body>
             </Card>
-            <div style={{margin:'0px 20px', backgroundColor:'white'}}>
-            <Tabs defaultActiveKey={jsonFields[0]} id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
-                {
+            <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
+            <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
+                <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
+                    <div key='rawmeat' class="container">
+                        {rawField.map((f, idx)=>{
+                            return(
+                                <div key={'raw-'+idx} class="row" >
+                                    <div key={'raw-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
+                                    <div key={'raw-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                                        {rawInput[f] ? rawInput[f] : ""}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Tab>
+                <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
+                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}} inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue);}}
+                    id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    />
+                    <div key='processedmeat' class="container">
+                        <div key={'processed-explanation'} class="row" >
+                            <div key={'processed-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'processed-exp-col0'} class="col-3" style={style.dataExpColumn}>1회차</div>
+                            {
+                                Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
+                                    <div key={'processed-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
+                                        {arr_idx+2}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        {deepAgingField.map((f, idx)=>{
+                        return(
+                            <div key={'processed-'+idx} class="row" >
+                                <div key={'processed-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'processed-'+idx+'col2'} class="col-3" style={style.dataContainer}>  
+                                {
+                                    f === 'minute' 
+                                    ?(
+                                        edited
+                                        ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[0]} placeholder={processedMinute[0]===null?"0.0":processedMinute[0]} 
+                                        onChange={(e)=>{handleMinuteInputChange(e, 0);}}/>
+                                        :(processedMinute[0]? processedMinute[0] : '')
+                                     )
+                                    :(edited
+                                        ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
+                                        onChange={(e)=>{handleInputChange(e,1,0);}}/>
+                                        :(processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
+                                    )
+                                }
+                                </div>
+                                {
+                                Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
+                                    <div key={'processed-'+arr_idx+'-col'+arr_idx} class="col-3" style={style.dataContainer}>
+                                    {
+                                        f === 'minute' 
+                                        ?(
+                                            edited
+                                            ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[arr_idx+1]} placeholder={processedMinute[arr_idx+1]===null?"0.0":processedMinute[arr_idx+1]} 
+                                            onChange={(e)=>{handleMinuteInputChange(e, arr_idx+1);}}/>
+                                            :(processedMinute[arr_idx+1]? processedMinute[arr_idx+1] : '')
+                                         )
+                                        :(edited
+                                        ?<input key={'processed-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={processedInput[arr_idx+1]?.[f]} placeholder={datas[1][arr_idx+1]===null?"0.0":datas[1][arr_idx]?.[f]} 
+                                            onChange={(e)=>{handleInputChange(e, 1,arr_idx+1)}}/>
+                                        : processedInput[arr_idx+ 1]?.[f] ? processedInput[arr_idx+ 1]?.[f] : "")
+                                    }   
+                                    </div>
+                                ))
+                                }
+                            </div>
+                            );
+                        })}
+                    </div>
+                </Tab>
+                <Tab eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
+                    <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
+                    id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    />
+                    <div key='heatedmeat' class="container">
+                        <div key={'heatedmeat-explanation'} class="row" >
+                            <div key={'heatedmeat-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'heatedmeat-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                            {
+                                Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                                    <div key={'heatedmeat-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                        {arr_idx+1}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        {heatedField.map((f, idx)=>{
+                        return(
+                            <div key={'heated-'+idx} class="row" >
+                                <div key={'heated-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'heated-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                                {
+                                    edited
+                                    ?<input key={'heated-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={heatInput[0]?.[f]} placeholder={heated_data[0]===null?"0.0":heated_data[0]?.[f]} 
+                                            onChange={(e)=>{handleInputChange(e,2,0);}}/>
+                                    :(heatInput[0]?.[f] ? heatInput[0]?.[f] : "")
+                                }
+                                </div>
+                                {// 실험실 및 가열육 추가 데이터 수정 
+                                Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx) => (
+                                    <div key={'heated-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
+                                    {
+                                        edited
+                                        ?<input key={'heated-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={heatInput[arr_idx+1]?.[f]} placeholder={heated_data[arr_idx+1]===null?"0.0":heated_data[arr_idx]?.[f]} 
+                                        onChange={(e)=>{handleInputChange(e, 2,arr_idx+1)}}/>
+                                        :(heatInput[arr_idx+ 1]?.[f] ? heatInput[arr_idx+ 1]?.[f] : "")
+                                    }   
+                                    </div>
+                                ))
+                                }
+                            </div>
+                            );
+                        })
+                        }
+                    </div>
+                </Tab>
+                <Tab eventKey='labData' title='실험실' style={{backgroundColor:'white'}}>
+                    <Autocomplete value={toggle4}  size="small" onChange={(event, newValue) => {setToggle4(newValue)}} inputValue={toggle4Value} onInputChange={(event, newInputValue) => {setToggle4Value(newInputValue)}}
+                    id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    />
+                    <div key='labData' class="container">
+                        <div key={'labData-explanation'} class="row" >
+                            <div key={'labData-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'labData-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                            {
+                                Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                                    <div key={'labData-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                        {arr_idx+1}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        {labField.map((f, idx)=>{
+                        return(
+                            <div key={'lab-'+idx} class="row" >
+                                <div key={'lab-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'lab-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                                {
+                                    edited
+                                    ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
+                                            onChange={(e)=>{handleInputChange(e,3,0);}}/>
+                                    :(labInput[0]?.[f] ? labInput[0]?.[f] : "")
+                                }
+                                </div>
+                                {// 실험실 및 가열육 추가 데이터 수정 
+                                Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
+                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
+                                    {
+                                        edited
+                                        ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 
+                                        onChange={(e)=>{handleInputChange(e, 3,arr_idx+1)}}/>
+                                        :(labInput[arr_idx+ 1]?.[f] ? labInput[arr_idx+ 1]?.[f] : "")
+                                    }   
+                                    </div>
+                                ))
+                                }
+                            </div>
+                            );
+                        })
+
+                        }
+                    </div>
+                </Tab>
+                <Tab eventKey='api' title='축산물 이력' style={{backgroundColor:'white'}}>
+                    <div key='api' class="container">
+                        {apiField.map((f, idx)=>{
+                        return(
+                            <div key={'api-'+idx} class="row" >
+                                <div key={'api-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'api-'+idx+'col2'} class="col-5" style={style.dataContainer}>      
+                                {
+                                    edited
+                                    ? <input key={'api-'+idx+'input'} name={f} style={{height:'23px'}} value={apiInput[f]} placeholder={api_data===null?"":api_data[f]} 
+                                            onChange={(e)=>{setApiInput((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
+                                    : apiInput[f] ? apiInput[f] : ""
+                                }
+                                </div>
+                            </div>
+                            );
+                        })
+
+                        }
+                    </div>
+                </Tab>
+                
+            </Tabs>         
+            </div>
+        </div> 
+        {
+        page === '수정및조회'
+        ?<div style={style.editBtnWrapper}>
+        { 
+        edited
+        ?<button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
+        :<button type="button" class="btn btn-success" onClick={onClickEditBtn}>수정</button>
+        }
+       </div> 
+       :<></>
+       }
+       {
+        page === "검토"
+        ?<div style={style.editBtnWrapper}>
+            <ToggleButtonGroup value={confirmed} exclusive onChange={handleAlignment} aria-label="text alignment">
+                <ToggleButton value="accept" aria-label="left aligned">
+                    승인
+                </ToggleButton>
+                <ToggleButton value="reject" aria-label="left aligned">
+                    반려
+                </ToggleButton>
+            </ToggleButtonGroup>
+            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmClick}>저장</button>
+        </div>
+        :<></> 
+       }
+            
+    </div>
+    );
+}
+
+export default DataView;
+
+// 토글 버튼
+let options = ['원육',];
+
+
+
+
+//탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
+//'imagepPath','period', 'seqno', 'userId''createdAt',
+const rawField =['marbling','color','texture','surfaceMoisture','overall',];
+const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute'];
+const heatedField = ['flavor', 'juiciness','tenderness','umami','palability',];
+//const tongueField = ['sourness','bitterness','umami','richness'];
+const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];
+const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
+
+const tabTitles = ["원육","처리육","가열육",/*전자혀,*/"실험실","축산물 이력",]; 
+
+const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
+
+const style={
+    singleDataWrapper:{
+      height:'590px',
+      marginTop:'70px',
+      padding: "20px 50px",
+      paddingBottom: "0px",
+      display: "flex",
+      justifyContent: "space-between", 
+      backgroundColor:'white', 
+      borderTopLeftRadius:'10px' , 
+      borderTopRightRadius:'10px',
+      width: "100%",
+    },
+    editBtnWrapper:{
+        padding:"5px 10px",
+        paddingTop:'0px',
+        width:'100%' ,
+        display:'flex',
+        justifyContent:'end', 
+        backgroundColor:'white', 
+        marginTop:'auto', 
+        borderBottomLeftRadius:'10px', 
+        borderBottomRightRadius:'10px'
+      },
+    dataFieldColumn:{
+    backgroundColor:'#9e9e9e',
+    height:'33px',
+    borderRight: '1px solid rgb(174, 168, 168)', 
+    borderBottom:'1px solid #fafafa',
+    padding:'4px 5px',
+    },
+    dataExpColumn:{
+        backgroundColor:'#757575',
+        height:'33px',
+        borderRight: '1px solid rgb(174, 168, 168)', 
+        borderBottom:'1px solid #fafafa',
+        padding:'4px 5px',
+        color:'white',
+    },
+    dataFieldContainer:{
+      backgroundColor:'#eeeeee',
+      height:'100%',
+      borderRight: '1px solid rgb(174, 168, 168)', 
+      borderBottom:'1px solid #fafafa',
+      padding:'4px 5px',
+    },
+    dataContainer:{
+        height:'33px', 
+        borderBottom:'0.8px solid #e0e0e0',
+        width:'',
+        borderRight:'0.8px solid #e0e0e0',
+        padding:'4px 5px',
+    }
+  
+  }
+
+  /***
+ * 
+  resp.propTypes={
+    id: PropTypes.string.isRequired,
+    deepAging: PropTypes.arrayOf(PropTypes.string), 
+    email: PropTypes.string.isRequired, 
+
+    fresh: PropTypes.shape({
+        marbling: PropTypes.number,
+        color:  PropTypes.number,
+        texture:  PropTypes.number,
+        surfaceMoisture: PropTypes.number,
+        total: PropTypes.number,
+      }), 
+
+    heated: PropTypes.shape({
+        flavor: PropTypes.number,
+        juiciness:  PropTypes.number,
+        tenderness:  PropTypes.number,
+        umami: PropTypes.number,
+        palability: PropTypes.number,
+      }), 
+    lab_data: PropTypes.shape({
+        L: PropTypes.number,
+        a:  PropTypes.number,
+        b:  PropTypes.number,
+        DL: PropTypes.number,
+        CL: PropTypes.number,
+        RW: PropTypes.number,
+        ph:  PropTypes.number,
+        WBSF:  PropTypes.number,
+        Cardepsin_activity: PropTypes.number,
+        MFI: PropTypes.number,
+      }), 
+
+    saveTime: PropTypes.string.isRequired, 
+
+    tongue: PropTypes.shape({
+        sourness: PropTypes.number,
+        bitterness:  PropTypes.number,
+        umami: PropTypes.number,
+        richness: PropTypes.number,
+      }), 
+    
+    apiData: PropTypes.shape({
+      butcheryPlaceNm: PropTypes.string.isRequired,
+      butcheryYmd: PropTypes.string.isRequired, 
+      farmAddr: PropTypes.string.isRequired, 
+      gradeNm: PropTypes.string.isRequired,
+      l_division: PropTypes.string.isRequired,
+      s_division: PropTypes.string.isRequired, 
+      species: PropTypes.string.isRequired, 
+      traceNumber: PropTypes.string.isRequired,
+    })
+}
+ * 
+ */
+
+/**
+ * 
+ * {
                 tabFields.map((t,index) =>{
                 return(
                 <Tab eventKey={jsonFields[index]} title={tabTitles[index]} style={{backgroundColor:'white'}}>
                     {
                     // 가열육과 실험실 데이터 토글 버튼
                     (tabTitles[index] === "가열육" || tabTitles[index] === "실험실")
-                    &&<Autocomplete value={toggle/*index===3?toggle3:toggle4*/}  size="small" onChange={(event, newValue) => {setToggle(newValue)/*index===3?setToggle3(newValue):setToggle4(newValue)*/}} inputValue={toggleValue/*index===3?toggle3Value:toggle4Value*/} onInputChange={(event, newInputValue) => {setToggleValue(newInputValue)/*index===3?setToggle3Value(newInputValue):setToggle4Value(newInputValue)*/ }}
-                        id={"controllable-states-"+tabTitles[index]} options={options} sx={{ width: 300 ,marginBottom:'20px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    &&<Autocomplete value={toggle/*index===3?toggle3:toggle4}  size="small" onChange={(event, newValue) => {setToggle(newValue)/*index===3?setToggle3(newValue):setToggle4(newValue)}} inputValue={toggleValue/*index===3?toggle3Value:toggle4Value} onInputChange={(event, newInputValue) => {setToggleValue(newInputValue)/*index===3?setToggle3Value(newInputValue):setToggle4Value(newInputValue) }}
+                    id={"controllable-states-"+tabTitles[index]} options={options} sx={{ width: 300 ,marginBottom:'20px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     }
                     {
@@ -242,156 +634,4 @@ function DataView({page, currentUser}){
                 );
                 })
                 }
-            </Tabs>         
-            </div>
-        </div> 
-        {
-        page === '수정및조회'
-        ?<div style={style.editBtnWrapper}>
-        { 
-        edited
-        ?<button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
-        :<button type="button" class="btn btn-success" onClick={onClickEditBtn}>수정</button>
-        }
-       </div> 
-       :<></>
-       }
-       {
-        page === "검토"
-        ?<div style={style.editBtnWrapper}>
-            <ToggleButtonGroup value={confirmed} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="accept" aria-label="left aligned">
-                    승인
-                </ToggleButton>
-                <ToggleButton value="reject" aria-label="left aligned">
-                    반려
-                </ToggleButton>
-            </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmClick}>저장</button>
-        </div>
-        :<></> 
-       }
-            
-    </div>
-    );
-}
-
-export default DataView;
-
-// 토글 버튼
-let options = ['원육',];
-
-
-
-
-//탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
-//'imagepPath','period', 'seqno', 'userId''createdAt',
-const rawField =['marbling','color','texture','surfaceMoisture','overall',];
-const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno'];
-const heatedField = ['flavor', 'juiciness','tenderness','umami','palability',];
-//const tongueField = ['sourness','bitterness','umami','richness'];
-const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];
-const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
-
-const tabTitles = ["원육","처리육","가열육",/*전자혀,*/"실험실","축산물 이력",]; 
-
-const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
-
-const style={
-    singleDataWrapper:{
-      height:'570px',
-      marginTop:'120px',
-      padding: "20px 50px",
-      paddingBottom: "0px",
-      display: "flex",
-      justifyContent: "space-between", 
-      backgroundColor:'white', 
-      borderTopLeftRadius:'10px' , 
-      borderTopRightRadius:'10px',
-      width: "100%",
-    },
-    editBtnWrapper:{
-        padding:"5px 10px",
-        paddingTop:'0px',
-        width:'100%' ,
-        display:'flex',
-        justifyContent:'end', 
-        backgroundColor:'white', 
-        marginTop:'auto', 
-        borderBottomLeftRadius:'10px', 
-        borderBottomRightRadius:'10px'
-      },
-    dataFieldContainer:{
-      backgroundColor:'#eeeeee',
-      height:'100%',
-      borderRight: '1px solid rgb(174, 168, 168)', 
-      borderBottom:'1px solid #fafafa',
-      padding:'4px 5px',
-    },
-    dataContainer:{
-        height:'100%', 
-        borderBottom:'0.8px solid #e0e0e0',
-        width:'',
-        borderRight:'0.8px solid #e0e0e0',
-        padding:'4px 5px',
-    }
-  
-  }
-
-  /***
- * 
-  resp.propTypes={
-    id: PropTypes.string.isRequired,
-    deepAging: PropTypes.arrayOf(PropTypes.string), 
-    email: PropTypes.string.isRequired, 
-
-    fresh: PropTypes.shape({
-        marbling: PropTypes.number,
-        color:  PropTypes.number,
-        texture:  PropTypes.number,
-        surfaceMoisture: PropTypes.number,
-        total: PropTypes.number,
-      }), 
-
-    heated: PropTypes.shape({
-        flavor: PropTypes.number,
-        juiciness:  PropTypes.number,
-        tenderness:  PropTypes.number,
-        umami: PropTypes.number,
-        palability: PropTypes.number,
-      }), 
-    lab_data: PropTypes.shape({
-        L: PropTypes.number,
-        a:  PropTypes.number,
-        b:  PropTypes.number,
-        DL: PropTypes.number,
-        CL: PropTypes.number,
-        RW: PropTypes.number,
-        ph:  PropTypes.number,
-        WBSF:  PropTypes.number,
-        Cardepsin_activity: PropTypes.number,
-        MFI: PropTypes.number,
-      }), 
-
-    saveTime: PropTypes.string.isRequired, 
-
-    tongue: PropTypes.shape({
-        sourness: PropTypes.number,
-        bitterness:  PropTypes.number,
-        umami: PropTypes.number,
-        richness: PropTypes.number,
-      }), 
-    
-    apiData: PropTypes.shape({
-      butcheryPlaceNm: PropTypes.string.isRequired,
-      butcheryYmd: PropTypes.string.isRequired, 
-      farmAddr: PropTypes.string.isRequired, 
-      gradeNm: PropTypes.string.isRequired,
-      l_division: PropTypes.string.isRequired,
-      s_division: PropTypes.string.isRequired, 
-      species: PropTypes.string.isRequired, 
-      traceNumber: PropTypes.string.isRequired,
-    })
-}
- * 
  */
