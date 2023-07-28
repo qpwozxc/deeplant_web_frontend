@@ -6,7 +6,7 @@ import ListPagination from "./pagination";
 import Spinner from "react-bootstrap/Spinner";
 import pagination from './pagination.json'
 const DataListComp=()=>{
-    const [isLoaded, setIsLoaded] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(true);// -> 삭제
     const [meatList, setMeatList] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -91,7 +91,7 @@ const DataListComp=()=>{
     return(
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-        {isLoaded 
+        {meatList.length!==0 
         ? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList meatList={meatList} pageProp={'list'}/>
         ) 

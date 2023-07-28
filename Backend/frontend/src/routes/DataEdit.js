@@ -21,13 +21,10 @@ function DataEdit(){
         <Box sx={style.fixed}>
           <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
             <Link to={{pathname : '/DataManage'}} >
-              <IconButton  size="large">
+              <IconButton sx={{backgroundColor:'white'}} size="large">
               <FaAngleDoubleLeft/>
               </IconButton>
             </Link>
-          </div>
-          <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-            <ExcelController/>
           </div>
         </Box>
         {DataLoad(idParam.id, "수정및조회", currentUser)}
@@ -44,11 +41,11 @@ const style={
     right:'0',
     left:'65px',
     zIndex: 1,
-    width:'100%',
+    width:'fit-content',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    backgroundColor:'white',
+    backgroundColor:'#F5F5F5',
     height: "70px",
   },
 

@@ -10,7 +10,7 @@ function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
  
     //데이터 받아오기 -> props 로 전달로 변경
-    const { id, userId, createdAt,rawImagePath, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
+    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
     console.log('id data load',id)
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
@@ -21,9 +21,7 @@ function DataView({page, currentUser ,dataProps}){
     useEffect(()=>{
         options = processed_data_seq;
     },[])
-    const [toggle, setToggle] = useState(options[0]);
-    const [toggleValue, setToggleValue] = useState('');
-    const [processed_toggle, setProcessedToggle] = useState(options[1]);
+    const [processed_toggle, setProcessedToggle] = useState('1회');
     const [processedToggleValue, setProcessedToggleValue] = useState('');
     const [toggle3, setToggle3] = useState(options[0]);
     const [toggle3Value, setToggle3Value] = useState('');
@@ -79,7 +77,7 @@ function DataView({page, currentUser ,dataProps}){
     //이미지 파일
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    const [previewImage, setPreviewImage] = useState(rawImagePath);
+    const [previewImage, setPreviewImage] = useState(raw_img_path);
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
@@ -168,34 +166,39 @@ function DataView({page, currentUser ,dataProps}){
     return(
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
-            <Card style={{ width: "20rem"}}>
-            <Card.Img variant="top" src={previewImage} />
+            <Card style={{ width: "100%"}}>
+            <Card.Img variant="top" src={previewImage}style={{height:'350px',width:'auto'}} />
             <Card.Body>
-                <Card.Text>
-                <ListGroup variant="flush">
-                    <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                    <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
-                    <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
-                    {page === '수정및조회'
-                    ?<ListGroup.Item>
-                        <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
-                            onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
-                        {
-                        edited
-                        ?<Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
-                        :<Button type="button" class="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
+                
+                <Card.Text >
+                <div style={{display:'flex'}}>
+                    <div><img src={qrImagePath} style={{width:'150px'}}/></div>
+                    
+                    <ListGroup variant="flush">
+                        <ListGroup.Item>관리번호: {id}</ListGroup.Item>
+                        <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
+                        <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
+                        {page === '수정및조회'
+                        ?<ListGroup.Item>
+                            <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
+                                onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
+                            {
+                            edited
+                            ?<Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
+                            :<Button type="button" class="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
+                            }
+                        </ListGroup.Item>
+                        :<></>
                         }
-                    </ListGroup.Item>
-                    :<></>
-                    }
-                </ListGroup>
+                    </ListGroup>
+                </div>    
+                
+                    
                 </Card.Text>
             </Card.Body>
             </Card>
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
-                {//const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];  
-                }
                 <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
                     <div key='rawmeat' class="container">
                         {rawField.map((f, idx)=>{
@@ -215,6 +218,17 @@ function DataView({page, currentUser ,dataProps}){
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <div key='processedmeat' class="container">
+                        <div key={'processed-explanation'} class="row" >
+                            <div key={'processed-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'processed-exp-col0'} class="col-3" style={style.dataExpColumn}>1회차</div>
+                            {
+                                Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
+                                    <div key={'processed-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
+                                        {arr_idx+2}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
                         {deepAgingField.map((f, idx)=>{
                         return(
                             <div key={'processed-'+idx} class="row" >
@@ -228,11 +242,11 @@ function DataView({page, currentUser ,dataProps}){
                                         onChange={(e)=>{handleMinuteInputChange(e, 0);}}/>
                                         :(processedMinute[0]? processedMinute[0] : '')
                                      )
-                                    :   (edited
-                                            ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
-                                            onChange={(e)=>{handleInputChange(e,1,0);}}/>
-                                            :(processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
-                                        )
+                                    :(edited
+                                        ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
+                                        onChange={(e)=>{handleInputChange(e,1,0);}}/>
+                                        :(processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
+                                    )
                                 }
                                 </div>
                                 {
@@ -264,6 +278,17 @@ function DataView({page, currentUser ,dataProps}){
                     id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <div key='heatedmeat' class="container">
+                        <div key={'heatedmeat-explanation'} class="row" >
+                            <div key={'heatedmeat-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'heatedmeat-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                            {
+                                Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                                    <div key={'heatedmeat-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                        {arr_idx+1}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
                         {heatedField.map((f, idx)=>{
                         return(
                             <div key={'heated-'+idx} class="row" >
@@ -299,6 +324,17 @@ function DataView({page, currentUser ,dataProps}){
                     id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <div key='labData' class="container">
+                        <div key={'labData-explanation'} class="row" >
+                            <div key={'labData-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'labData-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                            {
+                                Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                                    <div key={'labData-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                        {arr_idx+1}회차
+                                    </div>
+                                ))
+                            }
+                        </div>
                         {labField.map((f, idx)=>{
                         return(
                             <div key={'lab-'+idx} class="row" >
@@ -409,8 +445,8 @@ const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
 
 const style={
     singleDataWrapper:{
-      height:'570px',
-      marginTop:'120px',
+      height:'590px',
+      marginTop:'70px',
       padding: "20px 50px",
       paddingBottom: "0px",
       display: "flex",
@@ -431,6 +467,21 @@ const style={
         borderBottomLeftRadius:'10px', 
         borderBottomRightRadius:'10px'
       },
+    dataFieldColumn:{
+    backgroundColor:'#9e9e9e',
+    height:'33px',
+    borderRight: '1px solid rgb(174, 168, 168)', 
+    borderBottom:'1px solid #fafafa',
+    padding:'4px 5px',
+    },
+    dataExpColumn:{
+        backgroundColor:'#757575',
+        height:'33px',
+        borderRight: '1px solid rgb(174, 168, 168)', 
+        borderBottom:'1px solid #fafafa',
+        padding:'4px 5px',
+        color:'white',
+    },
     dataFieldContainer:{
       backgroundColor:'#eeeeee',
       height:'100%',
