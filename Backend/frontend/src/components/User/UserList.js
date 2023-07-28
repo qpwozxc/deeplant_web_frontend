@@ -5,7 +5,12 @@ import UserRegister from "./UserRegister";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import MuiAlert from "@mui/material/Alert";
+import TableCell from "@mui/material/TableCell";
 import { db } from "../../firebase-config";
+import CustomSnackbar from "../Base/CustomSnackbar";
 import {
   collection,
   getDocs,
@@ -30,23 +35,32 @@ function UserList() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-
   const [usersData, setUsersData] = useState({});
   const [searchedUsers, setSearchedUsers] = useState([]);
-
   const handleRegisterClose = () => setRegisterShow(false);
   const handleRegisterShow = () => setRegisterShow(true);
   const handleEditShow = (user) => {
     setSelectedUser(user);
     setEditShow(true);
   };
-
   const handleEditClose = () => setEditShow(false);
 
   const columns = [
-    { field: "name", headerName: "이름", width: 100 },
-    { field: "userId", headerName: "아이디", width: 200 },
-    { field: "type", headerName: "권한", width: 120 },
+    { field: "name", headerName: "이름", width: 70 },
+    { field: "userId", headerName: "아이디", width: 180 },
+    {
+      field: "type",
+      headerName: "권한",
+      width: 150,
+      renderCell: (params) => (
+        <CustomEditCell
+          id={params.id}
+          field={params.field}
+          value={params.value}
+          api={params.api}
+        />
+      ),
+    },
     { field: "company", headerName: "회사", width: 120 },
     {
       field: "createdAt",
@@ -55,7 +69,6 @@ function UserList() {
       valueGetter: (params) => {
         const createdAt = params.row.createdAt;
         if (createdAt) {
-          // Parse the ISO date string and format it using date-fns
           const parsedDate = new Date(createdAt);
           return format(parsedDate, "Y년 M월 d일 a h시 m분");
         }
@@ -66,12 +79,12 @@ function UserList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch users list
+        //유저 리스트 fetch
         const usersListResponse = await fetch("http://localhost:8080/user");
         const usersData = await usersListResponse.json();
         setUsersData(usersData);
 
-        // Fetch additional user data
+        //유저 상세정보
         const usersWithAdditionalData = [];
         for (const userType in usersData) {
           const users = usersData[userType];
@@ -110,10 +123,69 @@ function UserList() {
     }
   };
 
+  const handleCellEdit = async (params) => {
+    //유저 Type 수정
+    const { id, field, value } = params;
+    const userToUpdate = allUsers.find((user) => user.id === id);
+    if (!userToUpdate || userToUpdate[field] === value) {
+      return; // Return early if the value is not changed or the user is not found
+    }
+
+    try {
+      // Send a POST request to update the user's information
+      const response = await fetch("http://localhost:8080/user/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userToUpdate.userId,
+          createdAt: userToUpdate.createdAt,
+          updatedAt: userToUpdate.updatedAt, // Set the current date as updatedAt
+          loginAt: userToUpdate.loginAt,
+          password: userToUpdate.password,
+          name: userToUpdate.name,
+          company: userToUpdate.company,
+          jobTitle: userToUpdate.jobTitle,
+          homeAdress: userToUpdate.homeAdress,
+          alarm: userToUpdate.alarm,
+          type: value, // The new value for the "type" field
+        }),
+      });
+
+      if (response.ok) {
+        // If the update was successful, update the user's information in the state
+        setAllUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === id ? { ...user, [field]: value } : user
+          )
+        );
+        CustomSnackbar.showSnackbar("This is a Snackbar message.", "success");
+      } else {
+        console.log("Failed to update the user information");
+      }
+    } catch (error) {
+      console.log("Error updating user information:", error);
+    }
+  };
+
+  const CustomEditCell = ({ id, field, value, api }) => {
+    const handleChange = (event) => {
+      api.setEditCellValue({ id, field, value: event.target.value });
+      handleCellEdit({ id, field, value: event.target.value });
+    };
+
+    return (
+      <Select value={value} onChange={handleChange} sx={{ width: "140px" }}>
+        <MenuItem value="Normal">Normal</MenuItem>
+        <MenuItem value="Researcher">Researcher</MenuItem>
+        <MenuItem value="Manager">Manager</MenuItem>
+      </Select>
+    );
+  };
   return (
     <div>
       <Toolbar />
-
       <div style={{ display: "flex", alignItems: "center" }}>
         <Typography component="h2" variant="h4" color="primary" gutterBottom>
           사용자 관리
@@ -128,7 +200,6 @@ function UserList() {
           </Button>
         </div>
       </div>
-
       <Modal
         show={registerShow}
         onHide={handleRegisterClose}
@@ -164,11 +235,11 @@ function UserList() {
         sx={{
           p: 2,
           flexDirection: "column",
-          minHeight: "380px", // Adjust this value to the desired height
+          minHeight: "380px",
           minWidth: "800px",
           display: "flex",
-          alignItems: "center", // Center content vertically
-          justifyContent: "center", // Center content horizontally
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {isLoading ? (
@@ -176,7 +247,12 @@ function UserList() {
         ) : (
           <DataGrid
             rows={allUsers}
-            columns={columns}
+            columns={columns.map((column) =>
+              column.field === "type"
+                ? { ...column, editable: true } // Enable editing for the "type" field
+                : column
+            )}
+            onEditCellChange={handleCellEdit} // Attach the event handler for cell edits
             initialState={{
               pagination: {
                 paginationModel: {

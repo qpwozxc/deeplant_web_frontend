@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 //import json files 
 import processedMeat from './processedMeat.json';
-import rawMeat from './rawMeat.json';
+import rawMeat from "./rawmeat.json";
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
 
 export function DataLoad() {
