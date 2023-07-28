@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 
@@ -6,12 +6,16 @@ import ExcelController from "../components/SingleData/excelContr";
 import DataView from "../components/SingleData/DataView";
 import "bootstrap/dist/css/bootstrap.css"; 
 import { FaAngleDoubleLeft } from "react-icons/fa";
+import { DataLoad } from "../components/SingleData/SingleDataLoad";
 function DataEdit(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
 
     //로그인한 관리자의 관리번호 받아오기
-    const {editId} = useParams();
+    //const {editId} = useParams();
+    //관리번호
+     const idParam  = useParams();
+
     return (
       <Box sx={{ display: "flex"}}>
         <Box sx={style.fixed}>
@@ -26,11 +30,11 @@ function DataEdit(){
             <ExcelController/>
           </div>
         </Box>
-        <DataView page={"수정및조회"} currentUser={currentUser}/>
+        {DataLoad(idParam.id, "수정및조회", currentUser)}
+        
       </Box>
     );
 }
-
 export default DataEdit;
 
 const style={
