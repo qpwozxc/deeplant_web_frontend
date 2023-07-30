@@ -36,7 +36,7 @@ function App() {
       component: <DataManage />,
     },
     {
-      path: "/DataConfirm",
+      path: "/DataConfirm/:id",
       title: "DataConfirm | Deeplant",
       component: <DataConfirm/>,
     },

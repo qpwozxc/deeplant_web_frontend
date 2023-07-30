@@ -14,7 +14,6 @@ export function DataLoad(id, page, currentUser) {
   const [items, setItems] = useState(null);
   //관리번호
   //const id  = useParams().id;
-  console.log('dataload',id)
   // API fetch
   const getData = async (id) => {
     const json = await (
@@ -68,8 +67,8 @@ export function DataLoad(id, page, currentUser) {
   useEffect(() => {
     getData(id);
     setIsLoaded(true);
-    console.log("items", items);
-    console.log('isloaded',isLoaded)
+    //console.log("items", items);
+    //console.log('isloaded',isLoaded)
   }, []);
   
 
@@ -154,9 +153,9 @@ export function DataLoad(id, page, currentUser) {
     processed_data_seq : processedDataSeq,
     processed_minute : processedMinute,
   };
-  console.log("data", data);
+  //console.log("data", data);
   // 3-4. JSON객체 반환 
-  return (<DataView page={"수정및조회"} currentUser={currentUser} dataProps={data}/>);
+  return (<DataView page={page} currentUser={currentUser} dataProps={data}/>);
 }
   //data;
 }

@@ -10,7 +10,7 @@ const DataListComp=()=>{
     const [meatList, setMeatList] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalData, setTotalData] = useState(78);
+    const [totalData, setTotalData] = useState(0);
     const [currentPN, setCurrentPN] = useState(1);
     const [currentPageArray, setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
@@ -140,10 +140,7 @@ const DataListComp=()=>{
       </div>
     );
 }
-/**
- * 
- * 
-*/
+
 export default DataListComp;
 
 const apiList = [
