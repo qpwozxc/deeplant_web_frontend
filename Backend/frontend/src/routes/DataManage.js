@@ -12,14 +12,25 @@ import ExcelController from "../components/SingleData/excelContr";
 // mui 
 import { Box, Button, } from "@mui/material";
 
+const TIME_ZONE = 9 * 60 * 60 * 1000;
+
 function DataManage() { 
   // 목록/ 통계/ 반려함 탭 메뉴
   const [value, setValue] = useState('list');
+  const [period, setPeriod] = useState(7);
+  const s = new Date();
+  s.setDate(s.getDate() -7);
+  const [startDate, setStartDate] = useState(new Date(s.getTime() + TIME_ZONE).toISOString().slice(0, -5));
+  const [endDate, setEndDate] = useState(new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5));
+
+  useEffect(()=>{
+    console.log('str', startDate, 'end', endDate);
+  },[startDate, endDate]);
 
   return (
     <div style={{overflow: 'overlay', width:'100%', marginTop:'140px'}}>
       <Box sx={styles.fixed}>
-        <SearchFilterBar/>
+        <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
         <ExcelController/>
         </div>
@@ -35,9 +46,9 @@ function DataManage() {
         </div>
       </Box >
 
-      { value === "list" ? <DataListComp/> : <></> }
-      { value === "stat" ? <DataStat/> : <></> }
-      { value === "reject" ? <RejectedDataListComp/>: <></>}
+      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate}/> : <></> }
+      { value === "stat" ? <DataStat startDate={startDate} endDate={endDate}/> : <></> }
+      { value === "reject" ? <RejectedDataListComp startDate={startDate} endDate={endDate}/>: <></>}
     </div>
   );
 }
@@ -79,7 +90,8 @@ const styles={
   tabBtn:{
     border:'none',
     color:'#9e9e9e',
-  }
+  },
+ 
 }
 
 

@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
-
-import ExcelController from "../components/SingleData/excelContr";
-import DataView from "../components/SingleData/DataView";
 import "bootstrap/dist/css/bootstrap.css"; 
 import { FaAngleDoubleLeft } from "react-icons/fa";
 import { DataLoad } from "../components/SingleData/SingleDataLoad";

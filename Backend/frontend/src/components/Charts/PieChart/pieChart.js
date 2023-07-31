@@ -62,7 +62,7 @@ const PieChart = ({ subheader, chartColors, /*chartData, isFilter,*/...other }) 
       // pie 차트 데이터 받아오는 함수
       const getPieData = async() => {
         const json = await(
-        await fetch('http://localhost:8080/meat/statistic?type=0')
+        await fetch('http://3.38.52.82//meat/statistic?type=0')
         ).json();
         //console.log(json);
         setData(json);

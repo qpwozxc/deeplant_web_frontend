@@ -135,7 +135,7 @@ const StackedBarChart = () => {
 
       // 부위별 개수
       const categCount = await(
-        await fetch('http://localhost:8080/meat/statistic?type=2')
+        await fetch('http://3.38.52.82/meat/statistic?type=2')
       ).json();
 
       setCattleData(categCount['beef_counts_by_primal_value']);
@@ -191,8 +191,6 @@ const StackedBarChart = () => {
       
     }));
   }, []);
-
-  console.log(options)
  
   return (
     <div id="chart" style={{ backgroundColor: "white", borderRadius: "5px" }}>

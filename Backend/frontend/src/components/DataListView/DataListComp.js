@@ -5,41 +5,49 @@ import Pagination from "react-bootstrap/Pagination";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
 import pagination from './pagination.json'
-const DataListComp=()=>{
+
+const TIME_ZONE = 9 * 60 * 60 * 1000;
+
+const DataListComp=({startDate, endDate})=>{
+    console.log('date', startDate, endDate);
     const [isLoaded, setIsLoaded] = useState(true);// -> 삭제
     const [meatList, setMeatList] = useState([]);
+    
+    // 기간 일주일 전 : 디폴트
+    const s = new Date();
+    s.setDate(s.getDate() -7)
+    const [start, setStart] = useState(new Date(s.getTime() + TIME_ZONE).toISOString().slice(0, -5));
+    const [end , setEnd] = useState(new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5));
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(0);
     const [currentPN, setCurrentPN] = useState(1);
     const [currentPageArray, setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
-    const offset = 0; // 페이지 인덱스 
-    const count = 6; // 한페이지당 보여줄 개수
-    const limit = 5;
-    const page = 0;
+    const [offset, setOffset] = useState(0); // 현재 로드하는 페이지의 인덱스 (fetch)
+    const count = 6; // 한페이지당 보여줄 개수 (fetch)
+    const limit = 5; // 한 화면당 페이지 배열의 원소 개수
+    //const page = 0;
+
     // 나중에 prop으로 변경
     const period = 7;
-    const totalPages = Math.ceil(totalData / count); // 현재 9개
+    const totalPages = Math.ceil(totalData / count); 
   
-    //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
-    const getMeatList = async (offset) => {
-      
-      // 기간별 조회 안됨
-      //&period=${period}
-      const json = await (
-        await fetch(`http://localhost:8080/meat/get?offset=${offset}&count=${count}`)
-      ).json();
-      
-      //const json = pagination;
-      //console.log("data:",json.meat_dict);
 
+    //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
+    const getMeatList = async (offset, ) => {
+      //console.log('data loading',offset)
+      const json = await (
+        await fetch(`http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
+      ).json();
+     console.log('fetch done!', json);
+     //console.log('data loaded!',offset)
       // 전체 데이터 수
       setTotalData(json["DB Total len"]);
       // 데이터 
       let data = [];
       json.meat_id_list.map((m)=>{
-        //console.log(m);
         setMeatList([
           ...meatList,
           json.meat_dict[m],
@@ -48,20 +56,13 @@ const DataListComp=()=>{
         data = [
           ...data,
           json.meat_dict[m],
-        ]
-        //console.log('meatlist',meatList);
-        //console.log('json', data);
-        
+        ];
       });
+ 
+      
       setMeatList(data);
       // 데이터 로드 성공
       setIsLoaded(true);
-    };
-  
-    // 페이지별 데이터 불러오기
-    const handleCurrentPage = (page) => {
-      setCurrentPage(page);
-      getMeatList(page);
     };
   
     //페이지네이션 배열로 나눠서 저장
@@ -73,69 +74,80 @@ const DataListComp=()=>{
         .fill()
         .map((_, i) => totalPageArr.slice(i * limit, (i + 1) * limit));
     };
+    
   
     //페이지네이션 배열 전체 초기화
     useEffect(() => {
-      getMeatList(page);
+      getMeatList(offset,);
       setMeatList(meatList);
-      setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
-      setCurrentPageArray(totalSlicedPageArray[0]);
-    }, [totalPages, limit]);
+      
+      totalData && setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
+      //console.log(totalData);
+      totalData && setCurrentPageArray(totalSlicedPageArray[0]);
+    }, [startDate, endDate , totalData]);
 
     useEffect(() => {
-      console.log(meatList);
-      setCurrentPageArray(totalSlicedPageArray[0]);
-    }, [totalSlicedPageArray]);  
+     // console.log(meatList);
+      totalData && setCurrentPageArray(totalSlicedPageArray[0]);
     
+      //console.log('int?',totalSlicedPageArray[0])
+    }, [totalSlicedPageArray]);  
+
+
+    // 페이지별 데이터 불러오기
+    const handleCurrentPage = (page) => {
+      //console.log('page',page);
+      getMeatList(page-1);
+    };
+
+    // < 버튼 클릭시 
+    const handleOnClickPrev = () =>{
+      currentPN > 0
+      ? setCurrentPN(currentPN - 1)
+      : setCurrentPN(currentPN);
+
+      setCurrentPageArray(totalSlicedPageArray[currentPN]);
+    }
+
+    // > 버튼 클릭시
+    const handleOnClickNext = () =>{
+      currentPN < totalSlicedPageArray.length - 1
+      ? setCurrentPN(currentPN + 1)
+      : setCurrentPN(currentPN);
+
+      setCurrentPageArray(totalSlicedPageArray[currentPN]);
+    }
+
     return(
-        <div style={{marginTop:'70px'}}>
-        <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
-        {meatList.length!==0 
-        ? (//데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} pageProp={'list'}/>
-        ) 
-        : (// 데이터가 로드되지 않은 경우 로딩중 반환
-          <Spinner animation="border" />
-        )}
-        </div>
+        <div style={{position: 'fixed', top:'200px',left:'30px' ,width:'100%'}}>
+          <div style={{textAlign: "center", width: "100%", padding: "0px 150px", paddingBottom: "0",}}>
+          {//meatList.length!==0 
+          //? (//데이터가 로드된 경우 데이터 목록 반환
+            <DataList meatList={meatList} pageProp={'list'} offset={offset} count={count}/>
+         // ) 
+         // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
+        //    <Spinner animation="border" />
+        //  )
+      }
+          </div>
           
-        <Box sx={{display:'flex', marginTop:'40px', width:'100%', justifyContent:'center'}}>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev
-            onClick={() => {
-              currentPN > 0
-                ? setCurrentPN(currentPN - 1)
-                : setCurrentPN(currentPN);
-              setCurrentPageArray(totalSlicedPageArray[currentPN]);
-            }}
-          />
-          {currentPageArray
-            ? currentPageArray.map((m, idx) => {
-                return (
-                  <Pagination.Item
-                    key={idx}
-                    onClick={() => {
-                      //페이지 api 불러오기
-                      setCurrentPage(m);
-                    }}
-                  >
-                    {m}
-                  </Pagination.Item>
-                );
-              })
-            : null}
-          <Pagination.Next
-            onClick={() => {
-              currentPN < totalSlicedPageArray.length - 1
-                ? setCurrentPN(currentPN + 1)
-                : setCurrentPN(currentPN);
-              setCurrentPageArray(totalSlicedPageArray[currentPN]);
-            }}
-          />
-          <Pagination.Last disabled />
-        </Pagination>
-        </Box>
+          <Box sx={{display:'flex', position: 'fixed', bottom:'10px',marginTop:'40px', width:'100%', justifyContent:'center'}}>
+          <Pagination>
+            <Pagination.First />
+            <Pagination.Prev onClick={handleOnClickPrev}/>
+            {currentPageArray
+              ? currentPageArray.map((m, idx) => {
+                  return (
+                    <Pagination.Item key={idx} onClick={()=>{setCurrentPage(m); setOffset(m-1); handleCurrentPage(m);}}>
+                      {m}
+                    </Pagination.Item>
+                  );
+                })
+              : null}
+            <Pagination.Next onClick={handleOnClickNext} />
+            <Pagination.Last disabled />
+          </Pagination>
+          </Box>
       </div>
     );
 }

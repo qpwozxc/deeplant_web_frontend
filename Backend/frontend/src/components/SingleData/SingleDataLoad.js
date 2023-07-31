@@ -17,7 +17,7 @@ export function DataLoad(id, page, currentUser) {
   // API fetch
   const getData = async (id) => {
     const json = await (
-      await fetch(`http://localhost:8080/meat/get?id=${id}`)
+      await fetch(`http://3.38.52.82/meat/get?id=${id}`)
     ).json();
     console.log("connected!!", json);
     //console.log(json);
