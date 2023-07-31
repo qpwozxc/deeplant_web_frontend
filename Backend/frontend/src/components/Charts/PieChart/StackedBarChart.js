@@ -71,11 +71,11 @@ const columnChartOptions = {
   tooltip: {
     y: {
       formatter(val) {
-        return `$ ${val} thousands`;
+        return `${val}개`;
       },
     },
   },
-  /*legend: {
+  legend: {
     show: true,
     fontFamily: `'Public Sans', sans-serif`,
     offsetX: 10,
@@ -91,76 +91,77 @@ const columnChartOptions = {
       offsexY: 2,
     },
     itemMargin: {
-      horizontal: 15,
-      vertical: 50,
+      horizontal: 10,
+      vertical: 20,
     },
+    
   },
-  */
+  
 };
-
-// ==============================|| SALES COLUMN CHART ||============================== //
 
 const StackedBarChart = () => {
   const theme = useTheme();
-
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
   const stackColors  = [ 
-    theme.palette.primary.light,
-    theme.palette.secondary.dark,
     theme.palette.success.light,
     theme.palette.primary.main,
     theme.palette.warning.main,
-    theme.palette.info.main,
+    '#BB86FC',
     theme.palette.error.main,
+    '#FF0266',
     theme.palette.info.light,
-    theme.palette.secondary.main,
     theme.palette.warning.light,
-    theme.palette.action.main,
-    theme.palette.success.main,
-    theme.palette.mode.main,
+    theme.palette.secondary.main,
     theme.palette.success.dark,
-    theme.palette.secondary.light,
+    '#03DAC5',
     theme.palette.error.light,
-    theme.palette.warning.dark,
-    theme.palette.secondary.dark,
+    /*theme.palette.warning.dark,
+    theme.palette.secondary.dark,*/
   ];
-  const warning = theme.palette.warning.main;
-  const primaryMain = theme.palette.primary.main;
-  const successDark = theme.palette.success.dark;
 
-  const [series] = useState([
-    
-    {
-      name: "등심",
-      data: [120, 45],
-    },
-    {
-      name: "삼겹살",
-      data: [0, 55],//값 넣을때 비율로 계산해서 넣기 
-    },
-    {
-      name: "채끝",
-      data: [110, 0],
-    },
-    {
-      name: "목심",
-      data: [180, 90],
-    },
-    {
-      name: "앞다리",
-      data: [180, 90],
-    },
-    {
-      name: "안심",
-      data: [180, 90],
-    },
-    {
-      name: "안심",
-      data: [180, 90],
-    },
-  ]);
+  const [cattleData,setCattleData] = useState({});
+  const [porkData, setPorkData] = useState({});
+  
 
+  //부위별 데이터 저장 
+  const [series, setSeries] = useState([]);
+  useEffect(()=>{
+    const getData = async() => {
+      // 소 돼지 개수
+      /*const spiecesCount = await(
+        await fetch('http://localhost:8080/meat/statistic?type=1')
+      ).json();*/
+
+      // 부위별 개수
+      const categCount = await(
+        await fetch('http://localhost:8080/meat/statistic?type=2')
+      ).json();
+
+      setCattleData(categCount['beef_counts_by_primal_value']);
+      setPorkData(categCount['pork_counts_by_primal_value']);
+    }
+
+    // get api data
+    getData();    
+  },[]);
+
+  // 부위별 데이터 series에 저장 
+ useEffect(()=>{
+    let seriesArr = [];
+    categories.map((c)=>{
+      seriesArr = [
+          ...seriesArr,
+          {
+            name : c,
+            data : [(cattleData[c]!==undefined)? cattleData[c]: 0, (porkData[c]!==undefined) ? porkData[c] : 0],
+          }
+        ];
+    });
+    setSeries(seriesArr);
+ },[cattleData, porkData])
+  
+  // 스타일 
   const [options, setOptions] = useState(columnChartOptions);
 
   useEffect(() => {
@@ -189,8 +190,10 @@ const StackedBarChart = () => {
       },
       
     }));
-  }, [stackColors]);
+  }, []);
 
+  console.log(options)
+ 
   return (
     <div id="chart" style={{ backgroundColor: "white", borderRadius: "5px" }}>
       <ReactApexChart
@@ -205,11 +208,7 @@ const StackedBarChart = () => {
 
 export default StackedBarChart;
 
-const series=[
-  {
-    name:''
-  }
-]
+const categories = ["안심", "등심","목심","앞다리","갈비", "채끝","우둔", "설도", "양지",  "사태","삼겹살","뒷다리",];
 const cowCategory = [
   { value: "tenderloin", label: "안심" },
   { value: "sirloin", label: "등심" },
@@ -231,3 +230,34 @@ const pigCategory = [
   { value: "belly", label: "삼겹살" },
   { value: "ham", label: "뒷다리" },
 ];
+
+const [serieses] = ([
+  {
+    name: "등심",
+    data: [120, 45],
+  },
+  {
+    name: "삼겹살",
+    data: [0, 55],//값 넣을때 비율로 계산해서 넣기 
+  },
+  {
+    name: "채끝",
+    data: [110, 0],
+  },
+  {
+    name: "목심",
+    data: [180, 90],
+  },
+  {
+    name: "앞다리",
+    data: [180, 90],
+  },
+  {
+    name: "안심",
+    data: [180, 90],
+  },
+  {
+    name: "안심",
+    data: [180, 90],
+  },
+]);
