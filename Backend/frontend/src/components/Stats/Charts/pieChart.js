@@ -7,7 +7,7 @@ export default function BasicPie() {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch("http://127.0.0.1:8080/meat/statistic?type=0")
+    fetch("http://3.38.52.82/meat/statistic?type=0")
       .then((response) => response.json())
       .then((data) => {
         // Extract relevant data from the API response and transform it to match PieChart data structure

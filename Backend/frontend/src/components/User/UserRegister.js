@@ -115,7 +115,7 @@ function UserRegister({ handleClose }) {
       try {
         // Send a GET request to check if the email is already registered
         const response = await fetch(
-          `http://localhost:8080/user/duplicate_check?id=${userI}`
+          `http://3.38.52.82/user/duplicate_check?id=${userI}`
         );
         console.log(response);
         // Check if the response status is successful (200 OK)

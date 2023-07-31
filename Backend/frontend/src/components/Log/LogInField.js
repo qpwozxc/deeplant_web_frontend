@@ -62,7 +62,7 @@ const LogInField = () => {
       }
       const auth = getAuth();
       const response = await fetch(
-        `http://localhost:8080/user/login?id=${loginEmail}`
+        `http://3.38.52.82//user/login?id=${loginEmail}`
       );
       const user = await response.json();
       try {

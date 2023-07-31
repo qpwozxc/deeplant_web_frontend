@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Tabs, Tab, Box, Button,useTheme}from '@mui/material';
 import BarGraph from "./Charts/barGraph";
 import PieChart from "./Charts/pieChart";
-import AreaChart from "./Charts/BoxPlot";
+import AreaChart from "./Charts/Sens_FreshMeat";
 import { IoBarChart, IoPieChart } from "react-icons/io5";
 import * as React from "react";
 import { FaChartLine } from "react-icons/fa6";
@@ -12,7 +12,17 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import BasicScatter from "./Charts/ScatterChart";
 import BasicPie from "./Charts/pieChart";
-import BoxPlot from "./Charts/BoxPlot";
+import FreshMeat_BoxPlot from "./Charts/Sens_FreshMeat";
+import ProcMeat_BoxPlot from "./Charts/Sens_ProcMeat";
+import HeatedMeat_BoxPlot from "./Charts/Sens_HeatedMeat";
+import Sens_FreshMeat from "./Charts/Sens_FreshMeat";
+import Sens_ProcMeat from "./Charts/Sens_ProcMeat";
+import Sens_HeatedMeat from "./Charts/Sens_HeatedMeat";
+import Taste_FreshMeat from "./Charts/Taste_FreshMeat";
+import Taste_ProcMeat from "./Charts/Taste_ProcMeat";
+import Sens_Stat from "./Charts/Sens_Stat";
+import Sens_Fresh_Map from "./Charts/Sens_Fresh_Map";
+import Sens_Heated_Map from "./Charts/Sens_Heated_Map";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -46,34 +56,30 @@ function a11yProps(index) {
 export default function StatsTabs() {
   const [value, setValue] = useState(0);
   const [slot, setSlot] = useState("week");
-  const [meatOptions, setMeatOptions] = useState(["원육", "처리육"]);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   const [alignment, setAlignment] = React.useState("맛");
-
-  const handleToggleChange = (event, newAlignment) => {
+  const handleFirstChange = (event, newAlignment) => {
     setAlignment(newAlignment);
-
-    // Update the options in the second ToggleButtonGroup based on the selected value in the first ToggleButtonGroup
-    if (newAlignment === "맛") {
-      setMeatOptions(["원육", "처리육"]);
-    } else if (newAlignment === "관능") {
-      setMeatOptions(["원육", "처리육", "가열육"]);
-    }
+  };
+  const [secondary, setSecondary] = React.useState("원육");
+  const handleSecondChange = (event, newSecond) => {
+    setSecondary(newSecond);
   };
 
   return (
-    <Box sx={{ width: "900px", height: "300px", paddingTop: "10px" }}>
+    <Box sx={{ width: "900px", height: "350px" }}>
       <Box
         sx={{
           borderBottom: 1,
           borderColor: "divider",
           backgroundColor: "white",
           display: "flex",
-          alignItems: "center", // Optional: Align items vertically in the center
-          justifyContent: "space-between", // Optional: Distribute space between the components
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
         <Tabs
@@ -91,40 +97,55 @@ export default function StatsTabs() {
           color="primary"
           value={alignment}
           exclusive
-          onChange={handleToggleChange}
+          onChange={handleFirstChange}
           aria-label="Platform"
         >
           <ToggleButton value="맛">맛</ToggleButton>
           <ToggleButton value="관능">관능</ToggleButton>
         </ToggleButtonGroup>
+
         <ToggleButtonGroup
           color="primary"
-          value={alignment}
+          value={secondary}
           exclusive
-          onChange={handleToggleChange}
-          aria-label="Meat Options"
+          onChange={handleSecondChange}
+          aria-label="Platform"
         >
-          {meatOptions.map((option) => (
-            <ToggleButton key={option} value={option}>
-              {option}
-            </ToggleButton>
-          ))}
+          <ToggleButton value="원육">원육</ToggleButton>
+          <ToggleButton value="처리육">처리육</ToggleButton>
+          <ToggleButton value="가열육" disabled={alignment === "맛"}>
+            가열육
+          </ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <BarGraph />
+        {alignment === "관능" && secondary === "원육" ? (
+          <Sens_FreshMeat />
+        ) : alignment === "관능" && secondary === "처리육" ? (
+          <Sens_ProcMeat />
+        ) : alignment === "관능" && secondary === "가열육" ? (
+          <Sens_HeatedMeat />
+        ) : alignment === "맛" && secondary === "원육" ? (
+          <Taste_FreshMeat />
+        ) : alignment === "맛" && secondary === "처리육" ? (
+          <Taste_ProcMeat />
+        ) : null}
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={1}>
-        <BasicPie />
-      </CustomTabPanel>
-
-      <CustomTabPanel value={value} index={2}>
         <BasicScatter />
       </CustomTabPanel>
 
+      <CustomTabPanel value={value} index={2}>
+        {alignment === "관능" && secondary === "원육" ? (
+          <Sens_Fresh_Map />
+        ) : alignment === "관능" && secondary === "가열육" ? (
+          <Sens_Heated_Map />
+        ) : null}
+      </CustomTabPanel>
+
       <CustomTabPanel value={value} index={3}>
-        <BoxPlot />
+        <BarGraph />
       </CustomTabPanel>
     </Box>
   );
