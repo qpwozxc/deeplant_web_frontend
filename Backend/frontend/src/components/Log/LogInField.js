@@ -53,37 +53,52 @@ const LogInField = () => {
   const login = async () => {
     try {
       if (!loginEmail) {
-        //아이디가 입력되지 않았다면
         setLoginError("아이디를 입력해주세요.");
         return;
       }
       if (!loginPassword) {
-        //비밀번호가 입력되지 않았다면
         setLoginError("비밀번호를 입력해주세요.");
         return;
       }
+      const auth = getAuth();
       const response = await fetch(
-        `http://localhost:8080/user/login?id=${loginEmail}`
+        `http://3.38.52.82//user/login?id=${loginEmail}`
       );
       const user = await response.json();
-      console.log("response", response);
-      if (response.ok && user.password !== loginPassword) {
-        //비밀번호가 일치하지 않는다면
-        setLoginError("비밀번호가 일치하지 않습니다.");
-        return;
+      try {
+        await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          //아이디가 존재하지 않는다면
+          setLoginError("존재하지 않는 아이디입니다.");
+          return;
+        } else if (user.type !== "Manager") {
+          //아이디는 존재하지만 관리자가 아니라면
+          setLoginError("로그인 권한이 없습니다. 관리자에게 문의해주세요.");
+          return;
+        } else if (error.code === "auth/too-many-requests") {
+          //로그인을 너무 많이 시도하면
+          setLoginError(
+            "로그인을 너무 많이 시도했습니다. 잠시후 다시 시도해주세요."
+          );
+          return;
+        } else {
+          // 비밀번호가 일치하지 않는다면
+          setLoginError("비밀번호가 일치하지 않습니다.");
+          return;
+        }
       }
-      if (response.status === 404) {
-        //아이디가 존재하지 않는다면
-        setLoginError("존재하지 않는 아이디입니다.");
-        return;
-      }
-      // Store the email in local storage if "Remember Me" is checked
       if (rememberMe) {
         localStorage.setItem("rememberedEmail", loginEmail);
       } else {
         localStorage.removeItem("rememberedEmail");
       }
       //로그인 성공 시 홈으로 이동
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPassword
+      );
       navigate("/Home?userId=" + encodeURIComponent(user.userId));
     } catch (error) {
       console.log(error.message);

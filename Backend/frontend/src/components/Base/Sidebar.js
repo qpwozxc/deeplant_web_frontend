@@ -132,6 +132,7 @@ function Sidebar() {
       const response = await fetch(
         `http://localhost:8080/user?userId=${userEmail}`
       );
+      console.log(userEmail);
       const user = await response.json();
       setUsername(user.name); // Update the state with the username
     } catch (error) {

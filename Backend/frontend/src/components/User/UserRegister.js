@@ -8,7 +8,6 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-
 function UserRegister({ handleClose }) {
   const [userId, setuserId] = useState("");
   const [createdAt, setCreatedAt] = useState(
@@ -68,7 +67,6 @@ function UserRegister({ handleClose }) {
           userId,
           tempPassword
         );
-        console.log("User registered with Firebase Authentication:", user);
 
         // Send verification email to the registered user's email address
         await sendEmailVerification(user);
@@ -117,9 +115,9 @@ function UserRegister({ handleClose }) {
       try {
         // Send a GET request to check if the email is already registered
         const response = await fetch(
-          `http://localhost:8080/user/duplicate_check?id=${userI}`
+          `http://3.38.52.82/user/duplicate_check?id=${userI}`
         );
-
+        console.log(response);
         // Check if the response status is successful (200 OK)
         if (response.ok) {
           // Data is not JSON, but just a boolean value
@@ -130,7 +128,7 @@ function UserRegister({ handleClose }) {
           if (!isAvailable) {
             emailInput.setCustomValidity("이미 등록된 이메일입니다.");
           } else {
-            emailInput.setCustomValidity("");
+            emailInput.setCustomValidity("d");
           }
         } else {
           // Handle error response if needed

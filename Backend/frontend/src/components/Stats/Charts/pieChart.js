@@ -1,77 +1,40 @@
-import PropTypes from 'prop-types';
-import ReactApexChart from 'react-apexcharts';
-// @mui
-import { useTheme, styled } from '@mui/material/styles';
-import { Card, CardHeader, Typography } from '@mui/material';
-// utils
-import { fNumber } from './formatNumber';
-// components
-import useChart from './useChart';
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { PieChart } from "@mui/x-charts/PieChart";
 
-// ----------------------------------------------------------------------
+export default function BasicPie() {
+  const [chartData, setChartData] = useState([]);
 
-const CHART_HEIGHT = 350;
-const LEGEND_HEIGHT = 50;
+  useEffect(() => {
+    // Fetch data from the API
+    fetch("http://3.38.52.82/meat/statistic?type=0")
+      .then((response) => response.json())
+      .then((data) => {
+        // Extract relevant data from the API response and transform it to match PieChart data structure
+        const cattleProcessed = data.cattle_counts.processed;
+        const cattleRaw = data.cattle_counts.raw;
+        const pigProcessed = data.pig_counts.processed;
+        const pigRaw = data.pig_counts.raw;
 
-const StyledChartWrapper = styled('div')(({ theme }) => ({
-  height: CHART_HEIGHT,
-  marginTop: theme.spacing(5),
-  '& .apexcharts-canvas svg': { height: CHART_HEIGHT },
-  '& .apexcharts-canvas svg,.apexcharts-canvas foreignObject': {
-    overflow: 'visible',
-  },
-  '& .apexcharts-legend': {
-    height: LEGEND_HEIGHT,
-    alignContent: 'center',
-    position: 'relative !important',
-    borderTop: `solid 1px ${theme.palette.divider}`,
-    top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
-  },
-}));
+        const chartData = [
+          { id: 0, value: cattleProcessed, label: "Cattle Processed" },
+          { id: 1, value: cattleRaw, label: "Cattle Raw" },
+          { id: 2, value: pigProcessed, label: "Pig Processed" },
+          { id: 3, value: pigRaw, label: "Pig Raw" },
+        ];
 
-// ----------------------------------------------------------------------
+        // Set the transformed data to the state
+        setChartData(chartData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
-PieChart.propTypes = {
-  title: PropTypes.string,
-  subheader: PropTypes.string,
-  chartColors: PropTypes.arrayOf(PropTypes.string),
-  chartData: PropTypes.array,
-};
+  // Wait for the API call to complete and the state to be updated
+  if (chartData.length === 0) {
+    return null;
+  }
 
-export default function PieChart({ title, subheader, chartColors, chartData, ...other }) {
-  const theme = useTheme();
-
-  const chartLabels = chartData.map((i) => i.label);
-
-  const chartSeries = chartData.map((i) => i.value);
-
-  const chartOptions = useChart({
-    colors: chartColors,
-    labels: chartLabels,
-    stroke: { colors: [theme.palette.background.paper] },
-    legend: { floating: true, horizontalAlign: 'center' },
-    dataLabels: { enabled: true, dropShadow: { enabled: false } },
-    tooltip: {
-      fillSeriesColor: false,
-      y: {
-        formatter: (seriesName) => fNumber(seriesName),
-        title: {
-          formatter: (seriesName) => `${seriesName}`,
-        },
-      },
-    },
-    plotOptions: {
-      pie: { donut: { labels: { show: false } } },
-    },
-  });
-
-  return (
-    <Card {...other}>
-  
-      <StyledChartWrapper dir="ltr" style={{marginTop:'20px'}}>
-        <ReactApexChart type="pie" series={chartSeries} options={chartOptions} height={280} />
-      </StyledChartWrapper>
-    </Card>
-  );
+  return <PieChart series={[{ data: chartData }]} width={600} height={200} />;
 }
-//    <CardHeader title={title} titleTypographyProps={{variant:'h6' }} style={{paddingBottom:'0px'}}/>
