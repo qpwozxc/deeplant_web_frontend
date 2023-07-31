@@ -11,7 +11,7 @@ const DataStat = ()=>{
             <div style={{width:'400px', margin:'0px 20px'}}>
                 <PieChart 
                     //chartData={pieChartD1.chartData}
-                    chartColors={[theme.palette.primary.main, theme.palette.warning.main,]}
+                    chartColors={[/*theme.palette.primary.main*/'#3700B3','#FF0266' /*theme.palette.warning.main,*/]}
                     //isFilter={pieChartD1.isFilter}
                     />
             </div>  

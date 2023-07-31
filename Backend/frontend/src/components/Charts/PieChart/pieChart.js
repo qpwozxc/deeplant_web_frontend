@@ -93,7 +93,12 @@ const PieChart = ({ subheader, chartColors, /*chartData, isFilter,*/...other }) 
       </Box>
       
       <StyledChartWrapper dir="ltr" style={{marginTop:'20px'}}>
-        <ReactApexChart type="donut" series={chartSeries} options={chartOptions} height={280} />
+        {chartSeries[0] === 0 && chartSeries[1] === 0 
+        ?// 데이터가 없는 경우
+        <div style={{width:'100%', height:'100%', display:'flex', justifyContent:'center', alignItems:'center'}}><span>데이터가 존재하지 않습니다</span></div>
+        :<ReactApexChart type="donut" series={chartSeries} options={chartOptions} height={280} />
+        }
+        
       </StyledChartWrapper>
     </Card>
   );
