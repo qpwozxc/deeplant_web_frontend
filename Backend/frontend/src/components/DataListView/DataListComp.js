@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Box, Button,  Divider, useTheme, Tab ,TabContext ,TabList ,TabPanel} from "@mui/material";
 import DataList from "./DataList";
 import Pagination from "react-bootstrap/Pagination";
-import ListPagination from "./pagination";
+import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
 import pagination from './pagination.json'
 const DataListComp=()=>{
@@ -54,7 +54,6 @@ const DataListComp=()=>{
         
       });
       setMeatList(data);
-      //setMeatList(json);
       // 데이터 로드 성공
       setIsLoaded(true);
     };
@@ -142,99 +141,3 @@ const DataListComp=()=>{
 }
 
 export default DataListComp;
-
-const apiList = [
-  {
-    id : '',
-    name:'',
-    type:"",
-    company:'',
-    createdAt:'',
-    farmAddr : '',
-    statusType:'',
-  }
-]
-
-const sampleMeatList = [
-    {
-      id:"000189843795-cattle-chuck-chuck",
-      userName:"김수현",
-      userType:'1',
-      company:'deeplant1',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 원주시 호저면 매호리",
-      accepted : 'rejected',
-    },
-    {
-      id:"000189843795-cattle-chuck-chuck",
-      userName:"김",
-      userType:'1',
-      company:'deeplant2',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 철원군",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-pig-boston_shoulder-boston_shoulder",
-      userName:"나",
-      userType:'3',
-      company:'deeplant1',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 홍천군",
-      accepted : 'rejected',
-    },
-    {
-      id:"000189843795-pig-tenderloin-foreshank",
-      userName:"박",
-      userType:'2',
-      company:'gsUniv',
-      meatCreatedAt:"11/13/2021",
-      farmAddr :"경기도 김포시",
-      accepted:'stand-by',
-    },
-    {
-      id:"000189843795-cattle-sirloin-ribeye_roll",
-      userName:"이",
-      userType:'3',
-      company:'deeplant2',
-      meatCreatedAt:"7/14/2022",
-      farmAddr :"경기도 안성시",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted:'stand-by',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
-    {
-      id:"000189843795-cattle-striploin-strip_loin",
-      userName:"최",
-      userType:'1',
-      company:'gsUniv',
-      meatCreatedAt:"7/14/2023",
-      farmAddr :"경기도 용인시 처인구",
-      accepted : 'accepted',
-    },
-  ];

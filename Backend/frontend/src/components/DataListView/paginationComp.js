@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import Pagination from "react-bootstrap/Pagination";
 
-function ListPagination({getDataList, setDataList}){
+function PaginationComp({getDataList, setDataList}){
     const [currentPage, setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(78);
     const [currentPN, setCurrentPN] = useState(1);
@@ -81,4 +81,4 @@ function ListPagination({getDataList, setDataList}){
     );
 }
 
-export default ListPagination;
+export default PaginationComp;
