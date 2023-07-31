@@ -5,12 +5,11 @@ import Pagination from "react-bootstrap/Pagination";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
 import pagination from './pagination.json'
-import SearchFilterBar from "../Search/SearchFilterBar";
-import ExcelController from "../SingleData/excelContr";
 
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
-const DataListComp=()=>{
+const DataListComp=({startDate, endDate})=>{
+    console.log('date', startDate, endDate);
     const [isLoaded, setIsLoaded] = useState(true);// -> 삭제
     const [meatList, setMeatList] = useState([]);
     
@@ -34,14 +33,16 @@ const DataListComp=()=>{
     // 나중에 prop으로 변경
     const period = 7;
     const totalPages = Math.ceil(totalData / count); 
+  
 
     //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
-    const getMeatList = async (offset, /*start, end*/) => {
+    const getMeatList = async (offset, ) => {
+      //console.log('data loading',offset)
       const json = await (
-        await fetch(`http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${start}&end=${end}`)
+        await fetch(`http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
       ).json();
-     // console.log('fetch done!', json);
-     console.log('data loaded!',offset)
+     console.log('fetch done!', json);
+     //console.log('data loaded!',offset)
       // 전체 데이터 수
       setTotalData(json["DB Total len"]);
       // 데이터 
@@ -79,20 +80,23 @@ const DataListComp=()=>{
     useEffect(() => {
       getMeatList(offset,);
       setMeatList(meatList);
+      
       totalData && setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
+      //console.log(totalData);
       totalData && setCurrentPageArray(totalSlicedPageArray[0]);
-    }, [totalData, ]);
+    }, [startDate, endDate , totalData]);
 
     useEffect(() => {
      // console.log(meatList);
       totalData && setCurrentPageArray(totalSlicedPageArray[0]);
-      console.log('int?',totalSlicedPageArray[0])
+    
+      //console.log('int?',totalSlicedPageArray[0])
     }, [totalSlicedPageArray]);  
 
 
     // 페이지별 데이터 불러오기
     const handleCurrentPage = (page) => {
-      console.log('page',page);
+      //console.log('page',page);
       getMeatList(page-1);
     };
 
@@ -115,22 +119,16 @@ const DataListComp=()=>{
     }
 
     return(
-      <div>
-        <Box sx={styles.fixed}>
-        <SearchFilterBar/>
-        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-        <ExcelController/>
-        </div>
-        </Box>
         <div style={{position: 'fixed', top:'200px',left:'30px' ,width:'100%'}}>
           <div style={{textAlign: "center", width: "100%", padding: "0px 150px", paddingBottom: "0",}}>
-          {meatList.length!==0 
-          ? (//데이터가 로드된 경우 데이터 목록 반환
+          {//meatList.length!==0 
+          //? (//데이터가 로드된 경우 데이터 목록 반환
             <DataList meatList={meatList} pageProp={'list'} offset={offset} count={count}/>
-          ) 
-          : (// 데이터가 로드되지 않은 경우 로딩중 반환
-            <Spinner animation="border" />
-          )}
+         // ) 
+         // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
+        //    <Spinner animation="border" />
+        //  )
+      }
           </div>
           
           <Box sx={{display:'flex', position: 'fixed', bottom:'10px',marginTop:'40px', width:'100%', justifyContent:'center'}}>
@@ -151,23 +149,7 @@ const DataListComp=()=>{
           </Pagination>
           </Box>
       </div>
-      </div>
     );
 }
 
 export default DataListComp;
-
-const styles={
-  fixed:{
-    position: 'fixed', 
-    top:'70px',
-    right:'0',
-    left:'65px',
-    zIndex: 1,
-    width:'100%',
-    borderRadius:'0',
-    display:'flex',
-    justifyContent:'center',
-    backgroundColor:'white',
-  },
-};

@@ -220,12 +220,12 @@ function DataView({page, currentUser ,dataProps}){
                         <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
                         {page === '수정및조회'
                         ?<ListGroup.Item>
-                            <input class="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
+                            <input className="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
                                 onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
                             {
                             edited
-                            ?<Button type="button" class="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
-                            :<Button type="button" class="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
+                            ?<Button type="button" className="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
+                            :<Button type="button" className="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
                             }
                         </ListGroup.Item>
                         :<></>
@@ -240,12 +240,12 @@ function DataView({page, currentUser ,dataProps}){
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
                 <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
-                    <div key='rawmeat' class="container">
+                    <div key='rawmeat' className="container">
                         {rawField.map((f, idx)=>{
                             return(
-                                <div key={'raw-'+idx} class="row" >
-                                    <div key={'raw-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                    <div key={'raw-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                                <div key={'raw-'+idx} className="row" >
+                                    <div key={'raw-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                    <div key={'raw-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
                                         {rawInput[f] ? rawInput[f] : ""}
                                     </div>
                                 </div>
@@ -257,10 +257,10 @@ function DataView({page, currentUser ,dataProps}){
                     <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}} inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue);}}
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <div key='processedmeat' class="container">
-                        <div key={'processed-explanation'} class="row" >
-                            <div key={'processed-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'processed-exp-col0'} class="col-3" style={style.dataExpColumn}>1회차</div>
+                    <div key='processedmeat' className="container">
+                        <div key={'processed-explanation'} className="row" >
+                            <div key={'processed-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'processed-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>
                             {
                                 Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
                                     <div key={'processed-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
@@ -271,9 +271,9 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                         {deepAgingField.map((f, idx)=>{
                         return(
-                            <div key={'processed-'+idx} class="row" >
-                                <div key={'processed-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'processed-'+idx+'col2'} class="col-3" style={style.dataContainer}>  
+                            <div key={'processed-'+idx} className="row" >
+                                <div key={'processed-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'processed-'+idx+'col2'} className="col-3" style={style.dataContainer}>  
                                 {
                                     f === 'minute' 
                                     ?(
@@ -291,7 +291,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {
                                 Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
-                                    <div key={'processed-'+arr_idx+'-col'+arr_idx} class="col-3" style={style.dataContainer}>
+                                    <div key={'processed-'+arr_idx+'-col'+arr_idx} className="col-3" style={style.dataContainer}>
                                     {
                                         f === 'minute' 
                                         ?(
@@ -317,13 +317,13 @@ function DataView({page, currentUser ,dataProps}){
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
                     id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <div key='heatedmeat' class="container">
-                        <div key={'heatedmeat-explanation'} class="row" >
-                            <div key={'heatedmeat-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'heatedmeat-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                    <div key='heatedmeat' className="container">
+                        <div key={'heatedmeat-explanation'} className="row" >
+                            <div key={'heatedmeat-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'heatedmeat-exp-col0'} className="col-2" style={style.dataExpColumn}>원육</div>
                             {
                                 Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                    <div key={'heatedmeat-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                    <div key={'heatedmeat-exp-col'+(arr_idx+1)} className="col-2" style={style.dataExpColumn}>
                                         {arr_idx+1}회차
                                     </div>
                                 ))
@@ -331,9 +331,9 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                         {heatedField.map((f, idx)=>{
                         return(
-                            <div key={'heated-'+idx} class="row" >
-                                <div key={'heated-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'heated-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                            <div key={'heated-'+idx} className="row" >
+                                <div key={'heated-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'heated-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
                                 {
                                     edited
                                     ?<input key={'heated-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={heatInput[0]?.[f]} placeholder={heated_data[0]===null?"0.0":heated_data[0]?.[f]} 
@@ -343,7 +343,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {// 실험실 및 가열육 추가 데이터 수정 
                                 Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx) => (
-                                    <div key={'heated-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
+                                    <div key={'heated-'+arr_idx+'-col'+arr_idx} className="col-2" style={style.dataContainer}>
                                     {
                                         edited
                                         ?<input key={'heated-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={heatInput[arr_idx+1]?.[f]} placeholder={heated_data[arr_idx+1]===null?"0.0":heated_data[arr_idx]?.[f]} 
@@ -363,13 +363,13 @@ function DataView({page, currentUser ,dataProps}){
                     <Autocomplete value={toggle4}  size="small" onChange={(event, newValue) => {setToggle4(newValue)}} inputValue={toggle4Value} onInputChange={(event, newInputValue) => {setToggle4Value(newInputValue)}}
                     id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <div key='labData' class="container">
-                        <div key={'labData-explanation'} class="row" >
-                            <div key={'labData-exp-col'} class="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'labData-exp-col0'} class="col-2" style={style.dataExpColumn}>원육</div>
+                    <div key='labData' className="container">
+                        <div key={'labData-explanation'} className="row" >
+                            <div key={'labData-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
+                            <div key={'labData-exp-col0'} className="col-2" style={style.dataExpColumn}>원육</div>
                             {
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                    <div key={'labData-exp-col'+(arr_idx+1)} class="col-2" style={style.dataExpColumn}>
+                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-2" style={style.dataExpColumn}>
                                         {arr_idx+1}회차
                                     </div>
                                 ))
@@ -377,9 +377,9 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                         {labField.map((f, idx)=>{
                         return(
-                            <div key={'lab-'+idx} class="row" >
-                                <div key={'lab-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'lab-'+idx+'col2'} class="col-2" style={style.dataContainer}>      
+                            <div key={'lab-'+idx} className="row" >
+                                <div key={'lab-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'lab-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
                                 {
                                     edited
                                     ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
@@ -389,7 +389,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {// 실험실 및 가열육 추가 데이터 수정 
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
-                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
+                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-2" style={style.dataContainer}>
                                     {
                                         edited
                                         ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 
@@ -407,12 +407,12 @@ function DataView({page, currentUser ,dataProps}){
                     </div>
                 </Tab>
                 <Tab eventKey='api' title='축산물 이력' style={{backgroundColor:'white'}}>
-                    <div key='api' class="container">
+                    <div key='api' className="container">
                         {apiField.map((f, idx)=>{
                         return(
-                            <div key={'api-'+idx} class="row" >
-                                <div key={'api-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'api-'+idx+'col2'} class="col-5" style={style.dataContainer}>      
+                            <div key={'api-'+idx} className="row" >
+                                <div key={'api-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                <div key={'api-'+idx+'col2'} className="col-5" style={style.dataContainer}>      
                                 {
                                     edited
                                     ? <input key={'api-'+idx+'input'} name={f} style={{height:'23px'}} value={apiInput[f]} placeholder={api_data===null?"":api_data[f]} 
@@ -436,8 +436,8 @@ function DataView({page, currentUser ,dataProps}){
         ?<div style={style.editBtnWrapper}>
         { 
         edited
-        ?<button type="button" class="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
-        :<button type="button" class="btn btn-success" onClick={onClickEditBtn}>수정</button>
+        ?<button type="button" className="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
+        :<button type="button" className="btn btn-success" onClick={onClickEditBtn}>수정</button>
         }
        </div> 
        :<></>

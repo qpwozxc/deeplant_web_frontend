@@ -6,8 +6,7 @@ import DataList from "./DataList";
 import TransitionsModal from "./WarningComp";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
-import SearchFilterBar from "../Search/SearchFilterBar";
-import ExcelController from "../SingleData/excelContr";
+
 
 const RejectedDataListComp=()=>{
     const [isLoaded, setIsLoaded] = useState(true);
@@ -88,14 +87,6 @@ const RejectedDataListComp=()=>{
     }
     
     return(
-      <div>
-        <Box sx={styles.fixed}>
-        <SearchFilterBar/>
-        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-        <ExcelController/>
-        </div>
-        </Box>
-      
         <div style={{marginTop:'70px'}}>
         <div style={{textAlign: "center", width: "100%", padding: "0px 100px", paddingBottom: "0",}}>
         {isLoaded ? (
@@ -152,24 +143,28 @@ const RejectedDataListComp=()=>{
             :<></>
         }
       </div>
-      </div>
     );
 }
 
 export default RejectedDataListComp;
 
-const styles={
-  fixed:{
-    position: 'fixed', 
-    top:'70px',
-    right:'0',
-    left:'65px',
-    zIndex: 1,
-    width:'100%',
-    borderRadius:'0',
-    display:'flex',
-    justifyContent:'center',
-    backgroundColor:'white',
-  },
-};
-
+const sampleMeatList = [
+    {
+      id:"000189843795-cattle-chuck-chuck",
+      userName:"김수현",
+      userType:'1',
+      company:'deeplant1',
+      meatCreatedAt:"7/13/2023",
+      farmAddr :"강원도 원주시 호저면 매호리",
+      accepted : 'rejected',
+    },
+    {
+        id:"000189843795-pig-boston_shoulder-boston_shoulder",
+        userName:"나",
+        userType:'3',
+        company:'deeplant1',
+        meatCreatedAt:"7/13/2023",
+        farmAddr :"강원도 홍천군",
+        accepted : 'rejected',
+      },
+  ];

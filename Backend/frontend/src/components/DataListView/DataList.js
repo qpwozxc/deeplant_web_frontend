@@ -8,7 +8,7 @@ import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
 function DataList({meatList, pageProp, setDelete, offset, count}){
-
+    
     //console.log('offset and count',offset,count);
     // 반려함 탭인지 목록 탭인지 예측 탭인지 확인 
     const [page, setPage] = useState('list');
@@ -188,7 +188,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                         {content.company}
                     </TableCell>
                     <TableCell>
-                        {content.createdAt}
+                        {content.createdAt.replace('T',' ')}
                     </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
                         {content.statusType === '반려' ?<OrderStatus status={0} />: <></> }
