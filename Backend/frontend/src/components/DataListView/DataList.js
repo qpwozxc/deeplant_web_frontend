@@ -7,7 +7,9 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
-function DataList({meatList, pageProp, setDelete}){
+function DataList({meatList, pageProp, setDelete, offset, count}){
+
+    //console.log('offset and count',offset,count);
     // 반려함 탭인지 목록 탭인지 예측 탭인지 확인 
     const [page, setPage] = useState('list');
     useEffect(()=>{
@@ -167,7 +169,7 @@ function DataList({meatList, pageProp, setDelete}){
                     ?<TableCell><Checkbox value={content.id} checked={checkboxItems[checkboxKey]} onChange={(e)=>handleCheckBoxChange(e)} inputProps={{ 'aria-label': 'controlled' }}  /></TableCell>
                     : <></>
                     }
-                    <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {index+1} </TableCell>
+                    <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
                     <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content.id}`}}>
                         {content.id}

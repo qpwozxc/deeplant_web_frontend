@@ -18,12 +18,7 @@ function DataManage() {
 
   return (
     <div style={{overflow: 'overlay', width:'100%', marginTop:'140px'}}>
-      <Box sx={styles.fixed}>
-        <SearchFilterBar/>
-        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-        <ExcelController/>
-        </div>
-      </Box>
+      
 
       <Box sx={styles.fixedTab}>
         <div style={{display:'flex'}}>
@@ -35,7 +30,7 @@ function DataManage() {
         </div>
       </Box >
 
-      { value === "list" ? <DataListComp/> : <></> }
+      { value === "list" ? <DataListComp /> : <></> }
       { value === "stat" ? <DataStat/> : <></> }
       { value === "reject" ? <RejectedDataListComp/>: <></>}
     </div>
@@ -44,7 +39,15 @@ function DataManage() {
 
 export default DataManage;
 
-
+/**
+ * 
+ * <Box sx={styles.fixed}>
+        <SearchFilterBar/>
+        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
+        <ExcelController/>
+        </div>
+      </Box>
+ */
 const styles={
   fixed:{
     position: 'fixed', 
@@ -79,7 +82,8 @@ const styles={
   tabBtn:{
     border:'none',
     color:'#9e9e9e',
-  }
+  },
+ 
 }
 
 

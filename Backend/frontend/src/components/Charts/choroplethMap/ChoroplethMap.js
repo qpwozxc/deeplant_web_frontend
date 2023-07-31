@@ -12,7 +12,7 @@ const ChoroplethMap = ({data})=>{
     useEffect(()=>{
       const getData = async() =>{
         const mapData = await(
-          await fetch('http://localhost:8080/meat/statistic?type=3')
+          await fetch('http://3.38.52.82/meat/statistic?type=3')
         ).json();
 
         //setter
@@ -52,7 +52,6 @@ const ChoroplethMap = ({data})=>{
     //useEffect(() => {// feature 전달 해줘야 할듯
         // 값에 따른 색
         const getColor = (value) => {
-          console.log('v,',value);
           if (!value){
             return '#ffffff';
           }

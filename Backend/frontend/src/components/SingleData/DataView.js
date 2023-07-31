@@ -207,7 +207,7 @@ function DataView({page, currentUser ,dataProps}){
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
             <Card style={{ width: "100%"}}>
-            <Card.Img variant="top" src={previewImage}style={{height:'350px',width:'auto'}} />
+            <Card.Img variant="top" src={previewImage} style={{height:'350px',objectFit:'contain'}}/>
             <Card.Body>
                 
                 <Card.Text >

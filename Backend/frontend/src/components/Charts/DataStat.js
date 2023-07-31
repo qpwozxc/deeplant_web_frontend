@@ -1,5 +1,8 @@
 import PieChart from "./PieChart/pieChart";
 import StackedBarChart from "./PieChart/StackedBarChart";
+import SearchFilterBar from "../Search/SearchFilterBar";
+import ExcelController from "../SingleData/excelContr";
+
 import Map from "./choroplethMap/Map";
 import { Box,  useTheme, } from "@mui/material";
 const DataStat = ()=>{
@@ -7,6 +10,12 @@ const DataStat = ()=>{
     const theme = useTheme();
     return(
         <div>
+        <Box sx={styles.fixed}>
+        <SearchFilterBar/>
+        <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
+        <ExcelController/>
+        </div>
+        </Box>
         <Box sx={{display:'flex', width:"100%",height:'100%', marginBottom:'10px', justifyContent:'center', alignItems:'center'}}>   
             <div style={{width:'400px', margin:'0px 20px'}}>
                 <PieChart 
@@ -29,7 +38,20 @@ const DataStat = ()=>{
 }
 
 export default DataStat;
-
+const styles={
+    fixed:{
+      position: 'fixed', 
+      top:'70px',
+      right:'0',
+      left:'65px',
+      zIndex: 1,
+      width:'100%',
+      borderRadius:'0',
+      display:'flex',
+      justifyContent:'center',
+      backgroundColor:'white',
+    },
+  };
 const pieChartD1 = {
     chartColorsNum:2,
     chartData :[12,150]
