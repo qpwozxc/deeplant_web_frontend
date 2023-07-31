@@ -23,16 +23,33 @@ const RejectedDataListComp=()=>{
   
     //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
     const getMeatList = async (offset) => {
-      const response = await fetch(
-        `http://localhost:8080/meat?offset=${offset}&count=${count}`
-      );
-      console.log("response",response);
       const json = await (
-        await fetch(`http://localhost:8080/meat?offset=${offset}&count=${count}`)
+        await fetch(`http://localhost:8080/meat/status?statusType=1&offset=${offset}&count=${count}`)
       ).json();
       console.log("data:",json);
+      // 전체 데이터 수
+      setTotalData(json["DB Total len"]);
+      // 데이터 
+      let data = [];
+      json.meat_id_list.map((m)=>{
+        //console.log(m);
+        setMeatList([
+          ...meatList,
+          json.meat_dict[m],
+        ]
+        );
+        data = [
+          ...data,
+          json.meat_dict[m],
+        ]
+        //console.log('meatlist',meatList);
+        //console.log('json', data);
+        
+      });
+      setMeatList(data);
       //setMeatList(json);
-      //setIsLoaded(true);
+      // 데이터 로드 성공
+      setIsLoaded(true);
     };
   
     // 페이지별 데이터 불러오기

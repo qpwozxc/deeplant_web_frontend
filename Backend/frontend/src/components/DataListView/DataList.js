@@ -156,7 +156,7 @@ function DataList({meatList, pageProp, setDelete}){
                     <TableRow
                     hover
                     role="checkbox"
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } , height:'70px'}}
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={index}
@@ -189,15 +189,15 @@ function DataList({meatList, pageProp, setDelete}){
                         {content.createdAt}
                     </TableCell>
                     <TableCell align="left" style={{padding:"5px"}}>
-                        {content.statusType === 'rejected' ?<OrderStatus status={0} />: <></> }
+                        {content.statusType === '반려' ?<OrderStatus status={0} />: <></> }
                         {content.statusType === '승인' ?<OrderStatus status={1} />: <></> }
                         {content.statusType === '대기중' ?<OrderStatus status={2} />: <></> }
                     </TableCell>
                     {
-                    content.accepted === "accepted"
+                    content.statusType === "승인"
                     ?<TableCell></TableCell>
                     :<TableCell>
-                        <Link color="#000000" component={RouterLink} to={{pathname : '/DataConfirm'}}>
+                        <Link color="#000000" component={RouterLink} to={{pathname : `/DataConfirm/${content.id}`}}>
                             <Button>검토</Button>
                         </Link>
                     </TableCell>

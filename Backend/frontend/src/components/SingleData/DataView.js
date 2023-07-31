@@ -11,7 +11,6 @@ function DataView({page, currentUser ,dataProps}){
  
     //데이터 받아오기 -> props 로 전달로 변경
     const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
-    console.log('id data load',id)
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
     const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];
@@ -105,47 +104,88 @@ function DataView({page, currentUser ,dataProps}){
 
         // 가열육 관능검사: 
         for (let i =0; i < len ; i++){
-            let req = (heatInput[i]);
+            let req = heated_data[i];
             req = {
                 ...req,
-                ['id']: heated_data[i]['id'],
-                ['createdAt'] : heated_data[i]['createdAt'],
-                ['userId'] : heated_data[i]['userId'],
-                ['seqno'] : heated_data[i]['seqno'],
-                ['period'] : heated_data[i]['period'],
-                ['fresh'] : false   
+                ...heatInput[i],
             }
-            //console.log(i,req);
+            /*if (heatInput[i]){
+                req = {
+                    ...req,
+                   /* ['id']: heated_data[i]['id']? heated_data[i]['id'] : null,
+                    ['createdAt'] : heated_data[i]['createdAt']? heated_data[i]['createdAt'] : null,
+                    ['userId'] : heated_data[i]['userId']? heated_data[i]['userId'] : null,
+                    ['seqno'] : heated_data[0]['seqno'] !== null ?heated_data[0]['seqno'] : null,
+                    ['period'] : heated_data[i]['period']? heated_data[i]['period'] : null,
+                    ['imagePath'] : heated_data[i]['imagePath']?  heated_data[i]['imagePath'] : null,
+                    ['flavor'] : heatInput[i]['flavor'] ? heatInput[i]['flavor'] : null,
+                    ['juiciness'] :heatInput[i]['juiciness'] ? heatInput[i]['juiciness'] : null,
+                    ['tenderness']: heatInput[i]['tenderness'] ? heatInput[i]['tenderness'] : null,
+                    ['umami'] : heatInput[i]['umami']? heatInput[i]['umami'] : null,
+                    ['palability'] : heatInput[i]['palability'] ? heatInput[i]['palability'] : null,
+                }
+            }// ['fresh'] : false   ,
+            */
             ///meat/add/heatedmeat_eval
             const res = JSON.stringify(req);
+            console.log(i,res);
+            try{
+                fetch(`http://localhost:8080/meat/add/heatedmeat_eval`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: res,
+                });
+            }catch(err){
+                console.log('error')
+                console.error(err);
+            }
+            
+            //console.log("response",response);
         }
+
         // 실험실 : /meat/add/probexpt_data
         for (let i =0; i < len ; i++){
             let req = (labInput[i]);
+            /*let req = (lab_data[i]);
             req = {
                 ...req,
-                ['id']: lab_data[i]['id'],
-                ['updatedAt'] : lab_data[i]['updatedAt'],
-                ['userId'] : lab_data[i]['userId'],
-                ['seqno'] : lab_data[i]['seqno'],
-                ['period'] : lab_data[i]['period'],
+                ...labInput[i],
+            }*/
+            if (lab_data[i]){
+                req = {
+                    ...req,
+                    ['id']: lab_data[i]['id'],
+                    ['updatedAt'] : lab_data[i]['updatedAt'],
+                    ['userId'] : lab_data[i]['userId'],
+                    ['seqno'] : lab_data[i]['seqno'],
+                    ['period'] : lab_data[i]['period'],
+                }
             }
             // api 연결 /meat/add/probexpt_data
             const res = JSON.stringify(req);
         }
         // 처리육 관능검사 : /meat/add/deep_aging_data
         for (let i =0; i < len-1 ; i++){
-            let req = (processedInput[i]);
+            /*let req = processed_data[i];
             req = {
                 ...req,
-                ['id']: processed_data[i]['id'],
-                ['createdAt'] : processed_data[i]['createdAt'],
-                ['userId'] : processed_data[i]['userId'],
-                ['seqno'] : processed_data[i]['seqno'],
-                ['period'] : processed_data[i]['period'],
-                ['deepAging'] : {
-                    ['date'] : processed_data[i]['deepaging_data']['date'],
-                    ['minute'] : processedMinute[i],
+                ...processedInput,
+            }*/
+            let req = (processedInput[i]);
+            if(processed_data[i]) {
+                req = {
+                    ...req,
+                    ['id']: processed_data[i]['id'],
+                    ['createdAt'] : processed_data[i]['createdAt'],
+                    ['userId'] : processed_data[i]['userId'],
+                    ['seqno'] : processed_data[i]['seqno'],
+                    ['period'] : processed_data[i]['period'],
+                    ['deepAging'] : {
+                        ['date'] : processed_data[i]['deepaging_data']['date'],
+                        ['minute'] : processedMinute[i],
+                    }
                 }
             }
             console.log(i,req);
