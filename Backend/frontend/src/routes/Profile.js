@@ -1,12 +1,9 @@
-import Box from "@mui/material/Box";
-import Sidebar from "../components/Base/Sidebar";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Paper from "@mui/material/Paper";
+import Sidebar from "../components/Base/Sidebar";
 
 export default function Profile() {
-  return;
-  <>sd</>;
-}
+  const e = Sidebar.useremail;
 
+  return <Paper>{e}</Paper>;
+}
