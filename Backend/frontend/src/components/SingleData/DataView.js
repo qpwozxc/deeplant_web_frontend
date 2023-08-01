@@ -104,6 +104,8 @@ function DataView({page, currentUser ,dataProps}){
 
         // 가열육 관능검사: 
         for (let i =0; i < len ; i++){
+            console.log('heated data', heated_data[i]);
+            console.log('heated input',heatInput[i]);
             let req = heated_data[i];
             req = {
                 ...req,
@@ -130,7 +132,7 @@ function DataView({page, currentUser ,dataProps}){
             const res = JSON.stringify(req);
             console.log(i,res);
             try{
-                fetch(`http://localhost:8080/meat/add/heatedmeat_eval`, {
+                fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
