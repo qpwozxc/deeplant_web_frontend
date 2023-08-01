@@ -140,8 +140,8 @@ function DataView({page, currentUser ,dataProps}){
             const createdDate2 =  new Date(yy,mm,dd,h,m,s);
             const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
             const elapsedHour = elapsedMSec / 1000 / 60 / 60;*/
-            console.log('heated data', heated_data[i]);
-            console.log('heated input',heatInput[i]);
+            //console.log('heated data', heated_data[i]);
+            //console.log('heated input',heatInput[i]);
             // 데이터 수정 
             let req = {
                 ...heatInput[i],
@@ -156,24 +156,6 @@ function DataView({page, currentUser ,dataProps}){
                 ["period"] : Math.round(elapsedHour),
             }
 
-            //seqno, usesID, created at 
-            /*if (heatInput[i]){
-                req = {
-                    ...req,
-                   /* ['id']: heated_data[i]['id']? heated_data[i]['id'] : null,
-                    ['createdAt'] : heated_data[i]['createdAt']? heated_data[i]['createdAt'] : null,
-                    ['userId'] : heated_data[i]['userId']? heated_data[i]['userId'] : null,
-                    ['seqno'] : heated_data[0]['seqno'] !== null ?heated_data[0]['seqno'] : null,
-                    ['period'] : heated_data[i]['period']? heated_data[i]['period'] : null,
-                    ['imagePath'] : heated_data[i]['imagePath']?  heated_data[i]['imagePath'] : null,
-                    ['flavor'] : heatInput[i]['flavor'] ? heatInput[i]['flavor'] : null,
-                    ['juiciness'] :heatInput[i]['juiciness'] ? heatInput[i]['juiciness'] : null,
-                    ['tenderness']: heatInput[i]['tenderness'] ? heatInput[i]['tenderness'] : null,
-                    ['umami'] : heatInput[i]['umami']? heatInput[i]['umami'] : null,
-                    ['palability'] : heatInput[i]['palability'] ? heatInput[i]['palability'] : null,
-                }
-            }// ['fresh'] : false   ,
-            */
             ///meat/add/heatedmeat_eval
             const res = JSON.stringify(req);
             console.log(i,res);
@@ -227,27 +209,21 @@ function DataView({page, currentUser ,dataProps}){
 
         // 3. 처리육 관능검사 : /meat/add/deep_aging_data
         for (let i =0; i < len-1 ; i++){
-            /*let req = processed_data[i];
+            let req = (processedInput[i]);
             req = {
                 ...req,
-                ...processedInput,
-            }*/
-            let req = (processedInput[i]);
-            if(processed_data[i]) {
-                req = {
-                    ...req,
-                    ['id']: processed_data[i]['id'],
-                    ['createdAt'] : processed_data[i]['createdAt'],
-                    ['userId'] : processed_data[i]['userId'],
-                    ['seqno'] : processed_data[i]['seqno'],
-                    ['period'] : processed_data[i]['period'],
-                    ['deepAging'] : {
-                        ['date'] : processed_data[i]['deepaging_data']['date'],
-                        ['minute'] : processedMinute[i],
-                    }
+                ['id']: id,
+                ['createdAt'] : createdAt,
+                ['userId'] : userData["userId"],
+                ['seqno'] : i+1,
+                ['period'] : Math.round(elapsedHour),
+                ['deepAging'] : {
+                    ['date'] : processed_data[i]['deepaging_data']['date']?processed_data[i]['deepaging_data']['date']: null,
+                    ['minute'] : Number(processedMinute[i]),
                 }
             }
-            console.log(i,req);
+            
+            console.log('deepaging',i,req);
             //api 연결 /meat/add/deep_aging_data
         }
     };
@@ -266,7 +242,6 @@ function DataView({page, currentUser ,dataProps}){
             console.log('response', resp);
 
         }catch(err){
-            console.log('error')
             console.error(err);
         }
 
@@ -309,6 +284,9 @@ function DataView({page, currentUser ,dataProps}){
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
                 <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
+                    {//setImage
+                      //  setPreviewImage(raw_img_path)
+                    }
                     <div key='rawmeat' className="container">
                         {rawField.map((f, idx)=>{
                             return(
@@ -323,7 +301,8 @@ function DataView({page, currentUser ,dataProps}){
                     </div>
                 </Tab>
                 <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
-                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}} inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue);}}
+                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
+                     inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <div key='processedmeat' className="container">

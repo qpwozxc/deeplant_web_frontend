@@ -102,8 +102,8 @@ function SearchFilterBar({setStartDate, setEndDate}){
           
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]} sx={{  mx: "auto" }}>
-                <div style={{display:'flex',}}>
-                <span>직접입력</span>
+                <div style={{display:'flex', marginLeft:'20px'}}>
+                
                 <DatePicker disableFuture onChange={(newVal)=>{setStart(newVal); setIsDur(false);}} value={isDur? null : start} label="시작날짜" slotProps={{ textField: { size: 'small' } }} style={{width:'150px'}} format={"YYYY-MM-DD"}/>
                 ~
                 <DatePicker disableFuture minDate={start? start:dayjs('1970-01-01')}  onChange={(newVal)=>{setEnd(newVal); setIsDur(false);}} value={isDur? null :end} label="종료날짜" slotProps={{ textField: { size: 'small' } }}  format={"YYYY-MM-DD"}/>

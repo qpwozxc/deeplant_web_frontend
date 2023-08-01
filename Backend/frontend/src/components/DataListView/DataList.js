@@ -62,7 +62,6 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         if (typeof setDelete === 'function'){
             console.log('fuction')
             setDelete(checkedList);
-
         }
     }, [checkboxItems])
 
