@@ -47,6 +47,7 @@ const ChoroplethMap = ({data,startDate,endDate})=>{
       }
       addProperties();
       setKeyIdx((prev)=>prev+1);
+      console.log(cattleCnt, porkCnt, totalCnt);
     },[cattleCnt, porkCnt, totalCnt]);
   
     //useEffect(() => {// feature 전달 해줘야 할듯

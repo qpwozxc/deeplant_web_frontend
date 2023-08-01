@@ -8,7 +8,7 @@ import pagination from './pagination.json'
 
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
-const DataListComp=({startDate, endDate})=>{
+const DataListComp=({startDate, endDate, pageType})=>{
     console.log('date', startDate, endDate);
     const [isLoaded, setIsLoaded] = useState(true);// -> 삭제
     const [meatList, setMeatList] = useState([]);
@@ -18,7 +18,6 @@ const DataListComp=({startDate, endDate})=>{
     s.setDate(s.getDate() -7)
     const [start, setStart] = useState(new Date(s.getTime() + TIME_ZONE).toISOString().slice(0, -5));
     const [end , setEnd] = useState(new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5));
-
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalData, setTotalData] = useState(0);
@@ -123,7 +122,7 @@ const DataListComp=({startDate, endDate})=>{
           <div style={{textAlign: "center", width: "100%", padding: "0px 150px", paddingBottom: "0",}}>
           {//meatList.length!==0 
           //? (//데이터가 로드된 경우 데이터 목록 반환
-            <DataList meatList={meatList} pageProp={'list'} offset={offset} count={count}/>
+            <DataList meatList={meatList} pageProp={pageType} offset={offset} count={count}/>
          // ) 
          // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
         //    <Spinner animation="border" />

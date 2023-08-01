@@ -75,7 +75,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         console.log("iscliked", isDelClick);
         setDelId(id);
     }
-
+    console.log('pa', page)
   
     // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
@@ -83,7 +83,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         <TableHead>
             <TableRow>
                 {// 반려함 탭이나 예측 페이지인 경우 전체 선택 테이블 헤더 추가
-                page === 'reject' || page === 'pa'
+                page === 'reject' //|| page === 'pa'
                 ?<TableCell key={"checkbox"} align="center" padding="normal">
                     <Checkbox checked={selectAll} label="전체선택" labelPlacement="top" onChange={(e)=>handleSelectAll(e)} inputProps={{ 'aria-label': 'controlled' }}/>
                 </TableCell>
@@ -170,12 +170,12 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                     }
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
                     <TableCell align="center" style={{padding:"5px"}}>
-                    <Link color="#000000" component={RouterLink} to={content.statusType === "승인"?{pathname : `/dataView/${content.id}`}:{pathname : `/DataConfirm/${content.id}`}}>
+                    <Link color="#000000" component={RouterLink} to={page === 'pa' ?{pathname:`/dataPA/${content.id}`} : content.statusType === "승인"? {pathname : `/dataView/${content.id}`}:{pathname : `/DataConfirm/${content.id}`}}>
                         {content.id}
                     </Link>
                     </TableCell>
                     <TableCell align="center">
-                        {content.farmAddr}
+                        {content.farmAddr? content.farmAddr : '없음'}
                     </TableCell>
                     <TableCell align="center">
                         {content.name}

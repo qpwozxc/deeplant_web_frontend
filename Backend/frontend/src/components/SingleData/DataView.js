@@ -11,7 +11,7 @@ const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
- 
+    console.log('dataview page', page);
     //데이터 받아오기 -> props 로 전달로 변경
     const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
@@ -481,18 +481,17 @@ function DataView({page, currentUser ,dataProps}){
         </div> 
         {
         page === '수정및조회'
-        ?<div style={style.editBtnWrapper}>
+        &&<div style={style.editBtnWrapper}>
         { 
         edited
         ?<button type="button" className="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
         :<button type="button" className="btn btn-success" onClick={onClickEditBtn}>수정</button>
         }
        </div> 
-       :<></>
        }
        {
         page === "검토"
-        ?<div style={style.editBtnWrapper}>
+        &&<div style={style.editBtnWrapper}>
 
             <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
                 <ToggleButton value="confirm" aria-label="left aligned">
@@ -504,9 +503,7 @@ function DataView({page, currentUser ,dataProps}){
             </ToggleButtonGroup>
             <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>저장</button>
         </div>
-        :<></> 
-       }
-            
+       }         
     </div>
     );
 }
@@ -522,7 +519,7 @@ let options = ['원육',];
 //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
-const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute'];
+const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute','period'];
 const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
 //const tongueField = ['sourness','bitterness','umami','richness'];
 const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];

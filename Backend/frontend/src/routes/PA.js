@@ -19,7 +19,7 @@ function PA(){
                 <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
             </Box>
             <Box sx={{marginTop:'210px'}}>
-            <DataListComp startDate={startDate} endDate={endDate}/>
+            <DataListComp startDate={startDate} endDate={endDate} pageType={'pa'}/>
             </Box>
             
         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DataView from "./DataView";
+import DataPAView from "./DataPAView";
 //import json files 
 import processedMeat from './processedMeat.json';
 //import rawMeat from "./rawMeat.json";
@@ -157,9 +158,12 @@ export function DataLoad(id, page, currentUser) {
     processed_minute : processedMinute,
     processed_img_path : processedDataImgPath,
   };
-  //console.log("data", data);
   // 3-4. JSON객체 반환 
-  return (<DataView page={page} currentUser={currentUser} dataProps={data}/>);
+  if (page === "예측"){
+    return <DataPAView currentUser={currentUser} dataProps={data}/>;
+  }else{
+    return <DataView page={page} currentUser={currentUser} dataProps={data}/>;
+  }
 }
   //data;
 }
