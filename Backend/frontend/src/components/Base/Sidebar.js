@@ -114,7 +114,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const userEmail = new URLSearchParams(location.search).get("userId");
   const [username, setUsername] = useState("");
-
+  const UserInfo = JSON.parse(localStorage.getItem("UserInfo"));
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -127,22 +127,8 @@ function Sidebar() {
       console.log(error.message);
     }
   };
-  const TestFunction = async () => {
-    try {
-      const response = await fetch(
-        `http://3.38.52.82//user?userId=${userEmail}`
-      );
-      console.log(userEmail);
-      const user = await response.json();
-      setUsername(user.name); // Update the state with the username
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
-  useEffect(() => {
-    TestFunction();
-  }, [location]);
+  useEffect(() => {}, [location]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -172,14 +158,14 @@ function Sidebar() {
             <Badge color="secondary">
               <PersonIcon />
             </Badge>
-            {username ? (
+            {UserInfo.name ? (
               <Typography
                 component="h1"
                 variant="h6"
                 noWrap
                 sx={{ flexGrow: 1 }}
               >
-                {username}님
+                {UserInfo.name}님
               </Typography>
             ) : (
               <Typography component="span" variant="body1" sx={{ flexGrow: 1 }}>

@@ -37,13 +37,9 @@ function UserList() {
   const [allUsers, setAllUsers] = useState([]);
   const [usersData, setUsersData] = useState({});
   const [searchedUsers, setSearchedUsers] = useState([]);
+  const [showSnackbar, setShowSnackbar] = useState(false); // Step 1: State for showing Snackbar
   const handleRegisterClose = () => setRegisterShow(false);
   const handleRegisterShow = () => setRegisterShow(true);
-  const handleEditShow = (user) => {
-    setSelectedUser(user);
-    setEditShow(true);
-  };
-  const handleEditClose = () => setEditShow(false);
 
   const columns = [
     { field: "name", headerName: "이름", width: 70 },
@@ -109,15 +105,17 @@ function UserList() {
   }, []);
 
   const handleSearch = (event) => {
-    const keyword = event.target.value;
+    const keyword = event.target.value.toLowerCase();
     if (!allUsers || allUsers.length === 0) {
       return; // Return early if allUsers is empty or not yet initialized
     }
     if (keyword === "") {
-      setSearchedUsers(allUsers); // Show all users if the search field is empty
+      setSearchedUsers([]); // Show no users if the search field is empty
     } else {
       const results = allUsers.filter(
-        (user) => user.name.includes(keyword) || user.userId.includes(keyword)
+        (user) =>
+          user.name.toLowerCase().includes(keyword) ||
+          user.userId.toLowerCase().includes(keyword)
       );
       setSearchedUsers(results);
     }
@@ -160,7 +158,6 @@ function UserList() {
             user.id === id ? { ...user, [field]: value } : user
           )
         );
-        CustomSnackbar.showSnackbar("This is a Snackbar message.", "success");
       } else {
         console.log("Failed to update the user information");
       }
@@ -246,7 +243,7 @@ function UserList() {
           <CircularProgress />
         ) : (
           <DataGrid
-            rows={allUsers}
+            rows={searchedUsers.length > 0 ? searchedUsers : allUsers}
             columns={columns.map((column) =>
               column.field === "type"
                 ? { ...column, editable: true } // Enable editing for the "type" field

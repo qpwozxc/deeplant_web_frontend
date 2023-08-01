@@ -7,6 +7,7 @@ import { db, auth } from "../../firebase-config";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 function UserRegister({ handleClose }) {
   const [userId, setuserId] = useState("");
@@ -58,22 +59,15 @@ function UserRegister({ handleClose }) {
     }
     if (isNameValid(name) && isEmailValid(userId)) {
       try {
-        // Generate a temporary password
         const tempPassword = generateTempPassword();
-
-        // Register user email with Firebase Authentication
         const { user } = await createUserWithEmailAndPassword(
           auth,
           userId,
           tempPassword
         );
-
-        // Send verification email to the registered user's email address
         await sendEmailVerification(user);
-
-        // Update the createdAt state to the current date and time
+        await sendPasswordResetEmail(auth, userId);
         setCreatedAt(new Date().toISOString().slice(0, -5));
-
         const toJson = {
           userId: userId,
           createdAt: createdAt,
@@ -87,7 +81,7 @@ function UserRegister({ handleClose }) {
           alarm: alarm,
           type: type,
         };
-        fetch(`http://localhost:8080/user/register`, {
+        fetch(`http://3.38.52.82/user/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -111,33 +105,27 @@ function UserRegister({ handleClose }) {
   // Function to handle the "중복확인" button click
   const handleDuplicateCheck = async () => {
     const userI = userId;
+    const emailInput = document.getElementById("emailInput");
     if (isEmailValid(userI)) {
       try {
-        // Send a GET request to check if the email is already registered
         const response = await fetch(
           `http://3.38.52.82/user/duplicate_check?id=${userI}`
         );
-        console.log(response);
-        // Check if the response status is successful (200 OK)
         if (response.ok) {
-          // Data is not JSON, but just a boolean value
-          const isAvailable = await response.json();
-
-          // Show the feedback message based on email availability
-          const emailInput = document.getElementById("emailInput"); // Replace "emailInput" with the actual ID of the email input element
-          if (!isAvailable) {
-            emailInput.setCustomValidity("이미 등록된 이메일입니다.");
-          } else {
-            emailInput.setCustomValidity("d");
-          }
+          emailInput.setCustomValidity("사용 가능한 이메일입니다.");
+          setIsEmailAvailable(true); // 이메일이 사용 가능한 경우
         } else {
-          // Handle error response if needed
-          console.error("Server returned an error:", response.statusText);
+          emailInput.setCustomValidity("중복된 이메일입니다.");
+          setIsEmailAvailable(false); // 이메일이 이미 등록된 경우
         }
       } catch (error) {
-        // Handle fetch errors if any
-        console.error("Error checking email availability:", error);
+        console.error("Error checking duplicate email:", error);
+        emailInput.setCustomValidity("중복 확인 오류가 발생했습니다.");
+        setIsEmailAvailable(true); // 오류가 발생했으므로 이메일을 사용 가능한 것으로 간주
       }
+    } else {
+      emailInput.setCustomValidity("오류.");
+      setIsEmailAvailable(true); // 이메일이 올바르지 않으므로 사용 가능한 것으로 간주
     }
   };
 
@@ -171,14 +159,13 @@ function UserRegister({ handleClose }) {
             <Form.Control
               required
               type="email"
+              id="emailInput"
               placeholder="이메일 입력"
               onChange={(event) => {
                 const email = event.target.value;
                 setuserId(email);
                 if (!isEmailValid(email)) {
                   event.target.setCustomValidity("올바른 이메일을 입력하세요.");
-                } else {
-                  event.target.setCustomValidity("");
                 }
                 setIsEmailAvailable(true); // Reset the email availability when user changes the email
               }}

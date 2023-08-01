@@ -1,18 +1,22 @@
 import ApexCharts from "react-apexcharts";
 import React, { useEffect, useState } from "react";
 
-export default function Taste_Fresh_Map() {
+export default function Taste_Fresh_Map({ startDate, endDate }) {
   const [chartData, setChartData] = useState({});
+  const [prop, setProp] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://3.38.52.82/meat/statistic?type=4");
+        const response = await fetch(
+          `http://3.38.52.82/meat/statistic?type=4&start=${startDate}&end=${endDate}`
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        setProp(Object.keys(data));
         setChartData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -20,92 +24,56 @@ export default function Taste_Fresh_Map() {
     };
 
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
-  useEffect(() => {
-    // Function to transform chartData into required format for heatmap
-    const transformDataForHeatmap = () => {
-      const transformedSeries = {};
+  let ChartSeries = [];
+  if (prop.length > 0) {
+    ChartSeries = prop.map((property) => {
+      const uniqueValues = chartData[property].unique_values;
+      const frequencies = new Array(10).fill(0);
 
-      // Loop through each attribute in chartData
-      Object.entries(chartData).forEach(([attribute, data]) => {
-        const values = data.unique_values.sort((a, b) => a - b);
-        const seriesData = [];
-
-        // Loop through each unique value in the attribute
-        for (let i = 0; i < values.length; i++) {
-          const rangeStart = i === 0 ? 0 : values[i - 1];
-          const rangeEnd = values[i];
-          const frequency = values.filter(
-            (value) => value >= rangeStart && value <= rangeEnd
-          ).length;
-
-          for (let j = 0; j < frequency; j++) {
-            seriesData.push({
-              x: `W${i + 1}`,
-              y: values[i],
-            });
-          }
-        }
-
-        // Add an empty data point for x-axis label consistency
-        seriesData.push({
-          x: `W${values.length + 1}`,
-          y: null,
-        });
-
-        transformedSeries[attribute] = seriesData;
+      uniqueValues.forEach((value) => {
+        const index = Math.floor(value);
+        frequencies[index] += 1;
       });
 
-      return transformedSeries;
-    };
+      return {
+        name: property,
+        data: frequencies,
+      };
+    });
+  }
 
-    if (Object.keys(chartData).length > 0) {
-      const transformedSeries = transformDataForHeatmap();
-      setChartOptions({
-        ...chartOptions,
-        series: Object.entries(transformedSeries).map(([attribute, data]) => ({
-          name: attribute,
-          data,
-        })),
-      });
-    }
-  }, [chartData]);
-
-  const [chartOptions, setChartOptions] = useState({
-    options: {
-      chart: {
-        height: 450,
-        type: "heatmap",
-      },
-      xaxis: {
-        type: "category",
-        categories: Array.from({ length: 10 }, (_, i) => `W${i + 1}`),
-        title: {
-          text: "범위", // X-axis label
-        },
-      },
-      yaxis: {
-        title: {
-          text: "Attributes", // Y-axis label
-        },
+  const ChartOption = {
+    chart: {
+      height: 350,
+      type: "heatmap",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    xaxis: {
+      type: "numeric",
+      tickAmount: 10, // Number of ticks on the x-axis
+      min: 0,
+      max: 10, // Adjust the max value as needed
+    },
+    title: {
+      text: "처리육 관능데이터 범위별 분포(빈도수)",
+    },
+    grid: {
+      padding: {
+        right: 20,
       },
     },
-    series: [], // Initialize with an empty array
-  });
+  };
 
   return (
-    <div>
-      {Object.keys(chartData).length > 0 && chartOptions.series.length > 0 ? (
-        <ApexCharts
-          options={chartOptions.options}
-          series={chartOptions.series}
-          type="heatmap"
-          height={450}
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+    <ApexCharts
+      options={ChartOption}
+      series={ChartSeries}
+      type="heatmap"
+      height={350}
+    />
   );
 }

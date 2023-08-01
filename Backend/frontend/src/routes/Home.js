@@ -16,6 +16,7 @@ import Container from "@mui/material/Container";
 import { CardActions } from "@mui/material";
 import ProfileImage from "../src_assets/Profile.jpg";
 import LogOutImage from "../src_assets/LogOut.svg";
+import DataImage from "../src_assets/Data.png";
 const defaultTheme = createTheme();
 
 const cards = [
@@ -36,6 +37,14 @@ const cards = [
     link: "/DataManage",
   },
   {
+    title: "데이터 예측",
+    description: "데이터 예측",
+    sub_description: "데이터 예측",
+    image: DataImage,
+    imageSize: { height: 140, width: "55%" },
+    link: "/PA",
+  },
+  {
     title: "통계 분석",
     description: "통계 분석",
     sub_description: "",
@@ -52,20 +61,12 @@ const cards = [
     link: "/UserManagement",
   },
   {
-    title: "데이터 예측",
-    description: "데이터 예측",
-    sub_description: "데이터 예측",
+    title: "프로필",
+    description: "프로필 조회/수정",
+    sub_description: "프로필",
     image: ProfileImage,
-    imageSize: { height: 140, width: "55%" },
-    link: "/PA",
-  },
-  {
-    title: "로그아웃",
-    description: "로그인 페이지로 이동",
-    sub_description: "로그아웃",
-    image: LogOutImage,
     imageSize: { height: 140, width: "60%" },
-    link: "/UserManagement",
+    link: "/Profile",
   },
 ];
 function Home() {
