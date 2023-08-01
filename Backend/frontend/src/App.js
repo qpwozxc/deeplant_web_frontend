@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import LogIn from "./routes/LogIn";
 import Home from "./routes/Home";
+import { UserProvider } from "./components/User/UserContext";
 import DataManage from "./routes/DataManage";
 import Stats from "./routes/Stats";
 import PA from "./routes/PA";
@@ -38,7 +39,7 @@ function App() {
     {
       path: "/DataConfirm/:id",
       title: "DataConfirm | Deeplant",
-      component: <DataConfirm/>,
+      component: <DataConfirm />,
     },
     {
       path: "/dataView/:id",
@@ -68,54 +69,56 @@ function App() {
   ];
 
   return (
-    <Router>
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={
-              <>
-                <Helmet>
-                  <title>{route.title}</title>
-                </Helmet>
-                <ThemeProvider theme={defaultTheme}>
-                  {route.path === "/" ? (
-                    route.component
-                  ) : (
-                    <Box sx={{ display: "flex" }}>
-                      <Sidebar />
-                      <Box
-                        component="main"
-                        sx={{
-                          //backgroundImage: `url(${BackGroundImage})`,
-                          // backgroundColor:"#FAFAFB",
-                          // backgroundSize: "cover",
-                          // backgroundRepeat: "no-repeat",
-                          backgroundColor: (theme) =>
-                            theme.palette.mode === "light"
-                              ? theme.palette.grey[100]
-                              : theme.palette.grey[900],
-                          flexGrow: 1,
-                          height: "100vh",
-                          overflow: "auto",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                        }}
-                      >
-                        {route.component}
+    <UserProvider>
+      <Router>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                <>
+                  <Helmet>
+                    <title>{route.title}</title>
+                  </Helmet>
+                  <ThemeProvider theme={defaultTheme}>
+                    {route.path === "/" ? (
+                      route.component
+                    ) : (
+                      <Box sx={{ display: "flex" }}>
+                        <Sidebar />
+                        <Box
+                          component="main"
+                          sx={{
+                            //backgroundImage: `url(${BackGroundImage})`,
+                            // backgroundColor:"#FAFAFB",
+                            // backgroundSize: "cover",
+                            // backgroundRepeat: "no-repeat",
+                            backgroundColor: (theme) =>
+                              theme.palette.mode === "light"
+                                ? theme.palette.grey[100]
+                                : theme.palette.grey[900],
+                            flexGrow: 1,
+                            height: "100vh",
+                            overflow: "auto",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                          }}
+                        >
+                          {route.component}
+                        </Box>
                       </Box>
-                    </Box>
-                  )}
-                </ThemeProvider>
-              </>
-            }
-          />
-        ))}
-      </Routes>
-    </Router>
+                    )}
+                  </ThemeProvider>
+                </>
+              }
+            />
+          ))}
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 
