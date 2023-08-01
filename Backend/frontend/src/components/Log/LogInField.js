@@ -104,7 +104,7 @@ const LogInField = () => {
         loginEmail,
         loginPassword
       );
-
+      localStorage.setItem("UserInfo", JSON.stringify(user));
       navigate("/Home?userId=" + encodeURIComponent(user.userId));
     } catch (error) {
       console.log(error.message);
