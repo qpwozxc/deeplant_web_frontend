@@ -87,7 +87,7 @@ function UserRegister({ handleClose }) {
           alarm: alarm,
           type: type,
         };
-        fetch(`http://localhost:8080/user/register`, {
+        fetch(`http://3.38.52.82/user/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

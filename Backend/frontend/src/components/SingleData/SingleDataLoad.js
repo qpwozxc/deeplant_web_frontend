@@ -128,6 +128,8 @@ export function DataLoad(id, page, currentUser) {
   let processedMinute = [];
   //데이터 처리 횟수 parsing ex) 1회, 2회 ,...
   let processedDataSeq = ['원육',];
+  // 처리육 이미지 
+  let processedDataImgPath = [];
 
   for (let i in items[0].processedmeat){
     //processedDataSeq.push(i);
@@ -136,13 +138,14 @@ export function DataLoad(id, page, currentUser) {
     heatedData = [...heatedData, items[0].processedmeat[i].heatedmeat_sensory_eval];
     labData = [...labData, items[0].processedmeat[i].probexpt_data];
     processedMinute = [...processedMinute, items[0].processedmeat[i].sensory_eval.deepaging_data.minute];
+    processedDataImgPath = [...processedDataImgPath, items[0].processedmeat[i].sensory_eval.imagePath];
   }
 
   // 3-3. 데이터를 json 객체로 만들기 
   const data = {
     id: items[0].id,
     userId: items[0].userId,
-    createdAt: items[0].createdAt,
+    createdAt: items[0].createdAt.replace('T', ' '),
     qrImagePath: items[0].imagePath,
     raw_data: items[0].rawmeat.sensory_eval,
     raw_img_path : items[0].rawmeat.sensory_eval.imagePath,
@@ -152,6 +155,7 @@ export function DataLoad(id, page, currentUser) {
     api_data: apiData,
     processed_data_seq : processedDataSeq,
     processed_minute : processedMinute,
+    processed_img_path : processedDataImgPath,
   };
   //console.log("data", data);
   // 3-4. JSON객체 반환 

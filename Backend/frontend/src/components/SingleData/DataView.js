@@ -10,7 +10,7 @@ function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
  
     //데이터 받아오기 -> props 로 전달로 변경
-    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
+    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
     const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];
@@ -110,7 +110,9 @@ function DataView({page, currentUser ,dataProps}){
             req = {
                 ...req,
                 ...heatInput[i],
+
             }
+            //seqno, usesID, created at 
             /*if (heatInput[i]){
                 req = {
                     ...req,
@@ -368,10 +370,10 @@ function DataView({page, currentUser ,dataProps}){
                     <div key='labData' className="container">
                         <div key={'labData-explanation'} className="row" >
                             <div key={'labData-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'labData-exp-col0'} className="col-2" style={style.dataExpColumn}>원육</div>
+                            <div key={'labData-exp-col0'} className="col-1" style={style.dataExpColumn}>원육</div>
                             {
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-2" style={style.dataExpColumn}>
+                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-1" style={style.dataExpColumn}>
                                         {arr_idx+1}회차
                                     </div>
                                 ))
@@ -381,7 +383,7 @@ function DataView({page, currentUser ,dataProps}){
                         return(
                             <div key={'lab-'+idx} className="row" >
                                 <div key={'lab-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'lab-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
+                                <div key={'lab-'+idx+'col2'} className="col-1" style={style.dataContainer}>      
                                 {
                                     edited
                                     ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
@@ -391,7 +393,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {// 실험실 및 가열육 추가 데이터 수정 
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
-                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-2" style={style.dataContainer}>
+                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-1" style={style.dataContainer}>
                                     {
                                         edited
                                         ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 
@@ -476,7 +478,7 @@ let options = ['원육',];
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
 const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute'];
-const heatedField = ['flavor', 'juiciness','tenderness','umami','palability',];
+const heatedField = ['flavor', 'juiciness','tenderness','umami','palability','period'];
 //const tongueField = ['sourness','bitterness','umami','richness'];
 const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];
 const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];
