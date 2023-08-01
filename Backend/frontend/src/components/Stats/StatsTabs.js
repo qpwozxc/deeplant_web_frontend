@@ -18,11 +18,13 @@ import HeatedMeat_BoxPlot from "./Charts/BoxPlot/Sens_HeatedMeat";
 import Sens_FreshMeat from "./Charts/BoxPlot/Sens_FreshMeat";
 import Sens_ProcMeat from "./Charts/BoxPlot/Sens_ProcMeat";
 import Sens_HeatedMeat from "./Charts/BoxPlot/Sens_HeatedMeat";
-import Taste_FreshMeat from "./Charts/Taste_FreshMeat";
-import Taste_ProcMeat from "./Charts/Taste_ProcMeat";
+import Taste_FreshMeat from "./Charts/BoxPlot/Taste_FreshMeat";
+import Taste_ProcMeat from "./Charts/BoxPlot/Taste_ProcMeat";
 import Sens_Stat from "./Charts/Sens_Stat";
 import Sens_Fresh_Map from "./Charts/HeatMap/Sens_Fresh_Map";
 import Sens_Heated_Map from "./Charts/HeatMap/Sens_Heated_Map";
+import Taste_Fresh_Map from "./Charts/HeatMap/Taste_Fresh_Map";
+import Taste_Proc_Map from "./Charts/HeatMap/Taste_Proc_Map";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -69,7 +71,6 @@ export default function StatsTabs() {
   const handleSecondChange = (event, newSecond) => {
     setSecondary(newSecond);
   };
-
   return (
     <Box sx={{ width: "900px", height: "350px" }}>
       <Box
@@ -118,6 +119,7 @@ export default function StatsTabs() {
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
+      {/* BoxPlot(통계) */}
       <CustomTabPanel value={value} index={0}>
         {alignment === "관능" && secondary === "원육" ? (
           <Sens_FreshMeat />
@@ -136,11 +138,16 @@ export default function StatsTabs() {
         <BasicScatter />
       </CustomTabPanel>
 
+      {/* HeatMap(상관관계) */}
       <CustomTabPanel value={value} index={2}>
         {alignment === "관능" && secondary === "원육" ? (
           <Sens_Fresh_Map />
         ) : alignment === "관능" && secondary === "가열육" ? (
           <Sens_Heated_Map />
+        ) : alignment === "맛" && secondary === "원육" ? (
+          <Taste_Fresh_Map />
+        ) : alignment === "맛" && secondary === "처리육" ? (
+          <Taste_Proc_Map />
         ) : null}
       </CustomTabPanel>
 
