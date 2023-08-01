@@ -1,10 +1,13 @@
 import { useState, useEffect , useRef} from "react";
+import { useNavigate } from 'react-router-dom';
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import { Box, Typography, Button, IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
+import axios from 'axios';
+import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 //import { DataLoad } from "./SingleDataLoad";
+const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
@@ -39,6 +42,8 @@ function DataView({page, currentUser ,dataProps}){
         { value: labInput, setter: setLabInput },
         { value: apiInput, setter: setApiInput }
       ];
+
+    const navigate = useNavigate();
 
     // input field별 value prop으로 만들기
     useEffect(()=>{
@@ -94,24 +99,63 @@ function DataView({page, currentUser ,dataProps}){
     const onClickEditBtn = () => {
         setIsEdited(true);
     };
+
     // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
     const len = processed_data_seq.length;
     //api respoonse data로 보낼 json data 만들기
     const onClickSubmitBtn = () => {
         setIsEdited(false);       
         // 수정 시간
-        const date = new Date();
+        const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
 
-        // 가열육 관능검사: 
+        // period 계산 
+        const butcheryYmd = apiInput['butcheryYmd'];
+        const year = butcheryYmd.slice(0,4);
+        const month =  butcheryYmd.slice(4,6);
+        const day = butcheryYmd.slice(6,);
+        const butcheryDate = new Date(year, month, day, 0, 0, 0);
+        const [date, time] = createdDate.split('T');
+        const [yy,mm,dd] = date.split('-');
+        const [h,m,s] = time.split(':');
+        const createdDate2 =  new Date(yy,mm,dd,h,m,s);
+        const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
+        const elapsedHour = elapsedMSec / 1000 / 60 / 60;
+
+        //로그인한 유저 정보
+        const userData = JSON.parse(localStorage.getItem('UserInfo'));
+
+        // 1. 가열육 관능검사
         for (let i =0; i < len ; i++){
+            /*    // 수정 시간
+            const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
+            // 날짜 계산 
+            const butcheryYmd = apiInput['butcheryYmd'];
+            const [date, time] = createdDate.split('T');
+            const year = butcheryYmd.slice(0,4);
+            const month =  butcheryYmd.slice(4,6);
+            const day = butcheryYmd.slice(6,);
+            const butcheryDate = new Date(year, month, day, 0, 0, 0);
+            const [yy,mm,dd] = date.split('-');
+            const [h,m,s] = time.split(':');
+            const createdDate2 =  new Date(yy,mm,dd,h,m,s);
+            const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
+            const elapsedHour = elapsedMSec / 1000 / 60 / 60;*/
             console.log('heated data', heated_data[i]);
             console.log('heated input',heatInput[i]);
-            let req = heated_data[i];
+            // 데이터 수정 
+            let req = {
+                ...heatInput[i],
+            };
+            //데이터 추가
             req = {
                 ...req,
-                ...heatInput[i],
-
+                ['id'] : id,
+                ["createdAt"] : createdDate,
+                ["userId"] : userData["userId"],
+                ["seqno"] : i,
+                ["period"] : Math.round(elapsedHour),
             }
+
             //seqno, usesID, created at 
             /*if (heatInput[i]){
                 req = {
@@ -134,7 +178,7 @@ function DataView({page, currentUser ,dataProps}){
             const res = JSON.stringify(req);
             console.log(i,res);
             try{
-                fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
+                const response  = fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -149,28 +193,39 @@ function DataView({page, currentUser ,dataProps}){
             //console.log("response",response);
         }
 
-        // 실험실 : /meat/add/probexpt_data
+        // 2. 실험실 
         for (let i =0; i < len ; i++){
             let req = (labInput[i]);
-            /*let req = (lab_data[i]);
+            req = {
+                ...labInput[i],
+            }
+            //if (lab_data[i]){
             req = {
                 ...req,
-                ...labInput[i],
-            }*/
-            if (lab_data[i]){
-                req = {
-                    ...req,
-                    ['id']: lab_data[i]['id'],
-                    ['updatedAt'] : lab_data[i]['updatedAt'],
-                    ['userId'] : lab_data[i]['userId'],
-                    ['seqno'] : lab_data[i]['seqno'],
-                    ['period'] : lab_data[i]['period'],
-                }
+                ['id'] : id,
+                ['updatedAt'] : createdDate,
+                ['userId'] :  userData["userId"],
+                ['seqno'] : i,
+                ['period'] :  Math.round(elapsedHour),
             }
+            //}
             // api 연결 /meat/add/probexpt_data
             const res = JSON.stringify(req);
+            try{
+                fetch(`http://3.38.52.82/meat/add/probexpt_data`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: res,
+                });
+            }catch(err){
+                console.log('error')
+                console.error(err);
+            }
         }
-        // 처리육 관능검사 : /meat/add/deep_aging_data
+
+        // 3. 처리육 관능검사 : /meat/add/deep_aging_data
         for (let i =0; i < len-1 ; i++){
             /*let req = processed_data[i];
             req = {
@@ -198,13 +253,23 @@ function DataView({page, currentUser ,dataProps}){
     };
 
     // 검토 승인 여부 변경 토글 버튼
-    const [confirmed, setConfirmed] = useState(null);
+    const [confirmVal, setConfirmVal] = useState(null);
     const handleAlignment = (event, newAlignment) => {
-        setConfirmed(newAlignment);
+        setConfirmVal(newAlignment);
     };
-    const handleConfirmClick=()=>{
-        console.log(confirmed);
+    const handleConfirmSaveClick=()=>{
+        console.log(confirmVal);
         //승인 여부 변경 API
+        try{
+            const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);
+            navigate({pathname : '/DataManage'});
+            console.log('response', resp);
+
+        }catch(err){
+            console.log('error')
+            console.error(err);
+        }
+
     };
 
     return(
@@ -449,15 +514,16 @@ function DataView({page, currentUser ,dataProps}){
        {
         page === "검토"
         ?<div style={style.editBtnWrapper}>
-            <ToggleButtonGroup value={confirmed} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="accept" aria-label="left aligned">
+
+            <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
+                <ToggleButton value="confirm" aria-label="left aligned">
                     승인
                 </ToggleButton>
                 <ToggleButton value="reject" aria-label="left aligned">
                     반려
                 </ToggleButton>
             </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmClick}>저장</button>
+            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>저장</button>
         </div>
         :<></> 
        }
@@ -478,7 +544,7 @@ let options = ['원육',];
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
 const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute'];
-const heatedField = ['flavor', 'juiciness','tenderness','umami','palability','period'];
+const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
 //const tongueField = ['sourness','bitterness','umami','richness'];
 const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];
 const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];

@@ -170,32 +170,32 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                     : <></>
                     }
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
-                    <TableCell align="left" style={{padding:"5px"}}>
-                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content.id}`}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
+                    <Link color="#000000" component={RouterLink} to={content.statusType === "승인"?{pathname : `/dataView/${content.id}`}:{pathname : `/DataConfirm/${content.id}`}}>
                         {content.id}
                     </Link>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.farmAddr}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.type }
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.company}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.createdAt.replace('T',' ')}
                     </TableCell>
-                    <TableCell align="left" style={{padding:"5px"}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
                         {content.statusType === '반려' ?<OrderStatus status={0} />: <></> }
                         {content.statusType === '승인' ?<OrderStatus status={1} />: <></> }
                         {content.statusType === '대기중' ?<OrderStatus status={2} />: <></> }
                     </TableCell>
-                    {
+                    {/*
                     content.statusType === "승인"
                     ?<TableCell></TableCell>
                     :<TableCell>
@@ -203,9 +203,9 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                             <Button>검토</Button>
                         </Link>
                     </TableCell>
+                    */
                     }
-                    
-                    <TableCell align="right" style={{padding:"5px"}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
                         <IconButton aria-label="delete" color="primary" onClick={()=>handleDelete(content.id)} >
                             <DeleteIcon />
                         </IconButton>
@@ -240,19 +240,19 @@ const headCells = [
     },
     {
       id: 'id',
-      align: 'left',
+      align: 'center',
       disablePadding: true,
       label: '관리번호'
     },
     {
         id: 'farmAddr',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: '농장주소'
     },
     {
         id: 'userName',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: '등록인'
     },
@@ -274,23 +274,22 @@ const headCells = [
         disablePadding: true,
         label: '생성 날짜'
     },
-    {
-      id: 'accept',
-      align: 'center',
-      disablePadding: false,
-  
-      label: '승인 여부'
-    },
-    {
+   /* {
         id: 'button',
         align: 'center',
         disablePadding: false,
     
         label: '검토'
-      },
+      },*/
+    {
+      id: 'accept',
+      align: 'center',
+      disablePadding: false,
+      label: '승인 여부'
+    },
     {
       id: 'protein',
-      align: 'right',
+      align: 'center',
       disablePadding: false,
       label: '삭제'
     }

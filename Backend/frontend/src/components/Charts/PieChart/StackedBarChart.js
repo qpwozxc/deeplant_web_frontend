@@ -99,7 +99,7 @@ const columnChartOptions = {
   
 };
 
-const StackedBarChart = () => {
+const StackedBarChart = ({startDate,endDate}) => {
   const theme = useTheme();
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
@@ -135,7 +135,7 @@ const StackedBarChart = () => {
 
       // 부위별 개수
       const categCount = await(
-        await fetch('http://3.38.52.82/meat/statistic?type=2')
+        await fetch(`http://3.38.52.82/meat/statistic?type=2&start=${startDate}&end=${endDate}`)
       ).json();
 
       setCattleData(categCount['beef_counts_by_primal_value']);

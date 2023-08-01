@@ -39,7 +39,7 @@ const DataListComp=({startDate, endDate})=>{
     const getMeatList = async (offset, ) => {
       //console.log('data loading',offset)
       const json = await (
-        await fetch(`http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
+        await fetch(`http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=${true}`)
       ).json();
      console.log('fetch done!', json);
      //console.log('data loaded!',offset)
@@ -47,7 +47,7 @@ const DataListComp=({startDate, endDate})=>{
       setTotalData(json["DB Total len"]);
       // 데이터 
       let data = [];
-      json.meat_id_list.map((m)=>{
+      json.id_list.map((m)=>{
         setMeatList([
           ...meatList,
           json.meat_dict[m],
