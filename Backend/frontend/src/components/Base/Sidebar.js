@@ -121,7 +121,7 @@ function Sidebar() {
   const logout = async () => {
     try {
       console.log(userEmail);
-      fetch(`http://localhost:8080/user/logout?id=${userEmail}`);
+      fetch(`http://3.38.52.82/user/logout?id=${userEmail}`);
       navigate("/");
     } catch (error) {
       console.log(error.message);
@@ -130,7 +130,7 @@ function Sidebar() {
   const TestFunction = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/user?userId=${userEmail}`
+        `http://3.38.52.82//user?userId=${userEmail}`
       );
       console.log(userEmail);
       const user = await response.json();

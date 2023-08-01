@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../../firebase-config";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,7 +28,6 @@ const LogInField = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [rememberMe, setRememberMe] = useState(false); // New state variable for "Remember Me" checkbox
@@ -99,6 +104,7 @@ const LogInField = () => {
         loginEmail,
         loginPassword
       );
+
       navigate("/Home?userId=" + encodeURIComponent(user.userId));
     } catch (error) {
       console.log(error.message);
