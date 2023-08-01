@@ -62,7 +62,6 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         if (typeof setDelete === 'function'){
             console.log('fuction')
             setDelete(checkedList);
-
         }
     }, [checkboxItems])
 
@@ -76,7 +75,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         console.log("iscliked", isDelClick);
         setDelId(id);
     }
-
+    console.log('pa', page)
   
     // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
@@ -84,7 +83,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         <TableHead>
             <TableRow>
                 {// 반려함 탭이나 예측 페이지인 경우 전체 선택 테이블 헤더 추가
-                page === 'reject' || page === 'pa'
+                page === 'reject' //|| page === 'pa'
                 ?<TableCell key={"checkbox"} align="center" padding="normal">
                     <Checkbox checked={selectAll} label="전체선택" labelPlacement="top" onChange={(e)=>handleSelectAll(e)} inputProps={{ 'aria-label': 'controlled' }}/>
                 </TableCell>
@@ -170,32 +169,32 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                     : <></>
                     }
                     <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
-                    <TableCell align="left" style={{padding:"5px"}}>
-                    <Link color="#000000" component={RouterLink} to={{pathname : `/dataView/${content.id}`}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
+                    <Link color="#000000" component={RouterLink} to={page === 'pa' ?{pathname:`/dataPA/${content.id}`} : content.statusType === "승인"? {pathname : `/dataView/${content.id}`}:{pathname : `/DataConfirm/${content.id}`}}>
                         {content.id}
                     </Link>
                     </TableCell>
-                    <TableCell>
-                        {content.farmAddr}
+                    <TableCell align="center">
+                        {content.farmAddr? content.farmAddr : '없음'}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.type }
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.company}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                         {content.createdAt.replace('T',' ')}
                     </TableCell>
-                    <TableCell align="left" style={{padding:"5px"}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
                         {content.statusType === '반려' ?<OrderStatus status={0} />: <></> }
                         {content.statusType === '승인' ?<OrderStatus status={1} />: <></> }
                         {content.statusType === '대기중' ?<OrderStatus status={2} />: <></> }
                     </TableCell>
-                    {
+                    {/*
                     content.statusType === "승인"
                     ?<TableCell></TableCell>
                     :<TableCell>
@@ -203,9 +202,9 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                             <Button>검토</Button>
                         </Link>
                     </TableCell>
+                    */
                     }
-                    
-                    <TableCell align="right" style={{padding:"5px"}}>
+                    <TableCell align="center" style={{padding:"5px"}}>
                         <IconButton aria-label="delete" color="primary" onClick={()=>handleDelete(content.id)} >
                             <DeleteIcon />
                         </IconButton>
@@ -240,19 +239,19 @@ const headCells = [
     },
     {
       id: 'id',
-      align: 'left',
+      align: 'center',
       disablePadding: true,
       label: '관리번호'
     },
     {
         id: 'farmAddr',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: '농장주소'
     },
     {
         id: 'userName',
-        align: 'left',
+        align: 'center',
         disablePadding: true,
         label: '등록인'
     },
@@ -274,23 +273,22 @@ const headCells = [
         disablePadding: true,
         label: '생성 날짜'
     },
-    {
-      id: 'accept',
-      align: 'center',
-      disablePadding: false,
-  
-      label: '승인 여부'
-    },
-    {
+   /* {
         id: 'button',
         align: 'center',
         disablePadding: false,
     
         label: '검토'
-      },
+      },*/
+    {
+      id: 'accept',
+      align: 'center',
+      disablePadding: false,
+      label: '승인 여부'
+    },
     {
       id: 'protein',
-      align: 'right',
+      align: 'center',
       disablePadding: false,
       label: '삭제'
     }

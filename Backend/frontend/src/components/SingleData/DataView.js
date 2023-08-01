@@ -1,16 +1,19 @@
 import { useState, useEffect , useRef} from "react";
+import { useNavigate } from 'react-router-dom';
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import { Box, Typography, Button, IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
+import axios from 'axios';
+import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 //import { DataLoad } from "./SingleDataLoad";
+const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
- 
+    console.log('dataview page', page);
     //데이터 받아오기 -> props 로 전달로 변경
-    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute  } = dataProps;
+    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
     const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];
@@ -39,6 +42,8 @@ function DataView({page, currentUser ,dataProps}){
         { value: labInput, setter: setLabInput },
         { value: apiInput, setter: setApiInput }
       ];
+
+    const navigate = useNavigate();
 
     // input field별 value prop으로 만들기
     useEffect(()=>{
@@ -94,45 +99,68 @@ function DataView({page, currentUser ,dataProps}){
     const onClickEditBtn = () => {
         setIsEdited(true);
     };
+
     // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
     const len = processed_data_seq.length;
     //api respoonse data로 보낼 json data 만들기
     const onClickSubmitBtn = () => {
         setIsEdited(false);       
         // 수정 시간
-        const date = new Date();
+        const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
 
-        // 가열육 관능검사: 
+        // period 계산 
+        const butcheryYmd = apiInput['butcheryYmd'];
+        const year = butcheryYmd.slice(0,4);
+        const month =  butcheryYmd.slice(4,6);
+        const day = butcheryYmd.slice(6,);
+        const butcheryDate = new Date(year, month, day, 0, 0, 0);
+        const [date, time] = createdDate.split('T');
+        const [yy,mm,dd] = date.split('-');
+        const [h,m,s] = time.split(':');
+        const createdDate2 =  new Date(yy,mm,dd,h,m,s);
+        const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
+        const elapsedHour = elapsedMSec / 1000 / 60 / 60;
+
+        //로그인한 유저 정보
+        const userData = JSON.parse(localStorage.getItem('UserInfo'));
+
+        // 1. 가열육 관능검사
         for (let i =0; i < len ; i++){
-            console.log('heated data', heated_data[i]);
-            console.log('heated input',heatInput[i]);
-            let req = heated_data[i];
+            /*    // 수정 시간
+            const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
+            // 날짜 계산 
+            const butcheryYmd = apiInput['butcheryYmd'];
+            const [date, time] = createdDate.split('T');
+            const year = butcheryYmd.slice(0,4);
+            const month =  butcheryYmd.slice(4,6);
+            const day = butcheryYmd.slice(6,);
+            const butcheryDate = new Date(year, month, day, 0, 0, 0);
+            const [yy,mm,dd] = date.split('-');
+            const [h,m,s] = time.split(':');
+            const createdDate2 =  new Date(yy,mm,dd,h,m,s);
+            const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
+            const elapsedHour = elapsedMSec / 1000 / 60 / 60;*/
+            //console.log('heated data', heated_data[i]);
+            //console.log('heated input',heatInput[i]);
+            // 데이터 수정 
+            let req = {
+                ...heatInput[i],
+            };
+            //데이터 추가
             req = {
                 ...req,
-                ...heatInput[i],
+                ['id'] : id,
+                ["createdAt"] : createdDate,
+                ["userId"] : userData["userId"],
+                ["seqno"] : i,
+                ["period"] : Math.round(elapsedHour),
             }
-            /*if (heatInput[i]){
-                req = {
-                    ...req,
-                   /* ['id']: heated_data[i]['id']? heated_data[i]['id'] : null,
-                    ['createdAt'] : heated_data[i]['createdAt']? heated_data[i]['createdAt'] : null,
-                    ['userId'] : heated_data[i]['userId']? heated_data[i]['userId'] : null,
-                    ['seqno'] : heated_data[0]['seqno'] !== null ?heated_data[0]['seqno'] : null,
-                    ['period'] : heated_data[i]['period']? heated_data[i]['period'] : null,
-                    ['imagePath'] : heated_data[i]['imagePath']?  heated_data[i]['imagePath'] : null,
-                    ['flavor'] : heatInput[i]['flavor'] ? heatInput[i]['flavor'] : null,
-                    ['juiciness'] :heatInput[i]['juiciness'] ? heatInput[i]['juiciness'] : null,
-                    ['tenderness']: heatInput[i]['tenderness'] ? heatInput[i]['tenderness'] : null,
-                    ['umami'] : heatInput[i]['umami']? heatInput[i]['umami'] : null,
-                    ['palability'] : heatInput[i]['palability'] ? heatInput[i]['palability'] : null,
-                }
-            }// ['fresh'] : false   ,
-            */
+
             ///meat/add/heatedmeat_eval
             const res = JSON.stringify(req);
             console.log(i,res);
             try{
-                fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
+                const response  = fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -147,62 +175,76 @@ function DataView({page, currentUser ,dataProps}){
             //console.log("response",response);
         }
 
-        // 실험실 : /meat/add/probexpt_data
+        // 2. 실험실 
         for (let i =0; i < len ; i++){
             let req = (labInput[i]);
-            /*let req = (lab_data[i]);
+            req = {
+                ...labInput[i],
+            }
+            //if (lab_data[i]){
             req = {
                 ...req,
-                ...labInput[i],
-            }*/
-            if (lab_data[i]){
-                req = {
-                    ...req,
-                    ['id']: lab_data[i]['id'],
-                    ['updatedAt'] : lab_data[i]['updatedAt'],
-                    ['userId'] : lab_data[i]['userId'],
-                    ['seqno'] : lab_data[i]['seqno'],
-                    ['period'] : lab_data[i]['period'],
-                }
+                ['id'] : id,
+                ['updatedAt'] : createdDate,
+                ['userId'] :  userData["userId"],
+                ['seqno'] : i,
+                ['period'] :  Math.round(elapsedHour),
             }
+            //}
             // api 연결 /meat/add/probexpt_data
             const res = JSON.stringify(req);
+            try{
+                fetch(`http://3.38.52.82/meat/add/probexpt_data`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: res,
+                });
+            }catch(err){
+                console.log('error')
+                console.error(err);
+            }
         }
-        // 처리육 관능검사 : /meat/add/deep_aging_data
+
+        // 3. 처리육 관능검사 : /meat/add/deep_aging_data
         for (let i =0; i < len-1 ; i++){
-            /*let req = processed_data[i];
+            let req = (processedInput[i]);
             req = {
                 ...req,
-                ...processedInput,
-            }*/
-            let req = (processedInput[i]);
-            if(processed_data[i]) {
-                req = {
-                    ...req,
-                    ['id']: processed_data[i]['id'],
-                    ['createdAt'] : processed_data[i]['createdAt'],
-                    ['userId'] : processed_data[i]['userId'],
-                    ['seqno'] : processed_data[i]['seqno'],
-                    ['period'] : processed_data[i]['period'],
-                    ['deepAging'] : {
-                        ['date'] : processed_data[i]['deepaging_data']['date'],
-                        ['minute'] : processedMinute[i],
-                    }
+                ['id']: id,
+                ['createdAt'] : createdAt,
+                ['userId'] : userData["userId"],
+                ['seqno'] : i+1,
+                ['period'] : Math.round(elapsedHour),
+                ['deepAging'] : {
+                    ['date'] : processed_data[i]['deepaging_data']['date']?processed_data[i]['deepaging_data']['date']: null,
+                    ['minute'] : Number(processedMinute[i]),
                 }
             }
-            console.log(i,req);
+            
+            console.log('deepaging',i,req);
             //api 연결 /meat/add/deep_aging_data
         }
     };
 
     // 검토 승인 여부 변경 토글 버튼
-    const [confirmed, setConfirmed] = useState(null);
+    const [confirmVal, setConfirmVal] = useState(null);
     const handleAlignment = (event, newAlignment) => {
-        setConfirmed(newAlignment);
+        setConfirmVal(newAlignment);
     };
-    const handleConfirmClick=()=>{
-        console.log(confirmed);
+    const handleConfirmSaveClick=()=>{
+        console.log(confirmVal);
         //승인 여부 변경 API
+        try{
+            const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);
+            navigate({pathname : '/DataManage'});
+            console.log('response', resp);
+
+        }catch(err){
+            console.error(err);
+        }
+
     };
 
     return(
@@ -242,6 +284,9 @@ function DataView({page, currentUser ,dataProps}){
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
                 <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
+                    {//setImage
+                      //  setPreviewImage(raw_img_path)
+                    }
                     <div key='rawmeat' className="container">
                         {rawField.map((f, idx)=>{
                             return(
@@ -256,7 +301,8 @@ function DataView({page, currentUser ,dataProps}){
                     </div>
                 </Tab>
                 <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
-                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}} inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue);}}
+                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
+                     inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <div key='processedmeat' className="container">
@@ -368,10 +414,10 @@ function DataView({page, currentUser ,dataProps}){
                     <div key='labData' className="container">
                         <div key={'labData-explanation'} className="row" >
                             <div key={'labData-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'labData-exp-col0'} className="col-2" style={style.dataExpColumn}>원육</div>
+                            <div key={'labData-exp-col0'} className="col-1" style={style.dataExpColumn}>원육</div>
                             {
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-2" style={style.dataExpColumn}>
+                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-1" style={style.dataExpColumn}>
                                         {arr_idx+1}회차
                                     </div>
                                 ))
@@ -381,7 +427,7 @@ function DataView({page, currentUser ,dataProps}){
                         return(
                             <div key={'lab-'+idx} className="row" >
                                 <div key={'lab-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'lab-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
+                                <div key={'lab-'+idx+'col2'} className="col-1" style={style.dataContainer}>      
                                 {
                                     edited
                                     ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
@@ -391,7 +437,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {// 실험실 및 가열육 추가 데이터 수정 
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
-                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-2" style={style.dataContainer}>
+                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-1" style={style.dataContainer}>
                                     {
                                         edited
                                         ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 
@@ -435,31 +481,29 @@ function DataView({page, currentUser ,dataProps}){
         </div> 
         {
         page === '수정및조회'
-        ?<div style={style.editBtnWrapper}>
+        &&<div style={style.editBtnWrapper}>
         { 
         edited
         ?<button type="button" className="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
         :<button type="button" className="btn btn-success" onClick={onClickEditBtn}>수정</button>
         }
        </div> 
-       :<></>
        }
        {
         page === "검토"
-        ?<div style={style.editBtnWrapper}>
-            <ToggleButtonGroup value={confirmed} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="accept" aria-label="left aligned">
+        &&<div style={style.editBtnWrapper}>
+
+            <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
+                <ToggleButton value="confirm" aria-label="left aligned">
                     승인
                 </ToggleButton>
                 <ToggleButton value="reject" aria-label="left aligned">
                     반려
                 </ToggleButton>
             </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmClick}>저장</button>
+            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>저장</button>
         </div>
-        :<></> 
-       }
-            
+       }         
     </div>
     );
 }
@@ -475,8 +519,8 @@ let options = ['원육',];
 //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
-const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute'];
-const heatedField = ['flavor', 'juiciness','tenderness','umami','palability',];
+const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute','period'];
+const heatedField = ['flavor', 'juiciness','tenderness','umami','palability'];
 //const tongueField = ['sourness','bitterness','umami','richness'];
 const labField = ['L','a','b','DL', 'CL','RW','ph','WBSF','cardepsin_activity','MFI','sourness','bitterness','umami','richness',];
 const apiField = ['birthYmd', 'butcheryYmd', 'farmAddr','farmerNm','gradeNm','primalValue','secondaryValue','sexType','species', 'statusType', 'traceNum'];

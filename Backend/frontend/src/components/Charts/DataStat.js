@@ -2,7 +2,7 @@ import PieChart from "./PieChart/pieChart";
 import StackedBarChart from "./PieChart/StackedBarChart";
 import Map from "./choroplethMap/Map";
 import { Box,  useTheme, } from "@mui/material";
-const DataStat = ()=>{
+const DataStat = ({startDate,endDate})=>{
         
     const theme = useTheme();
     return(
@@ -13,13 +13,14 @@ const DataStat = ()=>{
                     //chartData={pieChartD1.chartData}
                     chartColors={[/*theme.palette.primary.main*/'#3700B3','#FF0266' /*theme.palette.warning.main,*/]}
                     //isFilter={pieChartD1.isFilter}
+                    startDate={startDate} endDate={endDate}
                     />
             </div>  
             <div style={{width:'350px', margin:'0px 20px'}}>
-                <StackedBarChart />    
+                <StackedBarChart startDate={startDate} endDate={endDate}/>    
             </div>
             <div style={{margin:'0px 20px'}}>
-                <Map/>
+                <Map startDate={startDate} endDate={endDate}/>
             </div>
         </Box>
         </div>

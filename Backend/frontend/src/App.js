@@ -10,6 +10,7 @@ import Profile from "./routes/Profile";
 import DataEdit from "./routes/DataEdit";
 import UserManagement from "./routes/UserManagement";
 import DataConfirm from "./routes/DataConfirm";
+import DataPredict from "./routes/DataPredict";
 
 import Box from "@mui/material/Box";
 import Sidebar from "./components/Base/Sidebar";
@@ -44,6 +45,11 @@ function App() {
       path: "/dataView/:id",
       title: "DataView | DeePlant",
       component: <DataEdit />,
+    },
+    {
+      path: "/dataPA/:id",
+      title: "PA-one | DeePlant",
+      component: <DataPredict />,
     },
     {
       path: "/PA",
