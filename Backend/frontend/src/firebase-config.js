@@ -26,3 +26,4 @@ export const db=getFirestore(app);
 // Initialize Firebase
 export {fireStore};
 export const auth = getAuth(app); // 코드 추가
+//export default firebase;

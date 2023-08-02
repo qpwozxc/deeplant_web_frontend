@@ -1,29 +1,11 @@
 import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 
-export default function TransitionsModal({id, setIsDelClick}) {
+export default function InputTransitionsModal({ setModal}) {
     //화면 창 닫기
     const [open, setOpen] = useState(true);
-    const handleClose = () => {setOpen(false); setIsDelClick(false)};
-    const ondelete = async(id) =>{
-      const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}`);
-      console.log('response', resp, id);
-     // window.location.reload();
-    }
-    const handleOnDelete=()=>{
-        console.log(id);
-        //삭제 api 전송  /meat/delete?id=
-        //console.log(typeof(id));
-        if (typeof(id) !== 'string'){
-          for (let i = 0; i < id.length; i++){
-            ondelete(id[i]);
-          }
-        }else{
-          ondelete(id);
-        }
-        //
-        handleClose();
-    }
+    const handleClose = () => {setOpen(false); setModal(false)};
+
     return (
       <div>
         <Modal
@@ -42,14 +24,10 @@ export default function TransitionsModal({id, setIsDelClick}) {
           <Fade in={open}>
             <Box sx={style}>
               <Typography id="transition-modal-title" variant="h6" component="h2">
-                정말로 삭제하시겠습니까?
-              </Typography>
-              <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                {id}
+                이미지를 먼저 업로드해야 합니다.
               </Typography>
               <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
-                <Button variant="outlined" sx={{marginRight:'5px'}} onClick={handleClose }>아니오</Button>
-                <Button variant="contained" onClick={handleOnDelete}>예</Button>
+                <Button variant="contained" sx={{marginRight:'5px'}} onClick={handleClose }>닫기</Button>
               </div>
             </Box>
           </Fade>

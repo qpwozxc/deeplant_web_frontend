@@ -15,7 +15,6 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         setPage(pageProp);
     }, [pageProp])
 
-    const id = 1;
     // 삭제 체크박스
     //checkboxItems에 체크박스 추가 
     let checkboxes = {};
@@ -35,8 +34,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                 acc[checkbox] = isChecked;
                 return acc;
             },{})
-        );
-        
+        );   
     }
 
     //한개 선택을 누를 경우
@@ -64,12 +62,12 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         }
     }, [checkboxItems])
 
-    //리스트에 있는 삭제 버튼 클릭 시
+    //리스트에 있는 삭제 버튼(전체 선택) 클릭 시
     const [isDelClick, setIsDelClick] = useState(false);
     const [delId, setDelId] = useState(null);
+
     const handleDelete = (id) =>{
         // 경고
-        
         setIsDelClick(true);
         console.log("iscliked", isDelClick);
         setDelId(id);

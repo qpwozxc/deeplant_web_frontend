@@ -4,9 +4,15 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import InputTransitionsModal from "./InputWarningComp";
 import {FaAngleLeft,FaAngleRight} from  "react-icons/fa6";
 import axios from 'axios';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
+// firebase 
+import { collection, getDocs,  query, where,setDoc, doc, Firestore,  } from "firebase/firestore";
+import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
+import {firebase, fireStore, db} from '../../firebase-config.js';
+//import { db, } from "../../firebase-config";
 //import { DataLoad } from "./SingleDataLoad";
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
@@ -62,9 +68,21 @@ function DataView({page, currentUser ,dataProps}){
             } 
         })
     },[]); 
+    // 처리육 모달창 여부
+    const [modal, setModal] = useState(false);
     // input 변화 감지
     const handleInputChange= (e, idx, valueIdx)=>{
         const value = e.target.value;
+        // 처리육의 경우 사진을 먼저 업로드 해야함
+        if (idx ===1 ){
+            if (images[valueIdx+1] === null){
+                console.log('upload image first!')
+                setModal(true);
+                return(
+                    <InputTransitionsModal setModal={setModal}/>
+                )
+            }
+        }
         let temp = setInputFields[idx].value[valueIdx];
         if (!isNaN(+value)){
             temp = {...temp, [e.target.name]:value};
@@ -79,20 +97,6 @@ function DataView({page, currentUser ,dataProps}){
         }
     }
 
-    //이미지 파일
-    const [imgFile, setImgFile] = useState(null);
-    const fileRef = useRef(null);
-    const [previewImage, setPreviewImage] = useState(raw_img_path);
-    //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
-    useEffect(() => {
-        if (imgFile) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            setPreviewImage(reader.result);
-        };
-        reader.readAsDataURL(imgFile);
-        }
-    }, [imgFile]);
 
     // 수정 여부 버튼 토글
     const [edited, setIsEdited] = useState(false);
@@ -213,6 +217,32 @@ function DataView({page, currentUser ,dataProps}){
         const pro_len = (len===1 ? len : (len-1));
         console.log(processedInput)
         for (let i =0; i <  pro_len; i++){
+            
+            // 수정된 게 있는 경우 (input 만 비교 )
+            console.log(processedInput[i], processed_data[i] 
+                , (processedMinute[i]),//processed_data[i]['deepaging_data']['minute']
+                );
+            // 1회차 데이터를 추가하는 경우(processeddata len === 0) (minute 값이 들어올 수도 있고 안들어올 수도있는데 안들어오면 input비교로 )
+            /*if (processed_data.length === 0){
+                // 데이터 추가가 일어나지 않은 경우
+                if (processedInput[i] === processed_data[i] && processedMinute[i].length === 0){
+                    console.log('no input change');
+                    continue;
+                }
+            }else{
+                // 수정된 데이터가 없는 경우
+                if (processedInput[i] === processed_data[i] && Number(processedMinute[i]) === 0){
+                    console.log('no input change2');
+                    continue;
+                }
+            }*/
+            // api를 호출하는 경우 : 추가하는 데이터가 있는 경우나 수정된 데이터가 있는 경우 
+
+                /*
+
+            console.log('compare',(processedInput[i]=== processed_data[i] 
+                && Number(processedMinute[i])===processed_data[i]['deepaging_data']['minute']
+                ));*/
             let req = (processedInput[i]);
             req = {
                 ...req,
@@ -230,7 +260,8 @@ function DataView({page, currentUser ,dataProps}){
             
             //api 연결 /meat/add/deep_aging_data
             const res = JSON.stringify(req);
-            
+            console.log(res);
+            /*
             try{
                 fetch(`http://3.38.52.82/meat/add/deep_aging_data`, {
                 method: "POST",
@@ -243,7 +274,7 @@ function DataView({page, currentUser ,dataProps}){
             }catch(err){
                 console.log('error')
                 console.error(err);
-            }
+            }*/
         }
     };
 
@@ -265,16 +296,93 @@ function DataView({page, currentUser ,dataProps}){
 
     };
 
-    // 이미지 클릭시 변경 
+    
+    // 1.이미지 파일
+    const [imgFile, setImgFile] = useState(null);
+    const fileRef = useRef(null);
+    //const [previewImage, setPreviewImage] = useState(raw_img_path);
+    //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
+    useEffect(() => {
+        if (imgFile) {
+        const reader = new FileReader();
+        //1. firebase connection 생성 
+        const getFileDownloadURLByName = async (folderPath, fileName) => {
+            try {
+              const folderRef = ref(fireStore, folderPath);
+              const fileList = await listAll(folderRef);
+                console.log('filelist', fileList);
+              for (const file of fileList.items) {
+                if (file.name === fileName) {
+                  const fileDownloadURL = await getDownloadURL(file);
+                  return fileDownloadURL;
+                }
+              }
+          
+              // If the file with the specified name is not found, return null or handle the case accordingly
+              return null;
+            } catch (error) {
+              console.error('Error fetching file from Firebase Storage:', error);
+              return null;
+            }
+          };
+
+          // Usage example:
+const folderPath = '/sensory_eval'; // Replace with the correct path to your folder
+const fileName = id+'-'+currentIdx+'.png'; // Replace with the desired file name
+getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
+  if (downloadURL) {
+    // Use the download URL to display or download the file
+    console.log('Download URL:', downloadURL);
+  } else {
+    // Handle the case when the file with the specified name is not found
+    console.log('File not found');
+  }
+});
+//const fileName = id+'-'+currentIdx+'.png';
+        //const collectionRef = db.collection(collection); 
+        const getFilesByFileName = async (fileName) => {
+            const q=  query(collection(db, "sensory_evals"), where("fileName", "==", fileName));//.child('/sensory_evals/'+id+'-'+currentIdx+'.png');
+            //const q = query(collection(db, "sensory_evals"), where("fileName", "==", fileName));
+            console.log("filename",fileName);
+            try {
+                const querySnapshot = await getDocs(q);
+                const files = querySnapshot.docs.map((doc) => doc.data());
+                return files;
+            } catch (error) {
+                console.error("Error getting files by file name:", error);
+                return [];
+            }
+        };
+        
+        const imgRef = getFilesByFileName(fileName);
+        console.log("image",imgRef);
+        reader.onload = () => {
+            console.log('image selected', currentIdx, id);
+            // 1. firebase에서 이미지 가져오기
+
+            // 2. 변경할 이미지 firebase storage에 올리기 (이미지 파일 이름 변경 )
+            const toChangeImg = reader.result;
+
+            //setPreviewImage(reader.result);
+        };
+        reader.readAsDataURL(imgFile);
+        }
+    }, [imgFile]);
+
+    // 2.이미지 클릭시 변경 
     let images = [raw_img_path,];
-    console.log('img',images,processed_img_path[0])
-    processed_img_path.length !== 0
-    ? images = [
+    //console.log('img',images,processed_img_path[0])
+    (processed_img_path.length !== 0)
+    ? //processedmeat이 {}이 아닌 경우 
+    (images = [
         ...images,
         ...processed_img_path,
-    ]
-    : console.log('imgs',images)
-    console.log('img',images)
+    ])
+    ://processedmeat이 {}인 경우 -> 1회차 처리육 정보 입력을 위해 null 생성 
+    (images = [
+        ...images,
+        null,
+    ])
     const [currentIdx, setCurrIdx] = useState(0);
     const handleNextClick = () => {
         setCurrIdx((prev)=> (prev+1) % images.length);
@@ -369,8 +477,6 @@ function DataView({page, currentUser ,dataProps}){
                         }
                     </ListGroup>
                 </div>    
-                
-                    
                 </Card.Text>
             </Card.Body>
             </Card>
@@ -402,7 +508,7 @@ function DataView({page, currentUser ,dataProps}){
                         <div key={'processed-explanation'} className="row" >
                             <div key={'processed-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
                             <div key={'processed-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>
-                            {
+                            {// 1회차 이상부터
                                 Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
                                     <div key={'processed-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
                                         {arr_idx+2}회차
@@ -415,34 +521,46 @@ function DataView({page, currentUser ,dataProps}){
                             <div key={'processed-'+idx} className="row" >
                                 <div key={'processed-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
                                 <div key={'processed-'+idx+'col2'} className="col-3" style={style.dataContainer}>  
-                                {
+                                {// 1회차 
                                     f === 'minute' 
-                                    ?(
-                                        edited
-                                        ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[0]} placeholder={processedMinute[0]===null?"0.0":processedMinute[0]} 
+                                    ?( // minute값을 업로드하는 경우 (수정 불가 , 추가할 때 입력만 가능) 
+                                        edited && (processed_img_path[0]=== null || processed_img_path === null)
+                                        ?modal?<InputTransitionsModal setModal={setModal}/>
+                                            :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[0]} placeholder={processedMinute[0]===null?"0.0":processedMinute[0]} 
                                         onChange={(e)=>{handleMinuteInputChange(e, 0);}}/>
                                         :(processedMinute[0]? processedMinute[0] : '')
                                      )
-                                    :(edited
-                                        ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
+                                    :// createdAt seqno period 수정 X (자동 수정됨)
+                                    (f === 'createdAt'|| f === 'seqno'|| f === 'period')
+                                    ? (processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
+                                    ://나머지 데이터 (이미지 업로드 후에만 수정 가능 )
+                                    (edited
+                                        ?modal?<InputTransitionsModal setModal={setModal}/>
+                                            :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
                                         onChange={(e)=>{handleInputChange(e,1,0);}}/>
                                         :(processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
                                     )
                                 }
                                 </div>
-                                {
+                                {// 1회차 이상부터 
                                 Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
                                     <div key={'processed-'+arr_idx+'-col'+arr_idx} className="col-3" style={style.dataContainer}>
                                     {
                                         f === 'minute' 
                                         ?(
                                             edited
-                                            ?<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[arr_idx+1]} placeholder={processedMinute[arr_idx+1]===null?"0.0":processedMinute[arr_idx+1]} 
+                                            ?modal?<InputTransitionsModal setModal={setModal}/>
+                                                :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[arr_idx+1]} placeholder={processedMinute[arr_idx+1]===null?"0.0":processedMinute[arr_idx+1]} 
                                             onChange={(e)=>{handleMinuteInputChange(e, arr_idx+1);}}/>
                                             :(processedMinute[arr_idx+1]? processedMinute[arr_idx+1] : '')
                                          )
-                                        :(edited
-                                        ?<input key={'processed-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={processedInput[arr_idx+1]?.[f]} placeholder={datas[1][arr_idx+1]===null?"0.0":datas[1][arr_idx]?.[f]} 
+                                        :// createdAt seqno period 수정 X (자동 수정됨)
+                                        (f === 'createdAt'|| f === 'seqno'|| f === 'period')
+                                        ?processedInput[arr_idx+ 1]?.[f] ? processedInput[arr_idx+ 1]?.[f] : ""
+                                        ://나머지 데이터 (이미지 업로드 후에만 수정 가능 )
+                                        (edited
+                                        ?modal?<InputTransitionsModal setModal={setModal}/>
+                                            :<input key={'processed-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={processedInput[arr_idx+1]?.[f]} placeholder={datas[1][arr_idx+1]===null?"0.0":datas[1][arr_idx]?.[f]} 
                                             onChange={(e)=>{handleInputChange(e, 1,arr_idx+1)}}/>
                                         : processedInput[arr_idx+ 1]?.[f] ? processedInput[arr_idx+ 1]?.[f] : "")
                                     }   
@@ -507,10 +625,10 @@ function DataView({page, currentUser ,dataProps}){
                     <div key='labData' className="container">
                         <div key={'labData-explanation'} className="row" >
                             <div key={'labData-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
-                            <div key={'labData-exp-col0'} className="col-1" style={style.dataExpColumn}>원육</div>
+                            <div key={'labData-exp-col0'} className="col-2" style={style.dataExpColumn}>원육</div>
                             {
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-1" style={style.dataExpColumn}>
+                                    <div key={'labData-exp-col'+(arr_idx+1)} className="col-2" style={style.dataExpColumn}>
                                         {arr_idx+1}회차
                                     </div>
                                 ))
@@ -520,7 +638,7 @@ function DataView({page, currentUser ,dataProps}){
                         return(
                             <div key={'lab-'+idx} className="row" >
                                 <div key={'lab-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={'lab-'+idx+'col2'} className="col-1" style={style.dataContainer}>      
+                                <div key={'lab-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
                                 {
                                     edited
                                     ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
@@ -530,7 +648,7 @@ function DataView({page, currentUser ,dataProps}){
                                 </div>
                                 {// 실험실 및 가열육 추가 데이터 수정 
                                 Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
-                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-1" style={style.dataContainer}>
+                                    <div key={'lab-'+arr_idx+'-col'+arr_idx} className="col-2" style={style.dataContainer}>
                                     {
                                         edited
                                         ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 

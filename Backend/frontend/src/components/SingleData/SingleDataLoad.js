@@ -132,6 +132,7 @@ export function DataLoad(id, page, currentUser) {
   // 처리육 이미지 
   let processedDataImgPath = [];
 
+  // n회차 처리육에 대한 회차별 정보 
   for (let i in items[0].processedmeat){
     //processedDataSeq.push(i);
     processedDataSeq = [...processedDataSeq, i];
@@ -141,6 +142,8 @@ export function DataLoad(id, page, currentUser) {
     processedMinute = [...processedMinute, items[0].processedmeat[i].sensory_eval.deepaging_data.minute];
     processedDataImgPath = [...processedDataImgPath, items[0].processedmeat[i].sensory_eval.imagePath];
   }
+  // 처리육 데이터가 {} 인 경우 processedData, processedMinute, processedDataImgPath(ok) 은 [] 값이 됨.
+ 
 
   // 3-3. 데이터를 json 객체로 만들기 
   const data = {
