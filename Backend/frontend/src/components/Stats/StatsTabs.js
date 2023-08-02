@@ -27,6 +27,7 @@ import Taste_Proc_Map from "./Charts/HeatMap/Taste_Proc_Map";
 import Taste_Time from "./Charts/Time/Taste_Time";
 import { useEffect, useRef } from "react";
 import Sens_Proc_Map from "./Charts/HeatMap/Sens_Proc_Map";
+import Taste_Fresh_Corr from "./Charts/Corr/Taste_Fresh_Corr";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -152,7 +153,17 @@ export default function StatsTabs({ startDate, endDate }) {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={2}>
-        <BasicScatter />
+        {alignment === "관능" && secondary === "원육" ? (
+          <Sens_Fresh_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "관능" && secondary === "처리육" ? (
+          <Sens_Proc_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "관능" && secondary === "가열육" ? (
+          <Sens_Heated_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "맛" && secondary === "원육" ? (
+          <Taste_Fresh_Corr startDate={startDate} endDate={endDate} />
+        ) : alignment === "맛" && secondary === "처리육" ? (
+          <Taste_Proc_Map startDate={startDate} endDate={endDate} />
+        ) : null}
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={3}>

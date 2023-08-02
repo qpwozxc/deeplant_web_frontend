@@ -11,6 +11,7 @@ import MuiAlert from "@mui/material/Alert";
 import TableCell from "@mui/material/TableCell";
 import { db } from "../../firebase-config";
 import CustomSnackbar from "../Base/CustomSnackbar";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   collection,
   getDocs,
@@ -27,6 +28,12 @@ import { GridToolbarQuickFilter, DataGrid } from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
+import {
+  getAuth,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+} from "firebase/auth";
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
@@ -37,9 +44,73 @@ function UserList() {
   const [allUsers, setAllUsers] = useState([]);
   const [usersData, setUsersData] = useState({});
   const [searchedUsers, setSearchedUsers] = useState([]);
-  const [showSnackbar, setShowSnackbar] = useState(false); // Step 1: State for showing Snackbar
-  const handleRegisterClose = () => setRegisterShow(false);
+  const handleRegisterClose = () => {
+    setRegisterShow(false);
+    window.location.reload();
+  };
   const handleRegisterShow = () => setRegisterShow(true);
+
+  const handleUserDelete = async (userId) => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      console.log(user);
+      if (!user) {
+        showSnackbar("로그인이 필요합니다.", "error");
+        return;
+      }
+
+      // Prompt the user to reauthenticate before performing the delete operation
+      const email = user.email; // You can get the user's email from the `user` object or ask for it from the user.
+      const password = "user's password here"; // Ask the user to enter their password to reauthenticate.
+
+      const credential = EmailAuthProvider.credential(email, password);
+
+      try {
+        await reauthenticateWithCredential(user, credential);
+      } catch (error) {
+        showSnackbar(
+          "재인증에 실패했습니다. 올바른 이메일과 비밀번호를 입력해주세요.",
+          "error"
+        );
+        return;
+      }
+
+      // If reauthentication is successful, proceed with the account deletion
+      const response = await fetch(
+        `http://3.38.52.82/user/delete?id=${userId}`
+      );
+
+      if (response.ok) {
+        // 삭제된 유저를 제외한 새로운 사용자 목록 업데이트
+        setAllUsers((prevUsers) =>
+          prevUsers.filter((user) => user.userId !== userId)
+        );
+        showSnackbar("사용자가 삭제되었습니다.", "success");
+      } else {
+        showSnackbar("사용자 삭제에 실패했습니다.", "error");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      showSnackbar("사용자 삭제 중 오류가 발생했습니다.", "error");
+    }
+  };
+  ///////////
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const showSnackbar = (message, severity) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  ////////////
 
   const columns = [
     { field: "name", headerName: "이름", width: 70 },
@@ -70,6 +141,18 @@ function UserList() {
         }
         return "";
       },
+    },
+    {
+      field: "actions",
+      headerName: "작업",
+      width: 120,
+      renderCell: (params) => (
+        <div>
+          <IconButton onClick={() => handleUserDelete(params.row.userId)}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      ),
     },
   ];
   useEffect(() => {
@@ -115,7 +198,10 @@ function UserList() {
       const results = allUsers.filter(
         (user) =>
           user.name.toLowerCase().includes(keyword) ||
-          user.userId.toLowerCase().includes(keyword)
+          user.userId.toLowerCase().includes(keyword) ||
+          user.type.toLowerCase().includes(keyword) ||
+          user.company.toLowerCase().includes(keyword) ||
+          user.createdAt.toLowerCase().includes(keyword)
       );
       setSearchedUsers(results);
     }
@@ -145,18 +231,22 @@ function UserList() {
           name: userToUpdate.name,
           company: userToUpdate.company,
           jobTitle: userToUpdate.jobTitle,
-          homeAdress: userToUpdate.homeAdress,
+          homeAddr: userToUpdate.homeAddr,
           alarm: userToUpdate.alarm,
           type: value, // The new value for the "type" field
         }),
       });
-
+      console.log(response);
       if (response.ok) {
         // If the update was successful, update the user's information in the state
         setAllUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.id === id ? { ...user, [field]: value } : user
           )
+        );
+        showSnackbar(
+          `${userToUpdate.name}님의 권한이 ${value}로 수정되었습니다. `,
+          "success"
         );
       } else {
         console.log("Failed to update the user information");
@@ -265,6 +355,12 @@ function UserList() {
           />
         )}
       </Paper>
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={closeSnackbar}
+      />
     </div>
   );
 }
