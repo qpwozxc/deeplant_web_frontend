@@ -327,19 +327,19 @@ function DataView({page, currentUser ,dataProps}){
           };
 
           // Usage example:
-const folderPath = '/sensory_eval'; // Replace with the correct path to your folder
-const fileName = id+'-'+currentIdx+'.png'; // Replace with the desired file name
-getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
-  if (downloadURL) {
-    // Use the download URL to display or download the file
-    console.log('Download URL:', downloadURL);
-  } else {
-    // Handle the case when the file with the specified name is not found
-    console.log('File not found');
-  }
-});
-//const fileName = id+'-'+currentIdx+'.png';
-        //const collectionRef = db.collection(collection); 
+    const folderPath = '/sensory_eval'; // Replace with the correct path to your folder
+    const fileName = id+'-'+currentIdx+'.png'; // Replace with the desired file name
+    getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
+    if (downloadURL) {
+        // Use the download URL to display or download the file
+        console.log('Download URL:', downloadURL);
+    } else {
+        // Handle the case when the file with the specified name is not found
+        console.log('File not found');
+    }
+    });
+    //const fileName = id+'-'+currentIdx+'.png';
+            //const collectionRef = db.collection(collection); 
         const getFilesByFileName = async (fileName) => {
             const q=  query(collection(db, "sensory_evals"), where("fileName", "==", fileName));//.child('/sensory_evals/'+id+'-'+currentIdx+'.png');
             //const q = query(collection(db, "sensory_evals"), where("fileName", "==", fileName));

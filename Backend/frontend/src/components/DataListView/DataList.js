@@ -13,7 +13,7 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
     const [page, setPage] = useState('list');
     useEffect(()=>{
         setPage(pageProp);
-    }, [pageProp])
+    }, [pageProp]);
 
     // 삭제 체크박스
     //checkboxItems에 체크박스 추가 

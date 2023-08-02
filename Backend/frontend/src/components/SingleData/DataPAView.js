@@ -174,31 +174,44 @@ function DataPAView({ currentUser ,dataProps}){
                             })}
                         </div>
                         <div key='rawmeatPA' className="container" style={{marginTop:'40px'}}>
-                            {rawField.map((f, idx)=>{
+                            {rawPAField.map((f, idx)=>{
                                 return(
                                     <div key={'rawPA-'+idx} className="row" >
                                         <div key={'rawPA-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                        <div key={'rawPA-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
-                                            {dataPA? dataPA[f] ? dataPA[f].toFixed(2) : "":""}
-                                            <div style={{marginLeft:'10px'}}>
-                                                {dataPA
-                                                ? dataPA[f] 
-                                                    ? <span style={(dataPA[f].toFixed(2) - raw_data[f] )>0?{color:'red'}:{color:'blue'}}>
-                                                        {
-                                                            (dataPA[f].toFixed(2) - raw_data[f])>0
-                                                            ? '(+'+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
-                                                            : '('+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
-                                                        }
-                                                        
-                                                        </span>  
-                                                    : <span></span>
+                                        <div key={'rawPA-'+idx+'col2'} className="col-2" style={style.dataContainer}>
+                                            {/*console.log(dataPA?"xai : "+ dataPA['xai_gradeNum']:"")*/}
+                                            {dataPA
+                                                ?f === 'xai_gradeNum'
+                                                    ? dataPA[f] === 0 ? "0" : dataPA[f]
+                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
                                                 :""}
-                                                
-                                            </div>
+                                            {
+                                                f !== "xai_gradeNum"
+                                                && 
+                                                (
+                                                    <div style={{marginLeft:'10px'}}>
+                                                        {dataPA
+                                                        ? dataPA[f] 
+                                                            ? <span style={(dataPA[f].toFixed(2) - raw_data[f] )>0?{color:'red'}:{color:'blue'}}>
+                                                                {
+                                                                    (dataPA[f].toFixed(2) - raw_data[f])>0
+                                                                    ? '(+'+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
+                                                                    : '('+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
+                                                                }
+                                                                
+                                                                </span>  
+                                                            : <span></span>
+                                                        :""}
+                                                        
+                                                    </div>
+                                                )
+                                            }
+                                            
                                         </div>
                                     </div>
                                 );
                             })}
+
                         </div>
                     </Tab>
                     <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
@@ -265,6 +278,7 @@ let options = ['원육',];
 //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
+const rawPAField =['marbling','color','texture','surfaceMoisture','overall','xai_gradeNum'];
 const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute','period'];
 
 const style={
