@@ -25,7 +25,7 @@ const DataListComp=({startDate, endDate, pageType})=>{
     const [currentPageArray, setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
     const [offset, setOffset] = useState(0); // 현재 로드하는 페이지의 인덱스 (fetch)
-    const count = 6; // 한페이지당 보여줄 개수 (fetch)
+    const count = 8; // 한페이지당 보여줄 개수 (fetch)
     const limit = 5; // 한 화면당 페이지 배열의 원소 개수
     //const page = 0;
 
@@ -144,7 +144,7 @@ const DataListComp=({startDate, endDate, pageType})=>{
                 })
               : null}
             <Pagination.Next onClick={handleOnClickNext} />
-            <Pagination.Last disabled />
+            <Pagination.Last />
           </Pagination>
           </Box>
       </div>

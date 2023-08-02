@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import {FaAngleLeft,FaAngleRight} from  "react-icons/fa6";
 import axios from 'axios';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 //import { DataLoad } from "./SingleDataLoad";
@@ -11,7 +12,7 @@ const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
-    console.log('dataview page', page);
+    
     //데이터 받아오기 -> props 로 전달로 변경
     const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
@@ -158,7 +159,7 @@ function DataView({page, currentUser ,dataProps}){
 
             ///meat/add/heatedmeat_eval
             const res = JSON.stringify(req);
-            console.log(i,res);
+            
             try{
                 const response  = fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
                 method: "POST",
@@ -208,23 +209,41 @@ function DataView({page, currentUser ,dataProps}){
         }
 
         // 3. 처리육 관능검사 : /meat/add/deep_aging_data
-        for (let i =0; i < len-1 ; i++){
+        console.log('length:', len, len-1);
+        const pro_len = (len===1 ? len : (len-1));
+        console.log(processedInput)
+        for (let i =0; i <  pro_len; i++){
             let req = (processedInput[i]);
             req = {
                 ...req,
                 ['id']: id,
-                ['createdAt'] : createdAt,
+                ['createdAt'] : createdDate,
                 ['userId'] : userData["userId"],
                 ['seqno'] : i+1,
                 ['period'] : Math.round(elapsedHour),
                 ['deepAging'] : {
-                    ['date'] : processed_data[i]['deepaging_data']['date']?processed_data[i]['deepaging_data']['date']: null,
-                    ['minute'] : Number(processedMinute[i]),
+                    ['date'] : processed_data[i]?processed_data[i]['deepaging_data']['date']: yy+mm+dd,
+                    ['minute'] : Number(processedMinute[i]?processedMinute[i]:0),
                 }
             }
             
-            console.log('deepaging',i,req);
+            
             //api 연결 /meat/add/deep_aging_data
+            const res = JSON.stringify(req);
+            
+            try{
+                fetch(`http://3.38.52.82/meat/add/deep_aging_data`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: res,
+                });
+                console.log('deepaging',i,res);
+            }catch(err){
+                console.log('error')
+                console.error(err);
+            }
         }
     };
 
@@ -234,7 +253,6 @@ function DataView({page, currentUser ,dataProps}){
         setConfirmVal(newAlignment);
     };
     const handleConfirmSaveClick=()=>{
-        console.log(confirmVal);
         //승인 여부 변경 API
         try{
             const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);
@@ -247,11 +265,86 @@ function DataView({page, currentUser ,dataProps}){
 
     };
 
+    // 이미지 클릭시 변경 
+    let images = [raw_img_path,];
+    console.log('img',images,processed_img_path[0])
+    processed_img_path.length !== 0
+    ? images = [
+        ...images,
+        ...processed_img_path,
+    ]
+    : console.log('imgs',images)
+    console.log('img',images)
+    const [currentIdx, setCurrIdx] = useState(0);
+    const handleNextClick = () => {
+        setCurrIdx((prev)=> (prev+1) % images.length);
+    };
+    const handlePrevClick = () =>{
+        setCurrIdx((prev)=> (prev-1) % images.length);
+    }
+
+    // 탭 누름에 따라 이미지 변경 
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        console.log('change');
+        //https://stackoverflow.com/questions/67013771/how-to-name-mui-tabs
+    };
+
+    const handleClick= () =>{
+        setValue('proc')
+        console.log('change');
+    }
+    const divStyle = {
+        currDiv :{
+            height:"fit-content", 
+            width:"fit-content", 
+            padding:'10px',
+            borderRadius : '5px',
+            backgroundColor:'#002984', 
+            color:'white',
+            border:'1px solid white'
+        },
+        notCurrDiv :{
+            height:"100%", 
+            width:"fit-content", 
+            borderRadius : '5px',
+            padding:'10px',
+            backgroundColor:'white', 
+            color:'#002984',
+            border:'1px solid #002984'
+        }
+    }
     return(
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
             <Card style={{ width: "100%"}}>
-            <Card.Img variant="top" src={previewImage} style={{height:'350px',objectFit:'contain'}}/>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <Button variant="contained" size="small" sx={{height:'40px'}} onClick={handlePrevClick}><FaAngleLeft/></Button>
+                <div>
+                {
+                currentIdx === 0
+                ?<div style={{backgroundColor:'#002984', color:'white'}}>원육이미지</div>
+                :<div style={{backgroundColor:'#002984', color:'white'}}>딥에이징 {currentIdx}회차 이미지</div>
+                }
+                {images[currentIdx]
+                ?<img src={images[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
+                :<div style={{height:'350px',width:"400px", display:'flex', justifyContent:'center', alignItems:'center'}}>이미지가 존재하지 않습니다.</div>
+                }
+                <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
+                    {
+                         Array.from({ length: images.length }, (_, idx)=>(
+                            <div style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv}>{idx + 1}</div>
+                         )
+                         )
+                    }
+                    
+                </div>
+                </div>
+                <Button variant="contained" size="small" sx={{height:'40px'}}  onClick={handleNextClick}><FaAngleRight/></Button>
+            </div>
+            
             <Card.Body>
                 
                 <Card.Text >
@@ -282,8 +375,8 @@ function DataView({page, currentUser ,dataProps}){
             </Card.Body>
             </Card>
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
-            <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
-                <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
+            <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
+                <Tab /*value='raw'*/eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
                     {//setImage
                       //  setPreviewImage(raw_img_path)
                     }
@@ -300,7 +393,7 @@ function DataView({page, currentUser ,dataProps}){
                         })}
                     </div>
                 </Tab>
-                <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
+                <Tab value='proc' eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
                      inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
@@ -361,7 +454,7 @@ function DataView({page, currentUser ,dataProps}){
                         })}
                     </div>
                 </Tab>
-                <Tab eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
+                <Tab /*value='heat'*/ eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
                     id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
@@ -407,7 +500,7 @@ function DataView({page, currentUser ,dataProps}){
                         }
                     </div>
                 </Tab>
-                <Tab eventKey='labData' title='실험실' style={{backgroundColor:'white'}}>
+                <Tab /*value='lab'*/ eventKey='labData' title='실험실' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle4}  size="small" onChange={(event, newValue) => {setToggle4(newValue)}} inputValue={toggle4Value} onInputChange={(event, newInputValue) => {setToggle4Value(newInputValue)}}
                     id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
@@ -454,7 +547,7 @@ function DataView({page, currentUser ,dataProps}){
                         }
                     </div>
                 </Tab>
-                <Tab eventKey='api' title='축산물 이력' style={{backgroundColor:'white'}}>
+                <Tab /*value='api'*/ eventKey='api' title='축산물 이력' style={{backgroundColor:'white'}}>
                     <div key='api' className="container">
                         {apiField.map((f, idx)=>{
                         return(
@@ -531,7 +624,7 @@ const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
 
 const style={
     singleDataWrapper:{
-      height:'590px',
+      height:'fit-content',
       marginTop:'70px',
       padding: "20px 50px",
       paddingBottom: "0px",

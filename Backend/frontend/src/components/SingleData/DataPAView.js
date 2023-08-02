@@ -41,6 +41,7 @@ function DataPAView({ currentUser ,dataProps}){
             console.log("connected PA!!", json);
             setDataPA(json);
             setLoaded(true);
+            
         }catch (error){
             console.error('Error fetching data:', error);
             //setErr(false);
@@ -58,6 +59,7 @@ function DataPAView({ currentUser ,dataProps}){
         console.log('loaded?',loaded,dataPA);
         dataPA ? setDataXAIImg(dataPA.xai_imagePath) : console.log('null');
         dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
+        
         console.log(dataXAIImg);
     },[dataPA,loaded,id]);
 
@@ -82,10 +84,10 @@ function DataPAView({ currentUser ,dataProps}){
 
         const len = processed_data_seq.length;
         //seqno for loop
-        for (let i = 0; i < len; i++){
+      //  for (let i = 0; i < len; i++){
             let req = {
                 ["id"]:id,
-                ["seqno"]:i,
+                ["seqno"]:seqno,
                 ["userId"]:userData["userId"],
                 ["period"]:Math.round(elapsedHour),
             };
@@ -99,8 +101,8 @@ function DataPAView({ currentUser ,dataProps}){
                 },
                 body: res,
                 });
-               
-                getData();
+               console.log(res);
+                getData(seqno);
                     // 강제 새로고침
                 window.location.reload();
                 
@@ -108,8 +110,8 @@ function DataPAView({ currentUser ,dataProps}){
                 console.log('error')
                 console.error(err);
             }
-        }
-        
+       // }
+       
         
         
     }
@@ -166,6 +168,33 @@ function DataPAView({ currentUser ,dataProps}){
                                         <div key={'raw-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
                                         <div key={'raw-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
                                             {raw_data[f] ? raw_data[f] : ""}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div key='rawmeatPA' className="container" style={{marginTop:'40px'}}>
+                            {rawField.map((f, idx)=>{
+                                return(
+                                    <div key={'rawPA-'+idx} className="row" >
+                                        <div key={'rawPA-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                        <div key={'rawPA-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
+                                            {dataPA? dataPA[f] ? dataPA[f].toFixed(2) : "":""}
+                                            <div style={{marginLeft:'10px'}}>
+                                                {dataPA
+                                                ? dataPA[f] 
+                                                    ? <span style={(dataPA[f].toFixed(2) - raw_data[f] )>0?{color:'red'}:{color:'blue'}}>
+                                                        {
+                                                            (dataPA[f].toFixed(2) - raw_data[f])>0
+                                                            ? '(+'+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
+                                                            : '('+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
+                                                        }
+                                                        
+                                                        </span>  
+                                                    : <span></span>
+                                                :""}
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 );
@@ -290,6 +319,7 @@ const style={
         width:'',
         borderRight:'0.8px solid #e0e0e0',
         padding:'4px 5px',
+        display:'flex'
     },
     imgContainer:{
         //-ms-transform: rotate(90deg); /* IE 9 */

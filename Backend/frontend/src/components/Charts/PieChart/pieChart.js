@@ -77,6 +77,7 @@ const PieChart = ({ subheader, chartColors, /*chartData, isFilter,*/startDate,en
     const handleBtnClick= (e)=>{
       const value = e.target.value;
       const chart_series = [data[value ]['raw'], data[value ]['processed']];
+      console.log('chart',chart_series);
       setLabel(value);
       setChartSeries(chart_series);
     }

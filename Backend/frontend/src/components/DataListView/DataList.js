@@ -8,8 +8,7 @@ import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
 function DataList({meatList, pageProp, setDelete, offset, count}){
-    
-    //console.log('offset and count',offset,count);
+
     // 반려함 탭인지 목록 탭인지 예측 탭인지 확인 
     const [page, setPage] = useState('list');
     useEffect(()=>{
@@ -148,11 +147,8 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
                 {meatList.map((content, index) => {
                 const isItemSelected = isSelected(content);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                
-                
-                const checkboxKey = content.id;
-                
-                
+               const checkboxKey = content.id;
+    
                 return (
                     <TableRow
                     hover
