@@ -77,13 +77,20 @@ const RejectedDataListComp=()=>{
     const setDelete =(items)=>{
         setDeleteItems(items);
     }
+    const ondelete = async(id) =>{
+      const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}}`);
+    }
     // 삭제버튼 클릭
     const handleDeleteBtn = () =>{
-        console.log('tow delete',deleteItems);
+        console.log('to delete',deleteItems);
         // 경고
         setIsDelClick(true);
         //console.log("iscliked", isDelClick);
         // api 연결 
+       for (let i = 0; i < deleteItems.length; i++){
+        //ondelete(deleteItems[i]);
+        console.log(i);
+       }
     }
     
     return(
@@ -134,7 +141,7 @@ const RejectedDataListComp=()=>{
               setCurrentPageArray(totalSlicedPageArray[currentPN]);
             }}
           />
-          <Pagination.Last disabled />
+          <Pagination.Last />
         </Pagination>
         </Box>
         {

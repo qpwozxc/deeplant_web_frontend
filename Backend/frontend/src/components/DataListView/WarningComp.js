@@ -5,10 +5,23 @@ export default function TransitionsModal({id, setIsDelClick}) {
     //화면 창 닫기
     const [open, setOpen] = useState(true);
     const handleClose = () => {setOpen(false); setIsDelClick(false)};
+    const ondelete = async(id) =>{
+      const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}}`);
+      
+    }
     const handleOnDelete=()=>{
         console.log(id);
+        //삭제 api 전송  /meat/delete?id=
+        //console.log(typeof(id));
+        if (typeof(id) !== 'string'){
+          for (let i = 0; i < id.length; i++){
+            ondelete(id[i]);
+          }
+        }else{
+          ondelete(id);
+        }
+        //
         handleClose();
-        //삭제 api 전송 
     }
     return (
       <div>
