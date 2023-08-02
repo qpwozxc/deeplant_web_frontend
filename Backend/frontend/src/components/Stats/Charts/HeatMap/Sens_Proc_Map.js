@@ -1,7 +1,7 @@
 import ApexCharts from "react-apexcharts";
 import React, { useEffect, useState } from "react";
 
-export default function Taste_Proc_Map({ startDate, endDate }) {
+export default function Sens_Proc_Map({ startDate, endDate }) {
   const [chartData, setChartData] = useState({});
   const [prop, setProp] = useState([]);
 
@@ -9,7 +9,7 @@ export default function Taste_Proc_Map({ startDate, endDate }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://3.38.52.82/meat/statistic?type=5&start=${startDate}&end=${endDate}`
+          `http://3.38.52.82/meat/statistic?type=7&start=${startDate}&end=${endDate}`
         );
 
         if (!response.ok) {

@@ -2,12 +2,14 @@ import ApexCharts from "react-apexcharts";
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function Taste_FreshMeat() {
+export default function Taste_FreshMeat({ startDate, endDate }) {
   const [chartData, setChartData] = useState([]); // Change initial state to null
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://3.38.52.82/meat/statistic?type=4");
+      const response = await fetch(
+        `http://3.38.52.82/meat/statistic?type=4&start=${startDate}&end=${endDate}`
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");

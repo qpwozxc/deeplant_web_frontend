@@ -20,11 +20,13 @@ import Sens_ProcMeat from "./Charts/BoxPlot/Sens_ProcMeat";
 import Sens_HeatedMeat from "./Charts/BoxPlot/Sens_HeatedMeat";
 import Taste_FreshMeat from "./Charts/BoxPlot/Taste_FreshMeat";
 import Taste_ProcMeat from "./Charts/BoxPlot/Taste_ProcMeat";
-import Sens_Stat from "./Charts/Sens_Stat";
 import Sens_Fresh_Map from "./Charts/HeatMap/Sens_Fresh_Map";
 import Sens_Heated_Map from "./Charts/HeatMap/Sens_Heated_Map";
 import Taste_Fresh_Map from "./Charts/HeatMap/Taste_Fresh_Map";
 import Taste_Proc_Map from "./Charts/HeatMap/Taste_Proc_Map";
+import Taste_Time from "./Charts/Time/Taste_Time";
+import { useEffect, useRef } from "react";
+import Sens_Proc_Map from "./Charts/HeatMap/Sens_Proc_Map";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,7 +57,7 @@ function a11yProps(index) {
   };
 }
 
-export default function StatsTabs() {
+export default function StatsTabs({ startDate, endDate }) {
   const [value, setValue] = useState(0);
   const [slot, setSlot] = useState("week");
   const theme = useTheme();
@@ -122,37 +124,39 @@ export default function StatsTabs() {
       {/* BoxPlot(통계) */}
       <CustomTabPanel value={value} index={0}>
         {alignment === "관능" && secondary === "원육" ? (
-          <Sens_FreshMeat />
+          <Sens_FreshMeat startDate={startDate} endDate={endDate} />
         ) : alignment === "관능" && secondary === "처리육" ? (
-          <Sens_ProcMeat />
+          <Sens_ProcMeat startDate={startDate} endDate={endDate} />
         ) : alignment === "관능" && secondary === "가열육" ? (
-          <Sens_HeatedMeat />
+          <Sens_HeatedMeat startDate={startDate} endDate={endDate} />
         ) : alignment === "맛" && secondary === "원육" ? (
-          <Taste_FreshMeat />
+          <Taste_FreshMeat startDate={startDate} endDate={endDate} />
         ) : alignment === "맛" && secondary === "처리육" ? (
-          <Taste_ProcMeat />
+          <Taste_ProcMeat startDate={startDate} endDate={endDate} />
         ) : null}
       </CustomTabPanel>
 
+      {/* HeatMap(분포) */}
       <CustomTabPanel value={value} index={1}>
+        {alignment === "관능" && secondary === "원육" ? (
+          <Sens_Fresh_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "관능" && secondary === "처리육" ? (
+          <Sens_Proc_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "관능" && secondary === "가열육" ? (
+          <Sens_Heated_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "맛" && secondary === "원육" ? (
+          <Taste_Fresh_Map startDate={startDate} endDate={endDate} />
+        ) : alignment === "맛" && secondary === "처리육" ? (
+          <Taste_Proc_Map startDate={startDate} endDate={endDate} />
+        ) : null}
+      </CustomTabPanel>
+
+      <CustomTabPanel value={value} index={2}>
         <BasicScatter />
       </CustomTabPanel>
 
-      {/* HeatMap(상관관계) */}
-      <CustomTabPanel value={value} index={2}>
-        {alignment === "관능" && secondary === "원육" ? (
-          <Sens_Fresh_Map />
-        ) : alignment === "관능" && secondary === "가열육" ? (
-          <Sens_Heated_Map />
-        ) : alignment === "맛" && secondary === "원육" ? (
-          <Taste_Fresh_Map />
-        ) : alignment === "맛" && secondary === "처리육" ? (
-          <Taste_Proc_Map />
-        ) : null}
-      </CustomTabPanel>
-
       <CustomTabPanel value={value} index={3}>
-        <BarGraph />
+        <Taste_Time startDate={startDate} endDate={endDate} />
       </CustomTabPanel>
     </Box>
   );
