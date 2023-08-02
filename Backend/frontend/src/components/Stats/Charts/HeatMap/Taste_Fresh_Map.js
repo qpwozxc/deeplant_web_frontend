@@ -1,9 +1,9 @@
 import ApexCharts from "react-apexcharts";
 import React, { useEffect, useState } from "react";
+import { da } from "date-fns/locale";
 
 export default function Taste_Fresh_Map({ startDate, endDate }) {
   const [chartData, setChartData] = useState({});
-  const [prop, setProp] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +16,12 @@ export default function Taste_Fresh_Map({ startDate, endDate }) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setProp(Object.keys(data));
+
+        for (const key in data) {
+          data[key].unique_values = data[key].unique_values.map((value) =>
+            value === null ? 0 : value
+          );
+        }
         setChartData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -26,23 +31,20 @@ export default function Taste_Fresh_Map({ startDate, endDate }) {
     fetchData();
   }, [startDate, endDate]);
 
-  let ChartSeries = [];
-  if (prop.length > 0) {
-    ChartSeries = prop.map((property) => {
-      const uniqueValues = chartData[property].unique_values;
-      const frequencies = new Array(10).fill(0);
+  const ChartSeries = Object.keys(chartData).map((property) => {
+    const uniqueValues = chartData[property].unique_values;
+    const frequencies = new Array(10).fill(0);
 
-      uniqueValues.forEach((value) => {
-        const index = Math.floor(value);
-        frequencies[index] += 1;
-      });
-
-      return {
-        name: property,
-        data: frequencies,
-      };
+    uniqueValues.forEach((value) => {
+      const index = Math.floor(value);
+      frequencies[index] += 1;
     });
-  }
+
+    return {
+      name: property,
+      data: frequencies,
+    };
+  });
 
   const ChartOption = {
     chart: {

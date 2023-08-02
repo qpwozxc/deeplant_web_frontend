@@ -1,60 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CustomSnackbar from "../components/Base/CustomSnackbar";
+import { CircularProgress } from "@mui/material";
 const UserInfo = JSON.parse(localStorage.getItem("UserInfo"));
 
 export default function Profile() {
-  const [updatedUserInfo, setUpdatedUserInfo] = useState({
-    userId: UserInfo.userId,
-    createdAt: UserInfo.createdAt,
-    updatedAt: UserInfo.updatedAt,
-    password: UserInfo.password,
+  const [modifiedUserInfo, setModifiedUserInfo] = useState({
     name: UserInfo.name,
     company: UserInfo.company,
     jobTitle: UserInfo.jobTitle,
     homeAddr: UserInfo.homeAddr,
-    loginAt: UserInfo.loginAt,
-    alarm: UserInfo.alarm,
-    type: UserInfo.type,
   });
+  const [updatedUserInfo, setUpdatedUserInfo] = useState(UserInfo);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Function to handle user information update
   const updateUserInfo = async () => {
+    setIsUpdating(true);
     try {
-      showSnackbar("회원정보가 수정되었습니다.", "success");
       const response = await fetch("http://3.38.52.82/user/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedUserInfo),
+        body: JSON.stringify({
+          userId: UserInfo.userId,
+          createdAt: UserInfo.createdAt,
+          updatedAt: UserInfo.updatedAt,
+          password: UserInfo.password,
+          name: modifiedUserInfo.name, // <-- Use the updated name
+          company: modifiedUserInfo.company, // <-- Use the updated company
+          jobTitle: modifiedUserInfo.jobTitle, // <-- Use the updated jobTitle
+          homeAddr: modifiedUserInfo.homeAddr, // <-- Use the updated homeAddr
+          loginAt: UserInfo.loginAt,
+          alarm: UserInfo.alarm,
+          type: UserInfo.type,
+        }),
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      console.log(response);
+      if (response.ok) {
+        const updatedData = await response.json();
+        setUpdatedUserInfo(updatedData);
+        showSnackbar("회원정보가 수정되었습니다.", "success");
+      } else {
+        showSnackbar("회원정보 수정에 실패했습니다.", "error");
       }
-
-      const updatedInfo = await response.json();
-      localStorage.setItem("UserInfo", JSON.stringify(updatedInfo));
     } catch (error) {
-      console.error("Error updating user information:", error);
+      console.log("Error updating user information:", error);
+      showSnackbar("서버와 통신 중 오류가 발생했습니다.", "error");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Only update the editable fields
-    if (["name", "company", "jobTitle", "homeAddr"].includes(name)) {
-      setUpdatedUserInfo({
-        ...updatedUserInfo,
-        [name]: value,
-      });
-    }
-    console.log("updatedUserInfo", updatedUserInfo);
+    setModifiedUserInfo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   ///////////
@@ -73,6 +80,7 @@ export default function Profile() {
   };
 
   ////////////
+  const { name, company, jobTitle, homeAddr } = modifiedUserInfo;
   return (
     <Grid
       container
@@ -118,7 +126,7 @@ export default function Profile() {
               <TextField
                 label="이름"
                 name="name"
-                value={updatedUserInfo.name}
+                value={name}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -126,7 +134,7 @@ export default function Profile() {
               <TextField
                 label="직장"
                 name="company"
-                value={updatedUserInfo.company}
+                value={company}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -134,7 +142,7 @@ export default function Profile() {
               <TextField
                 label="직책"
                 name="jobTitle"
-                value={updatedUserInfo.jobTitle}
+                value={jobTitle}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -142,13 +150,17 @@ export default function Profile() {
               <TextField
                 label="주소"
                 name="homeAddr"
-                value={updatedUserInfo.homeAddr}
+                value={homeAddr}
                 onChange={handleInputChange}
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" onClick={updateUserInfo}>
-                정보 수정
+              <Button
+                variant="contained"
+                onClick={updateUserInfo}
+                disabled={isUpdating}
+              >
+                {isUpdating ? <CircularProgress size={24} /> : "정보 수정"}
               </Button>
               <CustomSnackbar
                 open={snackbarOpen}

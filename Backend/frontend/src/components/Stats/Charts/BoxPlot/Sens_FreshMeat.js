@@ -23,7 +23,7 @@ export default function Sens_FreshMeat({ startDate, endDate }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const calculateBoxPlotStatistics = (data) => {
     const sortedData = data.sort((a, b) => a - b);
