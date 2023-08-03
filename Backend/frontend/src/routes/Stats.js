@@ -15,7 +15,7 @@ function Stats() {
   const [endDate, setEndDate] = useState(
     new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5)
   );
-  useEffect(() => {}, [startDate, endDate]);
+  
 
   return (
     <Container maxWidth="xl">

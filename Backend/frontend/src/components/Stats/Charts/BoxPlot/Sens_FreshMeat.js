@@ -4,7 +4,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Sens_FreshMeat({ startDate, endDate }) {
   const [chartData, setChartData] = useState([]);
-
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -23,8 +22,9 @@ export default function Sens_FreshMeat({ startDate, endDate }) {
 
   useEffect(() => {
     fetchData();
+    console.log('new data ', chartData);
   }, [startDate, endDate]);
-
+  
   const calculateBoxPlotStatistics = (data) => {
     const sortedData = data.sort((a, b) => a - b);
     const q1Index = Math.floor(sortedData.length / 4);

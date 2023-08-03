@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 // firebase 
 import { collection, getDocs,  query, where,setDoc, doc, Firestore,  } from "firebase/firestore";
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref as storageRef , listAll, getDownloadURL } from 'firebase/storage';
 import {firebase, fireStore, db} from '../../firebase-config.js';
 //import { db, } from "../../firebase-config";
 //import { DataLoad } from "./SingleDataLoad";
@@ -90,6 +90,7 @@ function DataView({page, currentUser ,dataProps}){
         }
         
     }
+    // 처리육 딥에이징 시간 (분) input 핸들링
     const handleMinuteInputChange = (e, index)=>{
         const value = e.target.value;
         if (!isNaN(+value)){
@@ -105,9 +106,8 @@ function DataView({page, currentUser ,dataProps}){
         setIsEdited(true);
     };
 
-    // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
     const len = processed_data_seq.length;
-    //api respoonse data로 보낼 json data 만들기
+    // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
     const onClickSubmitBtn = () => {
         setIsEdited(false);       
         // 수정 시간
@@ -129,7 +129,7 @@ function DataView({page, currentUser ,dataProps}){
         //로그인한 유저 정보
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
 
-        // 1. 가열육 관능검사
+        // 1. 가열육 관능검사 데이터 수정 API POST
         for (let i =0; i < len ; i++){
             /*    // 수정 시간
             const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
@@ -180,7 +180,7 @@ function DataView({page, currentUser ,dataProps}){
             //console.log("response",response);
         }
 
-        // 2. 실험실 
+        // 2. 실험실 데이터 수정 API POST
         for (let i =0; i < len ; i++){
             let req = (labInput[i]);
             req = {
@@ -212,16 +212,15 @@ function DataView({page, currentUser ,dataProps}){
             }
         }
 
-        // 3. 처리육 관능검사 : /meat/add/deep_aging_data
-        console.log('length:', len, len-1);
+        // 3. 처리육 관능검사 데이터 수정 API POST
+        //console.log('length:', len, len-1);
         const pro_len = (len===1 ? len : (len-1));
-        console.log(processedInput)
         for (let i =0; i <  pro_len; i++){
             
             // 수정된 게 있는 경우 (input 만 비교 )
             console.log(processedInput[i], processed_data[i] 
                 , (processedMinute[i]),//processed_data[i]['deepaging_data']['minute']
-                );
+            );
             // 1회차 데이터를 추가하는 경우(processeddata len === 0) (minute 값이 들어올 수도 있고 안들어올 수도있는데 안들어오면 input비교로 )
             /*if (processed_data.length === 0){
                 // 데이터 추가가 일어나지 않은 경우
@@ -283,21 +282,17 @@ function DataView({page, currentUser ,dataProps}){
     const handleAlignment = (event, newAlignment) => {
         setConfirmVal(newAlignment);
     };
+    //승인 여부 변경 API 호출 
     const handleConfirmSaveClick=()=>{
-        //승인 여부 변경 API
         try{
             const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);
             navigate({pathname : '/DataManage'});
-            console.log('response', resp);
-
         }catch(err){
             console.error(err);
         }
-
     };
-
     
-    // 1.이미지 파일
+    // 1.이미지 파일 변경 
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
     //const [previewImage, setPreviewImage] = useState(raw_img_path);
@@ -306,9 +301,13 @@ function DataView({page, currentUser ,dataProps}){
         if (imgFile) {
         const reader = new FileReader();
         //1. firebase connection 생성 
+
+        // 방법 1 > 
         const getFileDownloadURLByName = async (folderPath, fileName) => {
             try {
-              const folderRef = ref(fireStore, folderPath);
+                console.log('get folder ref')
+              const folderRef = storageRef(fireStore, folderPath);
+              console.log('got folder ref!', folderRef);
               const fileList = await listAll(folderRef);
                 console.log('filelist', fileList);
               for (const file of fileList.items) {
@@ -317,29 +316,28 @@ function DataView({page, currentUser ,dataProps}){
                   return fileDownloadURL;
                 }
               }
-          
               // If the file with the specified name is not found, return null or handle the case accordingly
               return null;
             } catch (error) {
-              console.error('Error fetching file from Firebase Storage:', error);
+              console.error('방법1. Firebase Storage에서 파일을 fetch 하는 데 실패했습니다:', error);
               return null;
             }
-          };
+        };
+        
+        const folderPath = 'sensory_eval'; 
+        const fileName = id+'-'+currentIdx+'.png'; 
 
-          // Usage example:
-    const folderPath = '/sensory_eval'; // Replace with the correct path to your folder
-    const fileName = id+'-'+currentIdx+'.png'; // Replace with the desired file name
-    getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
-    if (downloadURL) {
-        // Use the download URL to display or download the file
-        console.log('Download URL:', downloadURL);
-    } else {
-        // Handle the case when the file with the specified name is not found
-        console.log('File not found');
-    }
-    });
-    //const fileName = id+'-'+currentIdx+'.png';
-            //const collectionRef = db.collection(collection); 
+        getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
+        if (downloadURL) {
+            console.log('Download URL:', downloadURL);
+        } else {
+            console.log('방법1. File not found');
+        }
+        });
+
+        // 방법 2 > 
+        //const fileName = id+'-'+currentIdx+'.png';
+        //const collectionRef = db.collection(collection); 
         const getFilesByFileName = async (fileName) => {
             const q=  query(collection(db, "sensory_evals"), where("fileName", "==", fileName));//.child('/sensory_evals/'+id+'-'+currentIdx+'.png');
             //const q = query(collection(db, "sensory_evals"), where("fileName", "==", fileName));
@@ -349,11 +347,12 @@ function DataView({page, currentUser ,dataProps}){
                 const files = querySnapshot.docs.map((doc) => doc.data());
                 return files;
             } catch (error) {
-                console.error("Error getting files by file name:", error);
+                console.error("방법2. 파일을 받는 데 실패하였습니다.:", error);
                 return [];
             }
         };
         
+        // 파일에서 이미지 선택 
         const imgRef = getFilesByFileName(fileName);
         console.log("image",imgRef);
         reader.onload = () => {
@@ -368,6 +367,7 @@ function DataView({page, currentUser ,dataProps}){
         reader.readAsDataURL(imgFile);
         }
     }, [imgFile]);
+
 
     // 2.이미지 클릭시 변경 
     let images = [raw_img_path,];
@@ -391,13 +391,12 @@ function DataView({page, currentUser ,dataProps}){
         setCurrIdx((prev)=> (prev-1) % images.length);
     }
 
-    // 탭 누름에 따라 이미지 변경 
+    // 탭 누름에 따라 이미지 변경 -> 
     const [value, setValue] = useState(0);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (event, newValue) => {//react bootstrap tab key!!!
         setValue(newValue);
         console.log('change');
-        //https://stackoverflow.com/questions/67013771/how-to-name-mui-tabs
     };
 
     const handleClick= () =>{

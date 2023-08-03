@@ -61,6 +61,7 @@ function a11yProps(index) {
 export default function StatsTabs({ startDate, endDate }) {
   const [value, setValue] = useState(0);
   const [slot, setSlot] = useState("week");
+  useEffect(() => {console.log('stat tab'+startDate, '-', endDate)}, [startDate, endDate]);
   const theme = useTheme();
   const handleChange = (event, newValue) => {
     setValue(newValue);
