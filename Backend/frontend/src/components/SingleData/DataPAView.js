@@ -40,11 +40,14 @@ function DataPAView({ currentUser ,dataProps}){
             const json = await (response).json();
             console.log("connected PA!!", json);
             setDataPA(json);
+            
             setLoaded(true);
             
         }catch (error){
             console.error('Error fetching data:', error);
-            //setErr(false);
+            setDataPA(null);
+            setDataXAIImg(null);
+            setGradeXAIImg(null);
         }
     };
 
@@ -56,17 +59,14 @@ function DataPAView({ currentUser ,dataProps}){
 
     //set image path
     useEffect(()=>{
-        console.log('loaded?',loaded,dataPA);
+        //console.log('loaded?',loaded,dataPA);
+        console.log('to load ',dataPA && dataPA.xai_imagePath);
         dataPA ? setDataXAIImg(dataPA.xai_imagePath) : console.log('null');
         dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
         
-        console.log(dataXAIImg);
+        
     },[dataPA,loaded,id]);
-
-
-
     
-
     //데이터 예측 버튼 
     const handlePredictClick=()=>{
         //로그인한 유저 정보
@@ -84,10 +84,11 @@ function DataPAView({ currentUser ,dataProps}){
 
         const len = processed_data_seq.length;
         //seqno for loop
-      //  for (let i = 0; i < len; i++){
+       // console.log('len',len);
+        for (let i = 0; i < len; i++){
             let req = {
                 ["id"]:id,
-                ["seqno"]:seqno,
+                ["seqno"]:i,
                 ["userId"]:userData["userId"],
                 ["period"]:Math.round(elapsedHour),
             };
@@ -110,13 +111,35 @@ function DataPAView({ currentUser ,dataProps}){
                 console.log('error')
                 console.error(err);
             }
-       // }
+        }
        
         
         
     }
     
-
+    
+// 탭변환 -> 데이터 로드
+    const [tabKey, setTabKey] = useState('0');
+    //const [originImage, setOrImg] = useState(previewImage);
+   /* useEffect(()=>{
+        console.log('실행')
+        //setPreviewImage(previewImage);
+        //dataPA && setDataXAIImg(dataPA.xai_imagePath);
+        //dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
+    },[tabKey]);
+*/
+     const handleSelect=(key)=>{
+       // console.log('key', key);
+        // api fetch
+        getData(key);
+        // change image
+        key === '0'
+        ?setPreviewImage(raw_img_path)
+        :setPreviewImage(processed_img_path[0]? processed_img_path[0]:null)
+        //change tab key
+       // setTabKey(key);
+     }
+     console.log('preview image ',previewImage);
 
     return(
         <div style={{width:'100%'}}>
@@ -125,7 +148,12 @@ function DataPAView({ currentUser ,dataProps}){
                     <div>
                         <div style={{backgroundColor:'#002984', color:'white'}}>원본이미지</div>
                         <div style={{ width: "100%",padding:'10px 0px'}}>
-                            <img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
+                            {
+                            previewImage
+                            ?<img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
+                            :<div style={{height:'190px',width:'100%',display:'flex',justifyContent:'center', alignItems:'center'}}>데이터 이미지가 존재하지 않습니다.</div>
+                            }
+                            
                         </div>
                     </div>
                     
@@ -159,8 +187,8 @@ function DataPAView({ currentUser ,dataProps}){
                     </Card.Body>
                 </Card>
                 <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
-                <Tabs defaultActiveKey='rawMeat' id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
-                    <Tab eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
+                <Tabs defaultActiveKey='0'  id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}} onSelect={handleSelect}>
+                    <Tab eventKey='0' title='원육' style={{backgroundColor:'white'}}>
                         <div key='rawmeat' className="container">
                             {rawField.map((f, idx)=>{
                                 return(
@@ -182,10 +210,10 @@ function DataPAView({ currentUser ,dataProps}){
                                             {/*console.log(dataPA?"xai : "+ dataPA['xai_gradeNum']:"")*/}
                                             {dataPA
                                                 ?f === 'xai_gradeNum'
-                                                    ? dataPA[f] === 0 ? "0" : dataPA[f]
+                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
                                                     : dataPA[f] ? dataPA[f].toFixed(2) : ""
                                                 :""}
-                                            {
+                                            {// 오차
                                                 f !== "xai_gradeNum"
                                                 && 
                                                 (
@@ -214,7 +242,7 @@ function DataPAView({ currentUser ,dataProps}){
 
                         </div>
                     </Tab>
-                    <Tab eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
+                    <Tab eventKey='1' title='처리육' style={{backgroundColor:'white'}}>
                         <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
                         inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                         id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
@@ -257,6 +285,87 @@ function DataPAView({ currentUser ,dataProps}){
                                 );
                             })}
                         </div>
+                        <div key='processedmeatPA' className="container">
+                            <div key={'processedPA-explanation'} className="row" >
+                                <div key={'processedPA-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
+                                <div key={'processedPA-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>
+                                {
+                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
+                                        <div key={'processedPA-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
+                                            {arr_idx+2}회차
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            {deepAgingPAField.map((f, idx)=>{
+                            return(
+                                <div key={'processedPA-'+idx} className="row" >
+                                    <div key={'processedPA-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
+                                    <div key={'processedPA-'+idx+'col2'} className="col-3" style={style.dataContainer}>  
+                                    
+                                            {dataPA
+                                                ?f === 'xai_gradeNum'
+                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
+                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
+                                                :""}
+                                            {// 오차
+                                                (f !== "xai_gradeNum" &&f !== 'seqno' &&f !== 'period')
+                                                && 
+                                                (
+                                                    <div style={{marginLeft:'10px'}}>
+                                                        {dataPA
+                                                        ? dataPA[f] 
+                                                            ? <span style={(dataPA[f].toFixed(2) - processed_data[0]?.[f] )>0?{color:'red'}:{color:'blue'}}>
+                                                                {
+                                                                    (dataPA[f].toFixed(2) - processed_data[0]?.[f])>0
+                                                                    ? '(+'+(dataPA[f].toFixed(2) - processed_data[0]?.[f]).toFixed(2)+')'
+                                                                    : '('+(dataPA[f].toFixed(2) - processed_data[0]?.[f]).toFixed(2)+')'
+                                                                }
+                                                                
+                                                                </span>  
+                                                            : <span></span>
+                                                        :""}
+                                                        
+                                                    </div>
+                                                )
+                                            }
+                                    </div>
+                                    {
+                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
+                                        <div key={'processedPA-'+arr_idx+'-col'+arr_idx} className="col-3" style={style.dataContainer}>
+                                        {dataPA
+                                                ?f === 'xai_gradeNum'
+                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
+                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
+                                                :""}
+                                            {// 오차
+                                                f !== "xai_gradeNum"
+                                                && 
+                                                (
+                                                    <div style={{marginLeft:'10px'}}>
+                                                        {dataPA
+                                                        ? dataPA[f] 
+                                                            ? <span style={(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f] )>0?{color:'red'}:{color:'blue'}}>
+                                                                {
+                                                                    (dataPA[f].toFixed(2) - processed_data[f])>0
+                                                                    ? '(+'+(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f]).toFixed(2)+')'
+                                                                    : '('+(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f]).toFixed(2)+')'
+                                                                }
+                                                                
+                                                                </span>  
+                                                            : <span></span>
+                                                        :""}
+                                                        
+                                                    </div>
+                                                )
+                                            }  
+                                        </div>
+                                    ))
+                                    }
+                                </div>
+                                );
+                            })}
+                        </div>
                     </Tab>
                     
                 </Tabs>         
@@ -279,8 +388,8 @@ let options = ['원육',];
 //'imagepPath','period', 'seqno', 'userId''createdAt',
 const rawField =['marbling','color','texture','surfaceMoisture','overall',];
 const rawPAField =['marbling','color','texture','surfaceMoisture','overall','xai_gradeNum'];
-const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall','createdAt', 'seqno', 'minute','period'];
-
+const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall',/*'createdAt',*/ 'seqno', 'period'];
+const deepAgingPAField = ['marbling','color','texture','surfaceMoisture','overall',/*'createdAt',*/ 'seqno', 'period','xai_gradeNum'];
 const style={
     singleDataWrapper:{
       height:'fit-content',
