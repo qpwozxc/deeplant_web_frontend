@@ -222,18 +222,6 @@ const LogInField = () => {
                   }
                   label="아이디 저장"
                 />
-                <Grid container>
-                  <Grid item xs>
-                    <Link href="#" variant="body2">
-                      비밀번호를 잊으셨나요?
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Link href="#" variant="body2">
-                      계정이 없나요? 계정 생성하기
-                    </Link>
-                  </Grid>
-                </Grid>
               </>
             </Box>
           </Box>

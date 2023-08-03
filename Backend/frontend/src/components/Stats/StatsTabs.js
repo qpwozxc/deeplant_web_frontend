@@ -66,6 +66,7 @@ export default function StatsTabs({ startDate, endDate }) {
     setValue(newValue);
   };
 
+  
   const [alignment, setAlignment] = React.useState("맛");
   const handleFirstChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -153,8 +154,9 @@ export default function StatsTabs({ startDate, endDate }) {
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={2}>
-        {alignment === "관능" && secondary === "원육" ? (
-          <Sens_Fresh_Map startDate={startDate} endDate={endDate} />
+        {/* {alignment === "관능" && secondary === "원육" ? (
+          // <Sens_Fresh_Map startDate={startDate} endDate={endDate} />
+          <Taste_Fresh_Corr startDate={startDate} endDate={endDate} />
         ) : alignment === "관능" && secondary === "처리육" ? (
           <Sens_Proc_Map startDate={startDate} endDate={endDate} />
         ) : alignment === "관능" && secondary === "가열육" ? (
@@ -163,7 +165,9 @@ export default function StatsTabs({ startDate, endDate }) {
           <Taste_Fresh_Corr startDate={startDate} endDate={endDate} />
         ) : alignment === "맛" && secondary === "처리육" ? (
           <Taste_Proc_Map startDate={startDate} endDate={endDate} />
-        ) : null}
+        ) : null} */}
+
+        <Taste_Fresh_Corr startDate={startDate} endDate={endDate} />
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index={3}>

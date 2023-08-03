@@ -23,7 +23,7 @@ export default function Sens_ProcMeat({ startDate, endDate }) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const calculateBoxPlotStatistics = (data) => {
     const sortedData = data.sort((a, b) => a - b);
