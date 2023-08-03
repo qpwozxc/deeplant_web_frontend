@@ -9,9 +9,9 @@ import {FaAngleLeft,FaAngleRight} from  "react-icons/fa6";
 import axios from 'axios';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 // firebase 
-import { collection, getDocs,  query, where,setDoc, doc, Firestore,  } from "firebase/firestore";
-import { getStorage, ref as storageRef , listAll, getDownloadURL } from 'firebase/storage';
-import {firebase, fireStore, db} from '../../firebase-config.js';
+import { collection, getDocs,  query, where,setDoc, doc, Firestore, getDoc } from "firebase/firestore";
+import {  ref as storageRef , listAll, getDownloadURL , uploadBytes, } from 'firebase/storage';
+import { db, storage } from '../../firebase-config.js';
 //import { db, } from "../../firebase-config";
 //import { DataLoad } from "./SingleDataLoad";
 const TIME_ZONE = 9 * 60 * 60 * 1000;
@@ -296,79 +296,45 @@ function DataView({page, currentUser ,dataProps}){
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
     //const [previewImage, setPreviewImage] = useState(raw_img_path);
+    
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
         const reader = new FileReader();
-        //1. firebase connection 생성 
-
-        // 방법 1 > 
-        const getFileDownloadURLByName = async (folderPath, fileName) => {
-            try {
-                console.log('get folder ref')
-              const folderRef = storageRef(fireStore, folderPath);
-              console.log('got folder ref!', folderRef);
-              const fileList = await listAll(folderRef);
-                console.log('filelist', fileList);
-              for (const file of fileList.items) {
-                if (file.name === fileName) {
-                  const fileDownloadURL = await getDownloadURL(file);
-                  return fileDownloadURL;
-                }
-              }
-              // If the file with the specified name is not found, return null or handle the case accordingly
-              return null;
-            } catch (error) {
-              console.error('방법1. Firebase Storage에서 파일을 fetch 하는 데 실패했습니다:', error);
-              return null;
-            }
-        };
+        //firebase connection 생성 후 이미지 fetch 
+        const fileName = id+'-'+currentIdx+'.png';
+        const folderName = "sensory_evals/";
         
-        const folderPath = 'sensory_eval'; 
-        const fileName = id+'-'+currentIdx+'.png'; 
-
-        getFileDownloadURLByName(folderPath, fileName).then((downloadURL) => {
-        if (downloadURL) {
-            console.log('Download URL:', downloadURL);
-        } else {
-            console.log('방법1. File not found');
-        }
-        });
-
-        // 방법 2 > 
-        //const fileName = id+'-'+currentIdx+'.png';
-        //const collectionRef = db.collection(collection); 
-        const getFilesByFileName = async (fileName) => {
-            const q=  query(collection(db, "sensory_evals"), where("fileName", "==", fileName));//.child('/sensory_evals/'+id+'-'+currentIdx+'.png');
-            //const q = query(collection(db, "sensory_evals"), where("fileName", "==", fileName));
-            console.log("filename",fileName);
+        const uploadNewFile = async (file, folderName, fileName) => {
+             // 1. firebase에서 이미지 가져오기
+            const fileRef = storageRef(storage, `${folderName}/${fileName}`);      
             try {
-                const querySnapshot = await getDocs(q);
-                const files = querySnapshot.docs.map((doc) => doc.data());
-                return files;
+              // 2. 변경할 이미지 firebase storage에 올리기
+              await uploadBytes(fileRef, file);
+              console.log("File uploaded successfully!");
             } catch (error) {
-                console.error("방법2. 파일을 받는 데 실패하였습니다.:", error);
-                return [];
+              console.error("Error uploading file:", error);
             }
-        };
-        
+          };
+
         // 파일에서 이미지 선택 
-        const imgRef = getFilesByFileName(fileName);
-        console.log("image",imgRef);
-        reader.onload = () => {
-            console.log('image selected', currentIdx, id);
-            // 1. firebase에서 이미지 가져오기
-
-            // 2. 변경할 이미지 firebase storage에 올리기 (이미지 파일 이름 변경 )
+        reader.onload = (e) => {
+            console.log('image selected', currentIdx, id);            
+            
             const toChangeImg = reader.result;
+            uploadNewFile(imgFile, folderName, fileName);
 
+            images[currentIdx] = imgFile;
+            console.log('new images,', images);
             //setPreviewImage(reader.result);
+            //setImgFile(reader.result);
+            // 이미지 수정 (오류나면 안됨 )
         };
         reader.readAsDataURL(imgFile);
         }
     }, [imgFile]);
 
-
+    console.log('images,', imgFile);
     // 2.이미지 클릭시 변경 
     let images = [raw_img_path,];
     //console.log('img',images,processed_img_path[0])
@@ -383,6 +349,8 @@ function DataView({page, currentUser ,dataProps}){
         ...images,
         null,
     ])
+    console.log('image files ', images);
+
     const [currentIdx, setCurrIdx] = useState(0);
     const handleNextClick = () => {
         setCurrIdx((prev)=> (prev+1) % images.length);
