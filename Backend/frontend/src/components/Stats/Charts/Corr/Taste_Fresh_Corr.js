@@ -29,65 +29,51 @@ export default function Taste_Fresh_Corr({ startDate, endDate }) {
     },
   };
 
-  const calculateCorrelationCoefficient = (arr1, arr2) => {
-    // Replace null values with 0
-    if (arr1 === null || arr2 === null) {
-      return 0;
-    }
-    const arr1Filled = arr1.map((val) => (val === null ? 0 : val));
-    const arr2Filled = arr2.map((val) => (val === null ? 0 : val));
+  // Calculate correlation coefficients between properties
+  const correlationMatrix = [
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
+  ];
 
-    if (arr1Filled.length === 0 || arr2Filled.length === 0) {
-      return 0;
-    }
+  // Convert correlation matrix to series format for heatmap
+  const series = correlationMatrix.map((row, rowIndex) => ({
+    name: Object.keys(data)[rowIndex].toUpperCase(),
+    data: row.map((value, colIndex) => ({
+      x: colIndex,
+      y: rowIndex,
+      value: value,
+    })),
+  }));
 
-    const n = arr1Filled.length;
-    const mean1 = arr1Filled.reduce((acc, val) => acc + val, 0) / n;
-    const mean2 = arr2Filled.reduce((acc, val) => acc + val, 0) / n;
-    const numerator = arr1Filled.reduce(
-      (acc, val, i) => acc + (val - mean1) * (arr2Filled[i] - mean2),
-      0
-    );
-    const denominator1 = Math.sqrt(
-      arr1Filled.reduce((acc, val) => acc + Math.pow(val - mean1, 2), 0)
-    );
-    const denominator2 = Math.sqrt(
-      arr2Filled.reduce((acc, val) => acc + Math.pow(val - mean2, 2), 0)
-    );
-
-    const correlationCoefficient = numerator / (denominator1 * denominator2);
-    return correlationCoefficient;
-  };
-
-  const categories = ["Bitterness", "Richness", "Sourness", "Umami"];
-  const series = [];
-
-  // Calculate correlation coefficients and create series data
-  for (let i = 0; i < categories.length; i++) {
-    const seriesData = [];
-    for (let j = 0; j < categories.length; j++) {
-      if (i === j) {
-        seriesData.push(1); // Set diagonal elements to 1
-      } else {
-        const correlation = calculateCorrelationCoefficient(
-          data[categories[i]].unique_values,
-          data[categories[j]].unique_values
-        );
-        seriesData.push(correlation);
-      }
-    }
-    series.push({
-      name: categories[i],
-      data: seriesData,
-    });
-  }
-
+  // Defining options for the heatmap
   const options = {
+    chart: {
+      height: 350,
+      type: "heatmap",
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: ["#000"],
+      },
+    },
+    colors: ["#008FFB"],
     xaxis: {
-      categories: categories,
+      type: "category",
+      categories: Object.keys(data).map((property) => property.toUpperCase()),
     },
     yaxis: {
-      categories: categories,
+      type: "category",
+      categories: Object.keys(data).map((property) => property.toUpperCase()),
+    },
+    tooltip: {
+      y: {
+        formatter: function (value) {
+          return Object.keys(data)[value];
+        },
+      },
     },
   };
 
