@@ -253,14 +253,15 @@ function DataView({page, currentUser ,dataProps}){
                 ['deepAging'] : {
                     ['date'] : processed_data[i]?processed_data[i]['deepaging_data']['date']: yy+mm+dd,
                     ['minute'] : Number(processedMinute[i]?processedMinute[i]:0),
-                }
+                },
+                //['imagePath'] : images[i+1],
             }
             
             
             //api 연결 /meat/add/deep_aging_data
             const res = JSON.stringify(req);
             console.log(res);
-            /*
+            
             try{
                 fetch(`http://3.38.52.82/meat/add/deep_aging_data`, {
                 method: "POST",
@@ -273,7 +274,7 @@ function DataView({page, currentUser ,dataProps}){
             }catch(err){
                 console.log('error')
                 console.error(err);
-            }*/
+            }
         }
     };
 
@@ -295,16 +296,14 @@ function DataView({page, currentUser ,dataProps}){
     // 1.이미지 파일 변경 
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
-    //const [previewImage, setPreviewImage] = useState(raw_img_path);
+    const [previewImage, setPreviewImage] = useState(raw_img_path);
     
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
-        const reader = new FileReader();
-        //firebase connection 생성 후 이미지 fetch 
         const fileName = id+'-'+currentIdx+'.png';
-        const folderName = "sensory_evals/";
-        
+        const folderName = "sensory_evals";
+        // firebase 이미지 업로드 
         const uploadNewFile = async (file, folderName, fileName) => {
              // 1. firebase에서 이미지 가져오기
             const fileRef = storageRef(storage, `${folderName}/${fileName}`);      
@@ -315,51 +314,57 @@ function DataView({page, currentUser ,dataProps}){
             } catch (error) {
               console.error("Error uploading file:", error);
             }
-          };
-
+        };
+        const reader = new FileReader();
         // 파일에서 이미지 선택 
-        reader.onload = (e) => {
+        reader.onload = () => {
             console.log('image selected', currentIdx, id);            
             
-            const toChangeImg = reader.result;
             uploadNewFile(imgFile, folderName, fileName);
 
-            images[currentIdx] = imgFile;
+            let newImages = images;
+            newImages[currentIdx] = reader.result;
+            setImages(newImages);
             console.log('new images,', images);
-            //setPreviewImage(reader.result);
-            //setImgFile(reader.result);
+            setPreviewImage(reader.result);
+            //setImgFile();
             // 이미지 수정 (오류나면 안됨 )
         };
         reader.readAsDataURL(imgFile);
         }
     }, [imgFile]);
 
-    console.log('images,', imgFile);
+    
     // 2.이미지 클릭시 변경 
-    let images = [raw_img_path,];
-    //console.log('img',images,processed_img_path[0])
-    (processed_img_path.length !== 0)
-    ? //processedmeat이 {}이 아닌 경우 
-    (images = [
-        ...images,
-        ...processed_img_path,
-    ])
-    ://processedmeat이 {}인 경우 -> 1회차 처리육 정보 입력을 위해 null 생성 
-    (images = [
-        ...images,
-        null,
-    ])
-    console.log('image files ', images);
-
+    const [images,setImages] = useState([raw_img_path,]);
+    //초기 이미지 세팅 
+    useEffect(()=>{
+        (processed_img_path.length !== 0)
+        ? //processedmeat이 {}이 아닌 경우 
+        setImages([
+            ...images,
+            ...processed_img_path,
+        ])
+        ://processedmeat이 {}인 경우 -> 1회차 처리육 정보 입력을 위해 null 생성 
+        setImages([
+            ...images,
+            null,
+        ])
+    },[])
+    
+    
+    useEffect(()=>{console.log('image files changes', images);},[images])
+    // 탭 누름에 따라 이미지 변경 -> 
     const [currentIdx, setCurrIdx] = useState(0);
+    // 다음버튼클릭
     const handleNextClick = () => {
         setCurrIdx((prev)=> (prev+1) % images.length);
     };
+    // 이전 버튼 클릭 
     const handlePrevClick = () =>{
         setCurrIdx((prev)=> (prev-1) % images.length);
     }
-
-    // 탭 누름에 따라 이미지 변경 -> 
+    
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {//react bootstrap tab key!!!
@@ -396,23 +401,25 @@ function DataView({page, currentUser ,dataProps}){
         <div style={style.singleDataWrapper}>
             <Card style={{ width: "100%"}}>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                
                 <Button variant="contained" size="small" sx={{height:'40px'}} onClick={handlePrevClick}><FaAngleLeft/></Button>
                 <div>
-                {
+                {// 이미지 설명 
                 currentIdx === 0
                 ?<div style={{backgroundColor:'#002984', color:'white'}}>원육이미지</div>
                 :<div style={{backgroundColor:'#002984', color:'white'}}>딥에이징 {currentIdx}회차 이미지</div>
                 }
-                {images[currentIdx]
+                {// 실제 이미지 
+                images[currentIdx]
                 ?<img src={images[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
                 :<div style={{height:'350px',width:"400px", display:'flex', justifyContent:'center', alignItems:'center'}}>이미지가 존재하지 않습니다.</div>
                 }
+
                 <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
-                    {
+                    {// 페이지네이션 
                          Array.from({ length: images.length }, (_, idx)=>(
                             <div style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv}>{idx + 1}</div>
-                         )
-                         )
+                         ))
                     }
                     
                 </div>
@@ -420,12 +427,10 @@ function DataView({page, currentUser ,dataProps}){
                 <Button variant="contained" size="small" sx={{height:'40px'}}  onClick={handleNextClick}><FaAngleRight/></Button>
             </div>
             
-            <Card.Body>
-                
+            <Card.Body>         
                 <Card.Text >
                 <div style={{display:'flex'}}>
-                    <div><img src={qrImagePath} style={{width:'150px'}}/></div>
-                    
+                    <div><img src={qrImagePath} style={{width:'150px'}}/></div>              
                     <ListGroup variant="flush">
                         <ListGroup.Item>관리번호: {id}</ListGroup.Item>
                         <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
