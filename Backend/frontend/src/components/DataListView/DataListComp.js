@@ -9,7 +9,7 @@ import pagination from './pagination.json'
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 const DataListComp=({startDate, endDate, pageType})=>{
-  console.log("date", startDate, endDate);
+  //console.log("date", startDate, endDate);
   const [isLoaded, setIsLoaded] = useState(true); // -> 삭제
   const [meatList, setMeatList] = useState([]);
 
@@ -34,7 +34,6 @@ const DataListComp=({startDate, endDate, pageType})=>{
   //const page = 0;
 
   // 나중에 prop으로 변경
-  const period = 7;
   const totalPages = Math.ceil(totalData / count);
 
   //페이지 별 데이터를 count 개수만큼 받아서 meatList에 저장
@@ -106,22 +105,14 @@ const DataListComp=({startDate, endDate, pageType})=>{
     currentPN < totalSlicedPageArray.length - 1
       ? setCurrentPN(currentPN + 1)
       : setCurrentPN(currentPN);
-
     setCurrentPageArray(totalSlicedPageArray[currentPN]);
   };
 
   return (
     <div
-      style={{ position: "fixed", top: "200px", left: "30px", width: "100%" }}
+      style={style.wrapper}
     >
-      <div
-        style={{
-          textAlign: "center",
-          width: "100%",
-          padding: "0px 150px",
-          paddingBottom: "0",
-        }}
-      >
+      <div style={style.listContainer} >
         {
           //meatList.length!==0
           //? (//데이터가 로드된 경우 데이터 목록 반환
@@ -138,16 +129,7 @@ const DataListComp=({startDate, endDate, pageType})=>{
         }
       </div>
 
-      <Box
-        sx={{
-          display: "flex",
-          position: "fixed",
-          bottom: "10px",
-          marginTop: "40px",
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
+      <Box sx={style.paginationBar}>
         <Pagination>
           <Pagination.First />
           <Pagination.Prev onClick={handleOnClickPrev} />
@@ -176,3 +158,27 @@ const DataListComp=({startDate, endDate, pageType})=>{
 }
 
 export default DataListComp;
+
+
+const style = {
+  wrapper : {
+    position: "fixed", 
+    top: "200px", 
+    left: "30px", 
+    width: "100%",
+  },
+  listContainer :{
+    textAlign: "center",
+    width: "100%",
+    padding: "0px 150px",
+    paddingBottom: "0",
+  },
+  paginationBar : {
+    display: "flex",
+    position: "fixed",
+    bottom: "10px",
+    marginTop: "40px",
+    width: "100%",
+    justifyContent: "center",
+  },
+}

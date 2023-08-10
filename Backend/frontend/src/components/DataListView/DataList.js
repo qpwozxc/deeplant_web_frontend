@@ -72,7 +72,6 @@ function DataList({meatList, pageProp, setDelete, offset, count}){
         console.log("iscliked", isDelClick);
         setDelId(id);
     }
-    console.log('pa', page)
   
     // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
