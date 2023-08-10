@@ -7,8 +7,7 @@ import TransitionsModal from "./WarningComp";
 import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
 
-
-const RejectedDataListComp=()=>{
+const RejectedDataListComp=({startDate, endDate})=>{
     const [isLoaded, setIsLoaded] = useState(true);
     const [meatList, setMeatList] = useState([]);
 
@@ -32,7 +31,7 @@ const RejectedDataListComp=()=>{
     const getMeatList = async (offset) => {
       
       const json = await (
-        await fetch(`http://3.38.52.82/meat/status?statusType=1&offset=${offset}&count=${count}`)
+        await fetch(`http://3.38.52.82/meat/status?statusType=1&offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
       ).json();
       console.log('fetch done!');
       // 전체 데이터 수
@@ -59,7 +58,7 @@ const RejectedDataListComp=()=>{
       getMeatList(offset);
       // 페이지네이션 배열 슬라이스 
       totalData && setTotalSlicedPageArray(sliceByLimit(totalPages, limit));
-    }, [totalPages, limit]);
+    }, [startDate, endDate,totalPages]);
 
     useEffect(() => {
       totalData && setCurrentPageArray(totalSlicedPageArray[0]);
@@ -121,13 +120,10 @@ const RejectedDataListComp=()=>{
           {currentPageArray
             ? currentPageArray.map((m, idx) => {
                 return (
-                  <Pagination.Item
-                    key={idx}
-                    onClick={() => {
+                  <Pagination.Item key={idx} 
+                  onClick={() => {
                       //페이지 api 불러오기
-                      setCurrentPage(m);
-                    }}
-                  >
+                      setCurrentPage(m);}}>
                     {m}
                   </Pagination.Item>
                 );
@@ -154,24 +150,3 @@ const RejectedDataListComp=()=>{
 }
 
 export default RejectedDataListComp;
-
-const sampleMeatList = [
-    {
-      id:"000189843795-cattle-chuck-chuck",
-      userName:"김수현",
-      userType:'1',
-      company:'deeplant1',
-      meatCreatedAt:"7/13/2023",
-      farmAddr :"강원도 원주시 호저면 매호리",
-      accepted : 'rejected',
-    },
-    {
-        id:"000189843795-pig-boston_shoulder-boston_shoulder",
-        userName:"나",
-        userType:'3',
-        company:'deeplant1',
-        meatCreatedAt:"7/13/2023",
-        farmAddr :"강원도 홍천군",
-        accepted : 'rejected',
-      },
-  ];
