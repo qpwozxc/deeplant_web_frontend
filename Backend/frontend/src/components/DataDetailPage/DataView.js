@@ -1,19 +1,19 @@
 import { useState, useEffect , useRef} from "react";
 import { useNavigate } from 'react-router-dom';
+// react-bootstrap
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+// modal component
 import InputTransitionsModal from "./InputWarningComp";
+// icons
 import {FaAngleLeft,FaAngleRight} from  "react-icons/fa6";
-import axios from 'axios';
+// mui 
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 // firebase 
-import { collection, getDocs,  query, where,setDoc, doc, Firestore, getDoc } from "firebase/firestore";
-import {  ref as storageRef , listAll, getDownloadURL , uploadBytes, } from 'firebase/storage';
+import {  ref as storageRef ,uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../firebase-config.js';
-//import { db, } from "../../firebase-config";
-//import { DataLoad } from "./SingleDataLoad";
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
@@ -130,21 +130,8 @@ function DataView({page, currentUser ,dataProps}){
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
 
         // 1. 가열육 관능검사 데이터 수정 API POST
+        // 수정한 것만 보내야할 것 같은데 
         for (let i =0; i < len ; i++){
-            /*    // 수정 시간
-            const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
-            // 날짜 계산 
-            const butcheryYmd = apiInput['butcheryYmd'];
-            const [date, time] = createdDate.split('T');
-            const year = butcheryYmd.slice(0,4);
-            const month =  butcheryYmd.slice(4,6);
-            const day = butcheryYmd.slice(6,);
-            const butcheryDate = new Date(year, month, day, 0, 0, 0);
-            const [yy,mm,dd] = date.split('-');
-            const [h,m,s] = time.split(':');
-            const createdDate2 =  new Date(yy,mm,dd,h,m,s);
-            const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
-            const elapsedHour = elapsedMSec / 1000 / 60 / 60;*/
             //console.log('heated data', heated_data[i]);
             //console.log('heated input',heatInput[i]);
             // 데이터 수정 
@@ -242,7 +229,9 @@ function DataView({page, currentUser ,dataProps}){
             console.log('compare',(processedInput[i]=== processed_data[i] 
                 && Number(processedMinute[i])===processed_data[i]['deepaging_data']['minute']
                 ));*/
+            //const delprocessedInput = del()
             let req = (processedInput[i]);
+           
             req = {
                 ...req,
                 ['id']: id,
@@ -254,16 +243,15 @@ function DataView({page, currentUser ,dataProps}){
                     ['date'] : processed_data[i]?processed_data[i]['deepaging_data']['date']: yy+mm+dd,
                     ['minute'] : Number(processedMinute[i]?processedMinute[i]:0),
                 },
-                //['imagePath'] : images[i+1],
+                
             }
-            
-            
+            req && delete req['deepaging_data']
             //api 연결 /meat/add/deep_aging_data
             const res = JSON.stringify(req);
             console.log(res);
             
             try{
-                fetch(`http://3.38.52.82/meat/add/deep_aging_data`, {
+                fetch(`http://3.38.52.82/meat/add/sensory_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -658,7 +646,6 @@ function DataView({page, currentUser ,dataProps}){
                         }
                     </div>
                 </Tab>
-                
             </Tabs>         
             </div>
         </div> 
@@ -824,83 +811,4 @@ const style={
     })
 }
  * 
- */
-
-/**
- * 
- * {
-                tabFields.map((t,index) =>{
-                return(
-                <Tab eventKey={jsonFields[index]} title={tabTitles[index]} style={{backgroundColor:'white'}}>
-                    {
-                    // 가열육과 실험실 데이터 토글 버튼
-                    (tabTitles[index] === "가열육" || tabTitles[index] === "실험실")
-                    &&<Autocomplete value={toggle/*index===3?toggle3:toggle4}  size="small" onChange={(event, newValue) => {setToggle(newValue)/*index===3?setToggle3(newValue):setToggle4(newValue)}} inputValue={toggleValue/*index===3?toggle3Value:toggle4Value} onInputChange={(event, newInputValue) => {setToggleValue(newInputValue)/*index===3?setToggle3Value(newInputValue):setToggle4Value(newInputValue) }}
-                    id={"controllable-states-"+tabTitles[index]} options={options} sx={{ width: 300 ,marginBottom:'20px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
-                    />
-                    }
-                    {
-                    // 처리육 데이터 토글 버튼
-                    tabTitles[index] === "처리육"
-                    &&<>
-                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}} inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue);}}
-                    id={"controllable-states-"+tabTitles[index]} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'20px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
-                    />
-                    </>
-                    }
-                    <div key={index} class="container">
-                        {
-                        t.map((f, idx)=>{
-                        return(
-                            // 테이블 컴포넌트를 만들어서 데이터를 전달하는 식으로 코드 단순화하기 !!!!!!!!!
-                            <div key={index+'-'+idx} class="row" >
-                                <div key={index+'-'+idx+'col1'} class="col-3" style={style.dataFieldContainer}>{f}</div>
-                                <div key={index+'-'+idx+'col2'} class={tabTitles[index] === "축산물 이력"?"col-5" :"col-2"} style={style.dataContainer}>      
-                                {
-                                    (tabTitles[index] !== "원육" && edited)
-                                    ? tabTitles[index] === "축산물 이력"
-                                        ?<input key={index+'-'+idx+'input'} name={f} style={{height:'23px'}} value={setInputFields[index].value[f]} placeholder={datas[index]===null?"null":datas[index][f]} 
-                                            onChange={(e)=>{setInputFields[index].setter((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
-                                        :<input key={index+'-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={(setInputFields[index].value)[0]?.[f]} placeholder={datas[index][0]===null?"null":datas[index][0]?.[f]} 
-                                            onChange={(e)=>{handleInputChange(e,index,0);}}/>
-                                    : (tabTitles[index] === "축산물 이력" || tabTitles[index] === "원육")
-                                        ?(setInputFields[index].value[f] ? setInputFields[index].value[f] : "null")
-                                        :((setInputFields[index].value)[0]?.[f] ? (setInputFields[index].value)[0]?.[f] : "null")
-                                }
-                                </div>
-                                {// 실험실 및 가열육 추가 데이터 수정 
-                                Array.from({ length: Number(toggleValue.slice(0, -1)) }, (_, arr_idx) => (
-                                    (tabTitles[index] === "실험실" || tabTitles[index] === "가열육") 
-                                    &&<div key={index+'-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
-                                    {
-                                        edited
-                                        ?<input key={index+'-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={setInputFields[index].value[arr_idx+1]?.[f]} placeholder={datas[index][arr_idx+1]===null?"null":datas[index][arr_idx]?.[f]} 
-                                        onChange={(e)=>{handleInputChange(e, index,arr_idx+1)}}/>
-                                        :((setInputFields[index].value)[arr_idx+ 1]?.[f] ? (setInputFields[index].value)[arr_idx+ 1]?.[f] : "null")
-                                    }   
-                                    </div>
-                                ))
-                                }
-                                {
-                                //처리육 추가 데이터 
-                                Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
-                                    (tabTitles[index] === "처리육")
-                                    &&<div key={index+'-'+arr_idx+'-col'+arr_idx} class="col-2" style={style.dataContainer}>
-                                    {
-                                        edited
-                                        ?<input key={index+'-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={setInputFields[index].value[arr_idx+1]?.[f]} placeholder={datas[index][arr_idx+1]===null?"null":datas[index][arr_idx]?.[f]} 
-                                        onChange={(e)=>{handleInputChange(e, index,arr_idx+1)}}/>
-                                        :((setInputFields[index].value)[arr_idx+ 1]?.[f] ? (setInputFields[index].value)[arr_idx+ 1]?.[f] : "null")
-                                    }   
-                                    </div>
-                                ))
-                                }
-                            </div>
-                            );
-                        })}
-                    </div>
-                </Tab>
-                );
-                })
-                }
  */

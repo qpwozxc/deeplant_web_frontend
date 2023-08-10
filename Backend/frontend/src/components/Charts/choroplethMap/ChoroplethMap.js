@@ -9,19 +9,20 @@ const ChoroplethMap = ({data,startDate,endDate})=>{
     const [porkCnt, setPorkCnt] = useState({});
     const [totalCnt, setTotalCnt] = useState({});
     const [keyIdx, setKeyIdx] = useState(0);
+    // 지도 통계 API 호출
     useEffect(()=>{
       const getData = async() =>{
         const mapData = await(
           await fetch(`http://3.38.52.82/meat/statistic?type=3&start=${startDate}&end=${endDate}`)
         ).json();
 
-        //setter
+        //데이터 set
         setCattleCnt(mapData['cattle_counts_by_region']);
         setPorkCnt(mapData['pig_counts_by_region']);
         setTotalCnt(mapData['total_counts_by_region']);
       }
       getData();
-    },[])
+    },[startDate, endDate])
     const [geoJSONData, setGeoJSONData] = useState(data);
 
     // 데이터 추가하기

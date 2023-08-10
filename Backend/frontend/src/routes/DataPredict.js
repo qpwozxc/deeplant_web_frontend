@@ -3,7 +3,7 @@ import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import "bootstrap/dist/css/bootstrap.css"; 
 import { FaAngleDoubleLeft } from "react-icons/fa";
-import { DataLoad } from "../components/SingleData/SingleDataLoad";
+import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
 function DataPredict(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");

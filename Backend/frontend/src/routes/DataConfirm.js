@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams,Link } from "react-router-dom";
-import { DataLoad } from "../components/SingleData/SingleDataLoad";
-import DataView from "../components/SingleData/DataView";
+import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
+import DataView from "../components/DataDetailPage/DataView";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import { FaAngleDoubleLeft } from "react-icons/fa";
 
