@@ -30,7 +30,6 @@ const RejectedDataListComp=({startDate, endDate})=>{
       setTotalData(json["DB Total len"]);
       // 데이터 fetch
       setMeatList(json['반려']);
-
       // 데이터 로드 성공
       setIsLoaded(true);
     };

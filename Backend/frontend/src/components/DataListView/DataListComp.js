@@ -4,13 +4,10 @@ import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
 
-const TIME_ZONE = 9 * 60 * 60 * 1000;
-
 const DataListComp=({startDate, endDate, pageType})=>{
   //console.log("date", startDate, endDate);
   const [isLoaded, setIsLoaded] = useState(true);
   const [meatList, setMeatList] = useState([]);
-
   // 페이지네이션 - api로 부터 받아오는 정보 전체 데이터 개수
   const [totalData, setTotalData] = useState(0);
   // 페이지네이션 컴포넌트와 공유하는 변수 -> current page 변화하면 api 새로 가져옴 
@@ -20,10 +17,8 @@ const DataListComp=({startDate, endDate, pageType})=>{
   // 페이지네이션 - 전체 페이지 개수 
   const totalPages = Math.ceil(totalData / count);
 
- 
-  //API로부터 fetch 
+  //API로부터 fetch 하는 함수
   const getMeatList = async (offset) => {
-    //console.log('data loading',offset)
     const json = await (
       await fetch(
         `http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=${true}`
