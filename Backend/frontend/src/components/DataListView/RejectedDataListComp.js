@@ -46,9 +46,9 @@ const RejectedDataListComp=({startDate, endDate})=>{
     const setDelete =(items)=>{
         setDeleteItems(items);
     }
-    const ondelete = async(id) =>{
+    /*const ondelete = async(id) =>{
       const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}`);
-    }
+    }*/
     // 삭제버튼 클릭
     const handleDeleteBtn = () =>{
         console.log('to delete',deleteItems);
