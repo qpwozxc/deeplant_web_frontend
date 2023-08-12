@@ -464,7 +464,7 @@ function DataView({page, currentUser ,dataProps}){
                      inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                     id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <div key='processedmeat' className="container">
+                    <div key='processedmeat' className="container" >
                         <div key={'processed-explanation'} className="row" >
                             <div key={'processed-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
                             <div key={'processed-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>

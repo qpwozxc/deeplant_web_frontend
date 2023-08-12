@@ -46,7 +46,7 @@ function DataListManage() {
         </div>
       </Box >
 
-      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate} pageType={'list'}/> : <></> }
+      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate} /> : <></> }
       { value === "stat" ? <DataStat startDate={startDate} endDate={endDate}/> : <></> }
       { value === "reject" ? <RejectedDataListComp startDate={startDate} endDate={endDate}/>: <></>}
     </div>

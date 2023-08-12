@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, } from "@mui/material";
+import { Box,Button } from "@mui/material";
 import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
+import HandlePredictClick from "../API/predictPOST";
+import GetSingleData from "../API/detailMeatGet";
+import useGetDetail from "../API/useGetDetail";
 
-const DataListComp=({startDate, endDate})=>{
-  //console.log("date", startDate, endDate);
+const PADataListComp=({startDate, endDate})=>{
   const [isLoaded, setIsLoaded] = useState(true);
   const [meatList, setMeatList] = useState([]);
   // 페이지네이션 - api로 부터 받아오는 정보 전체 데이터 개수
@@ -22,6 +24,7 @@ const DataListComp=({startDate, endDate})=>{
   const [filterAsc, setFilterAsc] = useState(true);
 
   //API로부터 fetch 하는 함수
+  // ***** 우선 전체 fetch 했는데 나중에 예측된 것 , 안된것 토글 만들기 ****
   const getMeatList = async (offset,) => {
     const json = await (
       await fetch(
@@ -47,15 +50,52 @@ const DataListComp=({startDate, endDate})=>{
     getMeatList(currentPage - 1 );
   }, [startDate, endDate, currentPage, filter, filterAsc]);
 
+
+  // 예측 POST 함수
+  const [predictItems, setPredictItems] = useState([]);
+  const [isPredicted , setIsPredicted] = useState(false);
+  const [data, setData] = useState();
+  const [datas, setDatas] = useState([]);
+  // 처음 한번만 받아오는 게 나을 듯 
+  useEffect(()=>{
+    for (let i = 0; i < meatList.length; i++){
+        GetSingleData(meatList[i].id, setData);
+        if (data){
+            setDatas([...datas, data['butcheryYmd']]);
+            console.log(meatList[i].id,data['butcheryYmd'] )
+        }
+            
+    }
+  },[meatList])
+  console.log(currentPage,datas);
+
+  const handlePredict=()=>{
+   //console.log(singleData)
+    //console.log(predictItems);
+    /*for (let i = 0; i < predictItems.length; i++){
+        // api -> 함수 컴포넌트 화 ... -> 호출
+        const data = GetSingleData(predictItems[i], setSingleData);
+        //const datas = useGetDetail(predictItems[i]);
+        
+        if (singleData)
+            console.log(i, singleData['butcheryYmd'])
+            //HandlePredictClick(singleData['butcheryYmd']);
+    }*/
+    // 예측 후 
+    setIsPredicted(true);
+  }
+
   return (
     <div style={style.wrapper}>
       <div style={style.listContainer} >
+        <></>
         {
           //meatList.length!==0
           //? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList
             meatList={meatList}
-            pageProp={'list'}
+            pageProp={'pa'}
+            setChecked = {setPredictItems}
             offset={currentPage-1}
             count={count}
             setFilter={setFilter}
@@ -64,24 +104,27 @@ const DataListComp=({startDate, endDate})=>{
           // )
           // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
           //    <Spinner animation="border" />
-          // totalData ? page 랑 current page , setcurrent 만 넘겨주면 될듯 
           //  )
         }
       </div>
+      
       <Box sx={style.paginationBar}>
+        <Box sx={style.PABtnContainer}>
+            <Button variant="contained" onClick={handlePredict}>예측</Button>
+        </Box>
         <PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       </Box>
     </div>
   );
 }
 
-export default DataListComp;
+export default PADataListComp;
 
 
 const style = {
   wrapper : {
     position: "fixed", 
-    top: "200px", 
+    top: "170px", 
     left: "30px", 
     width: "100%",
   },
@@ -99,4 +142,13 @@ const style = {
     width: "100%",
     justifyContent: "center",
   },
+  PABtnContainer : {
+    display:'flex', 
+    margin:'20px 0', 
+    padding:'0px 100px',  
+    justifyContent:'start',
+    position:'fixed',
+    bottom:'10px',
+    left:'50px'
+  }
 }

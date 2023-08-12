@@ -7,73 +7,42 @@ import {FaArrowUp, FaArrowDown} from "react-icons/fa6";
 import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
-function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setFilterAsc}){
+function DataList({meatList, pageProp, setChecked, offset, count, setFilter, setFilterAsc}){
+    
+    // 체크된 아이템 배열 
+    const [checkItems, setCheckItems] = useState([]);
 
-    // 개별 선택 삭제 체크박스 
-    const [checkboxItems, setCheckboxItems] = useState({});
-    useEffect(()=>{ 
-        const checkboxes = meatList.reduce((acc, content) => {
-            return { ...acc, [content.id]: false };
-          }, {});
-        setCheckboxItems(checkboxes);
-    },[meatList])
-
-    //한개 선택을 누를 경우
-    const handleCheckBoxChange = (event) => {
-        setCheckboxItems(prevCheckbox => ({   
-            ...prevCheckbox, 
-            [event.target.value]:event.target.checked,
-            })
-        );
+    // 체크박스 전체 단일 개체 선택
+    const handleSingleCheck = (checked, id) => {
+        if (checked) {// 체크가 된 경우 
+            setCheckItems([...checkItems, id]);
+        } else {// 체크가 안 된 경우 
+            setCheckItems(checkItems.filter((el) => el !== id));
+        }
     };
 
-    // 전체 선택 삭제 체크박스 
-    const [selectAll , setSelectAll] = useState(false);
-    // 전체 선택을 누를 경우
-    const handleSelectAll=(e)=>{
-        const isChecked = e.target.checked;
-        setSelectAll(isChecked);
-        // 전체 체크박스의 체크 상태 한가지로 업데이트 
-        
-        const setitems = Object.keys(checkboxItems).reduce((acc, checkbox)=>{
-            acc[checkbox] = isChecked;
-            return acc;
-        },{});
-        console.log('handle select all ',checkboxItems, setitems['ff23becbd376'])
-        setCheckboxItems(setitems);
-        console.log('error');
-    }
-    /*useEffect(()=>{
-        setCheckboxItems(
-            Object.keys(checkboxItems).reduce((acc, checkbox)=>{
-                acc[checkbox] = selectAll;
-                return acc;
-            },{})
-        ); 
-    },[selectAll])*/
-    
-     // 전체가 선택/해제되었을 경우 select all 체크박스 업데이트
-    useEffect(()=>{
-        if(checkboxItems){
-            const allChecked = Object.values(checkboxItems).every((value)=> value);
-            setSelectAll(allChecked);
+    // 체크박스 전체 선택
+    const handleAllCheck = (checked) => {
+        if (checked) {
+            const idArray = [];
+            // 전체 체크 박스가 체크 되면 id를 가진 모든 elements를 배열에 넣어주어서, 전체 체크 박스 체크
+            meatList.forEach((el) => idArray.push(el.id));
+            setCheckItems(idArray);
         }
-        console.log('after select all', checkboxItems)
-    },[checkboxItems]);
+
+        // 반대의 경우 전체 체크 박스 체크 삭제
+        else {
+            setCheckItems([]);
+        }
+    };
+
 
     //부모로 삭제할 데이터 전달  //setElete로 삭제할 고기 아이디 전달함 
     useEffect(()=>{
-        let checkedList = [];
-        Object.entries(checkboxItems).map((c) => {
-            const id = c[0];
-            const checked = c[1];
-            checked? checkedList = ([...checkedList, c[0]]):checkedList = ([...checkedList])
-        })
-        if (typeof setDelete === 'function'){
-            console.log('checked list',checkedList)
-            setDelete(checkedList);
+        if (typeof setChecked === 'function'){
+            setChecked(checkItems);
         }
-    }, [checkboxItems]);
+    }, [checkItems]);
 
 
     //리스트에 있는 삭제 버튼(전체 선택) 클릭 시
@@ -81,11 +50,8 @@ function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setF
     const [delId, setDelId] = useState(null);
 
     const handleDelete = (id) =>{
-        // 경고
         setIsDelClick(true);
-        console.log("iscliked", isDelClick);
         setDelId(id);
-       
     }
   
     // 필터링
@@ -133,9 +99,17 @@ function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setF
         <TableHead>
             <TableRow>
                 {// 반려함 탭이나 예측 페이지인 경우 전체 선택 테이블 헤더 추가
-                pageProp === 'reject' //|| page === 'pa'
-                ?<TableCell key={"checkbox"} align="center" padding="normal">
-                    <Checkbox checked={selectAll} label="전체선택" labelPlacement="top" onChange={(e)=>handleSelectAll(e)} inputProps={{ 'aria-label': 'controlled' }}/>
+                (pageProp === 'reject' || pageProp === 'pa')
+                ?<TableCell key={"checkbox"} align="center" padding="none">
+                    <Checkbox 
+                    checked={
+                    checkItems.length === meatList.length
+                    ? true
+                    : false} 
+                    label="전체선택" 
+                    labelPlacement="top" 
+                    onChange={(e)=>handleAllCheck(e.target.checked)} 
+                    inputProps={{ 'aria-label': 'controlled' }}/>
                 </TableCell>
                 :<></>}
                 {headCells.map((headCell) => (
@@ -207,8 +181,6 @@ function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setF
                 meatList.map((content, index) => {
                 const isItemSelected = isSelected(content);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const checkboxKey = content.id;
-    
                 return (
                     <TableRow
                     hover
@@ -219,11 +191,16 @@ function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setF
                     key={index}
                     selected={isItemSelected}
                     >
-                    {//반려함인 경우 삭제 체크박스 추가
-                        pageProp === 'reject'
+                    {//반려함이나 예측 페이지인 경우 삭제 체크박스 추가
+                        (pageProp === 'reject' || pageProp === 'pa')
                         &&
                         <TableCell>
-                            <Checkbox value={content.id}  checked={checkboxItems[content.id]?checkboxItems[content.id]:false} onChange={(e)=>handleCheckBoxChange(e)} inputProps={{ 'aria-label': 'controlled' }}/>
+                            <Checkbox 
+                             value={content.id}
+                             key={content.id} 
+                             checked={checkItems.includes(content.id) ? true : false} 
+                             onChange={(e)=> handleSingleCheck(e.target.checked, content.id)} 
+                             inputProps={{ 'aria-label': 'controlled' }}/>
                         </TableCell>
                     }
                         <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
@@ -271,9 +248,7 @@ function DataList({meatList, pageProp, setDelete, offset, count, setFilter, setF
         }
         </Box>
     );
-  
 }
-
 
 export default DataList;
 

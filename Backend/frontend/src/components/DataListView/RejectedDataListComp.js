@@ -46,20 +46,11 @@ const RejectedDataListComp=({startDate, endDate})=>{
     const setDelete =(items)=>{
         setDeleteItems(items);
     }
-    /*const ondelete = async(id) =>{
-      const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}`);
-    }*/
+
     // 삭제버튼 클릭
     const handleDeleteBtn = () =>{
-        console.log('to delete',deleteItems);
-        // 경고
+        // 경고 창
         setIsDelClick(true);
-        //console.log("iscliked", isDelClick);
-        // api 연결 
-       for (let i = 0; i < deleteItems.length; i++){
-        //ondelete(deleteItems[i]);
-        console.log(i);
-       }
     }
     
     return(
@@ -67,7 +58,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
         <div style={style.listContainer}>
         {isLoaded ? (
           //데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} pageProp={'reject'} setDelete={setDeleteItems} offset={offset} count={count}/>
+          <DataList meatList={meatList} pageProp={'reject'} setChecked={setDeleteItems} offset={offset} count={count}/>
         ) : (
           // 데이터가 로드되지 않은 경우 로딩중 반환
           <Spinner animation="border"/>
