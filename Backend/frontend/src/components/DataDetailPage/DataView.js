@@ -16,6 +16,10 @@ import {  ref as storageRef ,uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../firebase-config.js';
 // import tables
 import RawTable from "./tablesComps/rawTable";
+import ProcessedTable from "./tablesComps/processedTable";
+import HeatTable from "./tablesComps/heatTable";
+import LabTable from "./tablesComps/labTable";
+import ApiTable from "./tablesComps/apiTable";
 
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
@@ -94,13 +98,13 @@ function DataView({page, currentUser ,dataProps}){
         
     }
     // 처리육 딥에이징 시간 (분) input 핸들링
-    const handleMinuteInputChange = (e, index)=>{
+ /*   const handleMinuteInputChange = (e, index)=>{
         const value = e.target.value;
         if (!isNaN(+value)){
             setProcessedMinute((prev)=>({...prev, [index] : value}))
         }
     }
-
+*/
 
     // 수정 여부 버튼 토글
     const [edited, setIsEdited] = useState(false);
@@ -430,222 +434,65 @@ function DataView({page, currentUser ,dataProps}){
             </Card>
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
-                <Tab value='raw' eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
-                    <TableContainer key='rawmeat' component={Paper} sx={{width:'fitContent',overflow:'auto'}}>
-                        <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
-                            <TableHead>
-                            </TableHead>
-                            <TableBody>
-                                {rawField.map((f, idx)=>{
-                                    return(
-                                        <TableRow key={'raw-Row'+idx}>
-                                            <TableCell key={'raw-'+idx+'col1'}>{f}</TableCell>
-                                            <TableCell key={'raw-'+idx+'col2'}>{rawInput[f] ? rawInput[f] : ""}</TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                <Tab value='raw' eventKey='rawMeat' title='원육' >
+                    <RawTable data={rawInput}/>                  
                 </Tab>
                 <Tab value='proc' eventKey='processedMeat' title='처리육' style={{backgroundColor:'white'}}>
-                    <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
-                     inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
-                    id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    <Autocomplete 
+                        id={"controllable-states-processed"} 
+                        label="처리상태" 
+                        size="small" 
+                        value={processed_toggle} 
+                        onChange={(event, newValue) => {setProcessedToggle(newValue);}}
+                        inputValue={processedToggleValue} 
+                        onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
+                        options={options.slice(1,)} 
+                        sx={{ width: 300 ,marginBottom:'10px'}} 
+                        renderInput={(params) => <TextField {...params}/>}
                     />
-
-                    <TableContainer key='processedmeat' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
-                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>{}</TableCell>
-                                    <TableCell align="right">1회차</TableCell>
-                                    {// 2회차 이상부터
-                                        Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
-                                            <TableCell align="right">{arr_idx+2}회차</TableCell>
-                                        ))
-                                    }
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {deepAgingField.map((f, idx) => (
-                                <TableRow key={'processed-'+idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-                                <TableCell component="th" scope="row">{f}</TableCell>
-                                <TableCell align="right">{// 1회차 
-                                    f === 'minute' 
-                                    ?( // minute값을 업로드하는 경우 (수정 불가 , 추가할 때 입력만 가능) 
-                                        edited && (processed_img_path[0]=== null || processed_img_path === null)
-                                        ?modal?<InputTransitionsModal setModal={setModal}/>
-                                            :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[0]} placeholder={processedMinute[0]===null?"0.0":processedMinute[0]} 
-                                        onChange={(e)=>{handleMinuteInputChange(e, 0);}}/>
-                                        :(processedMinute[0]? processedMinute[0] : '')
-                                     )
-                                    :// createdAt seqno period 수정 X (자동 수정됨)
-                                    (f === 'createdAt'|| f === 'seqno'|| f === 'period')
-                                    ? (processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
-                                    ://나머지 데이터 (이미지 업로드 후에만 수정 가능 )
-                                    (edited
-                                        ?modal?<InputTransitionsModal setModal={setModal}/>
-                                            :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedInput[0]?.[f]} placeholder={processed_data[0]===null?"0.0":processed_data[0]?.[f]} 
-                                        onChange={(e)=>{handleInputChange(e,1,0);}}/>
-                                        :(processedInput[0]?.[f] ? processedInput[0]?.[f] : "")
-                                    )
-                                }</TableCell>
-                                {
-                                    //2회차 부터 
-                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
-                                        <TableCell align="right">
-                                        {
-                                            f === 'minute' 
-                                            ?(
-                                                edited
-                                                ?modal?<InputTransitionsModal setModal={setModal}/>
-                                                    :<input key={'processed-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={processedMinute[arr_idx+1]} placeholder={processedMinute[arr_idx+1]===null?"0.0":processedMinute[arr_idx+1]} 
-                                                onChange={(e)=>{handleMinuteInputChange(e, arr_idx+1);}}/>
-                                                :(processedMinute[arr_idx+1]? processedMinute[arr_idx+1] : '')
-                                             )
-                                            :// createdAt seqno period 수정 X (자동 수정됨)
-                                            (f === 'createdAt'|| f === 'seqno'|| f === 'period')
-                                            ?processedInput[arr_idx+ 1]?.[f] ? processedInput[arr_idx+ 1]?.[f] : ""
-                                            ://나머지 데이터 (이미지 업로드 후에만 수정 가능 )
-                                            (edited
-                                            ?modal?<InputTransitionsModal setModal={setModal}/>
-                                                :<input key={'processed-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={processedInput[arr_idx+1]?.[f]} placeholder={datas[1][arr_idx+1]===null?"0.0":datas[1][arr_idx]?.[f]} 
-                                                onChange={(e)=>{handleInputChange(e, 1,arr_idx+1)}}/>
-                                            : processedInput[arr_idx+ 1]?.[f] ? processedInput[arr_idx+ 1]?.[f] : "")
-                                        }   
-                                        </TableCell>
-                                    ))
-                                }
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <ProcessedTable 
+                        edited ={edited} 
+                        modal={modal}
+                        setModal={setModal}
+                        processed_img_path={processed_img_path} 
+                        processedMinute={processedMinute} 
+                        setProcessedMinute={setProcessedMinute}
+                        processedInput={processedInput} 
+                        processed_data={processed_data}
+                        processedToggleValue={processedToggleValue} 
+                        handleInputChange={handleInputChange}                     
+                    />
                 </Tab>
                 <Tab value='heat' eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
                     id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <TableContainer key='heatedmeat' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
-                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                            <TableHead>
-                                <TableRow key={'heatedmeat-explanation'}>
-                                    <TableCell key={'heatedmeat-exp-col'}>{}</TableCell>
-                                    <TableCell key={'heatedmeat-exp-col0'}>원육</TableCell>
-                                    {
-                                    Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                        <TableCell key={'heatedmeat-exp-col'+(arr_idx+1)}>{arr_idx+1}회차</TableCell>
-                                    ))
-                                    }
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {heatedField.map((f, idx)=>{
-                            return(
-                                <TableRow key={'heated-'+idx}>
-                                    <TableCell key={'heated-'+idx+'col1'}>{f}</TableCell>
-                                    <TableCell key={'heated-'+idx+'col2'}>{
-                                        edited
-                                        ?<input key={'heated-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={heatInput[0]?.[f]} placeholder={heated_data[0]===null?"0.0":heated_data[0]?.[f]} 
-                                                onChange={(e)=>{handleInputChange(e,2,0);}}/>
-                                        :(heatInput[0]?.[f] ? heatInput[0]?.[f] : "")
-                                    }
-                                    </TableCell>
-                                    {// 실험실 및 가열육 추가 데이터 수정 
-                                    Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx) => (
-                                        <TableCell key={'heated-'+arr_idx+'-col'+arr_idx}>
-                                        {
-                                            edited
-                                            ?<input key={'heated-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={heatInput[arr_idx+1]?.[f]} placeholder={heated_data[arr_idx+1]===null?"0.0":heated_data[arr_idx]?.[f]} 
-                                            onChange={(e)=>{handleInputChange(e, 2,arr_idx+1)}}/>
-                                            :(heatInput[arr_idx+ 1]?.[f] ? heatInput[arr_idx+ 1]?.[f] : "")
-                                        }   
-                                        </TableCell>
-                                    ))
-                                    }
-                                </TableRow>
-                                );
-                            })
-                            }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <HeatTable 
+                        edited ={edited} 
+                        heatInput={heatInput} 
+                        heated_data={heated_data}
+                        toggle3Value={toggle3Value} 
+                        handleInputChange={handleInputChange}
+                    />
                 </Tab>
                 <Tab value='lab' eventKey='labData' title='실험실' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle4}  size="small" onChange={(event, newValue) => {setToggle4(newValue)}} inputValue={toggle4Value} onInputChange={(event, newInputValue) => {setToggle4Value(newInputValue)}}
                     id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
-                    <TableContainer key='labData' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
-                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                            <TableHead>
-                                <TableRow key={'labData-explanation'}>
-                                    <TableCell key={'labData-exp-col'}>{}</TableCell>
-                                    <TableCell key={'labData-exp-col0'}>원육</TableCell>
-                                    {
-                                    Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
-                                        <TableCell key={'labData-exp-col'+(arr_idx+1)}> {arr_idx+1}회차 </TableCell>
-                                    ))
-                                    }
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {labField.map((f, idx)=>{
-                            return(
-                                <TableRow key={'lab-'+idx}>
-                                    <TableCell key={'lab-'+idx+'col1'}>{f}</TableCell>
-                                    <TableCell key={'lab-'+idx+'col2'}>
-                                    {
-                                        edited
-                                        ?<input key={'lab-'+idx+'input'} style={{width:'100px',height:'23px'}} name={f} value={labInput[0]?.[f]} placeholder={lab_data[0]===null?"0.0":lab_data[0]?.[f]} 
-                                                onChange={(e)=>{handleInputChange(e,3,0);}}/>
-                                        :(labInput[0]?.[f] ? labInput[0]?.[f] : "")
-                                    }
-                                    </TableCell>
-                                    {// 실험실 및 가열육 추가 데이터 수정 
-                                    Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
-                                        <TableCell  key={'lab-'+arr_idx+'-col'+arr_idx}>
-                                        {
-                                            edited
-                                            ?<input key={'lab-'+arr_idx+'-input'}  style={{width:'100px',height:'23px'}} name={f} value={labInput[arr_idx+1]?.[f]} placeholder={lab_data[arr_idx+1]===null?"0.0":lab_data[arr_idx]?.[f]} 
-                                            onChange={(e)=>{handleInputChange(e, 3,arr_idx+1)}}/>
-                                            :(labInput[arr_idx+ 1]?.[f] ? labInput[arr_idx+ 1]?.[f] : "")
-                                        }   
-                                        </TableCell>
-                                    ))
-                                    }
-                                </TableRow>
-                                );
-                            })
-                            }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <LabTable 
+                        edited={edited} 
+                        labInput={labInput} 
+                        lab_data={lab_data}
+                        toggle4Value={toggle4Value} 
+                        handleInputChange={handleInputChange}/>
                 </Tab>
                 <Tab value='api' eventKey='api' title='축산물 이력' style={{backgroundColor:'white'}}>
-                    <TableContainer key='api' component={Paper} sx={{width:'fitContent',overflow:'auto'}}>
-                        <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
-                            <TableHead>
-                            </TableHead>
-                            <TableBody>
-                                {apiField.map((f, idx)=>{
-                                    return(
-                                        <TableRow key={'api-'+idx}>
-                                            <TableCell key={'api-'+idx+'col1'}>{f}</TableCell>
-                                            <TableCell key={'api-'+idx+'col2'}>    
-                                            {
-                                                edited
-                                                ? <input key={'api-'+idx+'input'} name={f} style={{height:'23px'}} value={apiInput[f]} placeholder={api_data===null?"":api_data[f]} 
-                                                        onChange={(e)=>{setApiInput((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
-                                                : apiInput[f] ? apiInput[f] : ""
-                                            }
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <ApiTable
+                        edited={edited} 
+                        apiInput={apiInput} 
+                        api_data={api_data} 
+                        setApiInput={setApiInput}
+                    />
                 </Tab>
             </Tabs>         
             </div>

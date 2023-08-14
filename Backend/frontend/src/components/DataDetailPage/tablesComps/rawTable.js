@@ -1,11 +1,13 @@
-import { Box, Button,Paper, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, } from '@mui/material';
+import { Paper,  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-const RawTable=(rawInput)=>{
+const RawTable=({data})=>{
+    /*console.log('why not', data);
     const[rawdata, setRawData] = useState({});
     useEffect(()=>{
-        setRawData(rawInput)
-    },[rawInput])
+        setRawData(data)
+        console.log('rawdata',data);
+    },[data])*/
 
     return (
         <TableContainer key='rawmeat' component={Paper} sx={{width:'fitContent',overflow:'auto'}}>
@@ -17,7 +19,7 @@ const RawTable=(rawInput)=>{
                         return(
                             <TableRow key={'raw-Row'+idx}>
                                 <TableCell key={'raw-'+idx+'col1'}>{f}</TableCell>
-                                <TableCell key={'raw-'+idx+'col2'}>{rawInput[f] ? rawInput[f] : ""}</TableCell>
+                                <TableCell key={'raw-'+idx+'col2'}>{data[f] ? data[f] : ""}</TableCell>
                             </TableRow>
                         );
                     })}
