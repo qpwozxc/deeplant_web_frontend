@@ -14,6 +14,9 @@ import { Box, Button,Paper, ButtonGroup,IconButton,ToggleButton, ToggleButtonGro
 // firebase 
 import {  ref as storageRef ,uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../firebase-config.js';
+// import tables
+import RawTable from "./tablesComps/rawTable";
+
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function DataView({page, currentUser ,dataProps}){
@@ -75,7 +78,7 @@ function DataView({page, currentUser ,dataProps}){
         const value = e.target.value;
         // 처리육의 경우 사진을 먼저 업로드 해야함
         if (idx ===1 ){
-            if (images[valueIdx+1] === null){
+            if (imgArr[valueIdx+1] === null){
                 console.log('upload image first!')
                 setModal(true);
                 return(
@@ -310,10 +313,10 @@ function DataView({page, currentUser ,dataProps}){
             
             uploadNewFile(imgFile, folderName, fileName);
 
-            let newImages = images;
+            let newImages = imgArr;
             newImages[currentIdx] = reader.result;
-            setImages(newImages);
-            console.log('new images,', images);
+            setImgArr(newImages);
+            console.log('new images,', imgArr);
             setPreviewImage(reader.result);
             //setImgFile();
             // 이미지 수정 (오류나면 안됨 )
@@ -324,35 +327,39 @@ function DataView({page, currentUser ,dataProps}){
 
     
     // 2.이미지 클릭시 변경 
-    const [images,setImages] = useState([raw_img_path,]);
+    const [imgArr,setImgArr] = useState([raw_img_path,]);
     //초기 이미지 세팅 
     useEffect(()=>{
         (processed_img_path.length !== 0)
         ? //processedmeat이 {}이 아닌 경우 
-        setImages([
-            ...images,
+        setImgArr([
+            ...imgArr,
             ...processed_img_path,
         ])
         ://processedmeat이 {}인 경우 -> 1회차 처리육 정보 입력을 위해 null 생성 
-        setImages([
-            ...images,
+        setImgArr([
+            ...imgArr,
             null,
         ])
     },[])
     
     
-    useEffect(()=>{console.log('image files changes', images);},[images])
-    // 탭 누름에 따라 이미지 변경 -> 
+    useEffect(()=>{console.log('image files changes', imgArr);},[imgArr])
+
     const [currentIdx, setCurrIdx] = useState(0);
     // 다음버튼클릭
     const handleNextClick = () => {
-        setCurrIdx((prev)=> (prev+1) % images.length);
+        setCurrIdx((prev)=> (prev+1) % imgArr.length);
     };
     // 이전 버튼 클릭 
     const handlePrevClick = () =>{
-        setCurrIdx((prev)=> (prev-1) % images.length);
+        setCurrIdx((prev)=> (prev-1) % imgArr.length);
     }
-    
+    // 해당 번호 클릭
+    const handleImgClick = (e) => {
+        console.log();
+        setCurrIdx(e.target.outerText-1);
+    }
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {//react bootstrap tab key!!!
@@ -364,26 +371,7 @@ function DataView({page, currentUser ,dataProps}){
         setValue('proc')
         console.log('change');
     }
-    const divStyle = {
-        currDiv :{
-            height:"fit-content", 
-            width:"fit-content", 
-            padding:'10px',
-            borderRadius : '5px',
-            backgroundColor:'#002984', 
-            color:'white',
-            border:'1px solid white'
-        },
-        notCurrDiv :{
-            height:"100%", 
-            width:"fit-content", 
-            borderRadius : '5px',
-            padding:'10px',
-            backgroundColor:'white', 
-            color:'#002984',
-            border:'1px solid #002984'
-        }
-    }
+
     return(
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
@@ -398,15 +386,15 @@ function DataView({page, currentUser ,dataProps}){
                 :<div style={{backgroundColor:'#002984', color:'white'}}>딥에이징 {currentIdx}회차 이미지</div>
                 }
                 {// 실제 이미지 
-                images[currentIdx]
-                ?<img src={images[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
+                imgArr[currentIdx]
+                ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
                 :<div style={{height:'350px',width:"400px", display:'flex', justifyContent:'center', alignItems:'center'}}>이미지가 존재하지 않습니다.</div>
                 }
 
                 <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
                     {// 페이지네이션 
-                         Array.from({ length: images.length }, (_, idx)=>(
-                            <div style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv}>{idx + 1}</div>
+                         Array.from({ length: imgArr.length }, (_, idx)=>(
+                            <div value={idx} style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv} onClick={(e)=>handleImgClick(e)}>{idx + 1}</div>
                          ))
                     }
                     
@@ -443,9 +431,6 @@ function DataView({page, currentUser ,dataProps}){
             <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
             <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
                 <Tab value='raw' eventKey='rawMeat' title='원육' style={{backgroundColor:'white'}}>
-                    {//setImage
-                      //  setPreviewImage(raw_img_path)
-                    }
                     <TableContainer key='rawmeat' component={Paper} sx={{width:'fitContent',overflow:'auto'}}>
                         <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
                             <TableHead>
@@ -453,7 +438,7 @@ function DataView({page, currentUser ,dataProps}){
                             <TableBody>
                                 {rawField.map((f, idx)=>{
                                     return(
-                                        <TableRow key={'raw-Row'}>
+                                        <TableRow key={'raw-Row'+idx}>
                                             <TableCell key={'raw-'+idx+'col1'}>{f}</TableCell>
                                             <TableCell key={'raw-'+idx+'col2'}>{rawInput[f] ? rawInput[f] : ""}</TableCell>
                                         </TableRow>
@@ -770,6 +755,26 @@ const style={
     }
   
   }
+  const divStyle = {
+    currDiv :{
+        height:"fit-content", 
+        width:"fit-content", 
+        padding:'10px',
+        borderRadius : '5px',
+        backgroundColor:'#002984', 
+        color:'white',
+        border:'1px solid white'
+    },
+    notCurrDiv :{
+        height:"100%", 
+        width:"fit-content", 
+        borderRadius : '5px',
+        padding:'10px',
+        backgroundColor:'white', 
+        color:'#002984',
+        border:'1px solid #002984'
+    }
+}
 
   /***
  * 
