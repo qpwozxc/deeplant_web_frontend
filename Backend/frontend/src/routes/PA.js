@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SearchFilterBar from "../components/Search/SearchFilterBar";
 // 데이터 목록
-import DataListComp from "../components/DataListView/DataListComp";
+import PADataListComp from "../components/DataListView/PADataListComp";
 // mui 
 import { Box, Button, } from "@mui/material";
 
@@ -19,7 +19,7 @@ function PA(){
                 <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
             </Box>
             <Box sx={{marginTop:'210px'}}>
-            <DataListComp startDate={startDate} endDate={endDate} pageType={'pa'}/>
+                <PADataListComp startDate={startDate} endDate={endDate}/>
             </Box>
             
         </div>
@@ -39,7 +39,8 @@ const styles={
       display:'flex',
       justifyContent:'center',
       backgroundColor:'white',
-    },
+    }, 
+    
  
   }
   

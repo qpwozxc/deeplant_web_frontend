@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import LogIn from "./routes/LogIn";
 import Home from "./routes/Home";
-import DataManage from "./routes/DataManage";
+import DataListManage from "./routes/DataListManage";
 import Stats from "./routes/Stats";
 import PA from "./routes/PA";
 import Profile from "./routes/Profile";
@@ -32,7 +32,7 @@ function App() {
     {
       path: "/DataManage",
       title: "DataManage | DeePlant",
-      component: <DataManage />,
+      component: <DataListManage />,
     },
     {
       path: "/DataConfirm/:id",

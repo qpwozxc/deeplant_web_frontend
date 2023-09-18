@@ -30,7 +30,6 @@ function SearchFilterBar({setStartDate, setEndDate}){
 
     // 탭 api
     useEffect(()=>{
-        console.log('duration', duration);
         // call API를 위한 준비
         const s = new Date();
         if (duration === 'week'){
@@ -123,10 +122,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
 }
 
 export default SearchFilterBar;
-/**
- * 
- * <Stack spacing={2} direction="row" style={{marginTop:'70px', backgroundColor:'white', marginBottom:'10px'}}></Stack>
- */
+
 const styles = {
     button:{
         borderRadius : '50px',

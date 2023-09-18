@@ -10,17 +10,26 @@ export default function TransitionsModal({id, setIsDelClick}) {
       console.log('response', resp, id);
      // window.location.reload();
     }
+  
+    let idArr = [];
+    if (typeof(id) !== 'string'){
+      idArr = Array.from({ length: id.length }, (_, index) => id[index]);
+    }else{
+      console.log('string')
+      idArr.push(id);
+    }
+    console.log(idArr);
     const handleOnDelete=()=>{
-        console.log(id);
+        
         //삭제 api 전송  /meat/delete?id=
-        //console.log(typeof(id));
-        if (typeof(id) !== 'string'){
-          for (let i = 0; i < id.length; i++){
-            ondelete(id[i]);
-          }
-        }else{
-          ondelete(id);
+        //삭제할 것이 하나가 아니라 여러개(배열)인 경우
+        //if (typeof(id) !== 'string'){
+        for (let i = 0; i < id.length; i++){
+          ondelete(id[i]);
         }
+        /*}else{
+          ondelete(id);
+        }*/
         //
         handleClose();
     }
@@ -44,9 +53,11 @@ export default function TransitionsModal({id, setIsDelClick}) {
               <Typography id="transition-modal-title" variant="h6" component="h2">
                 정말로 삭제하시겠습니까?
               </Typography>
-              <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                {id}
-              </Typography>
+              {idArr.map(id => (
+                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                  {id}
+                </Typography>
+              ))}
               <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
                 <Button variant="outlined" sx={{marginRight:'5px'}} onClick={handleClose }>아니오</Button>
                 <Button variant="contained" onClick={handleOnDelete}>예</Button>

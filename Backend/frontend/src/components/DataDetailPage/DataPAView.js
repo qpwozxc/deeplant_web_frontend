@@ -14,7 +14,7 @@ function DataPAView({ currentUser ,dataProps}){
     const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data,processed_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
 
-    // 처리육 및 실험 회차 토글 
+    // 처리육 및 실험 회차 토글  
     useEffect(()=>{
         options = processed_data_seq;
     },[])

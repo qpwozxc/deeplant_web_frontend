@@ -32,7 +32,7 @@ const StyledChartWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
-const PieChart = ({ subheader, chartColors, /*chartData, isFilter,*/startDate,endDate,...other }) => {
+const PieChart = ({ subheader, chartColors, startDate,endDate,...other }) => {
     const theme = useTheme();
   // const chartSeries = chartData;
     const [data, setData] = useState({});
@@ -57,21 +57,20 @@ const PieChart = ({ subheader, chartColors, /*chartData, isFilter,*/startDate,en
         pie: { donut: { labels: { show: false } } },
       },
     });
-
+    console.log("date",startDate, endDate);
     useEffect(()=>{
       // pie 차트 데이터 받아오는 함수
       const getPieData = async() => {
         const json = await(
         await fetch(`http://3.38.52.82//meat/statistic?type=0&start=${startDate}&end=${endDate}`)
         ).json();
-        //console.log(json);
         setData(json);
         setChartSeries([json['total_counts']['raw'], json['total_counts']['processed']]);
       } 
 
       // pie 차트 데이터 받아오기
       getPieData();
-    },[]);
+    },[startDate, endDate]);
 
     // 토글 버튼 클릭시 
     const handleBtnClick= (e)=>{

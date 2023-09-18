@@ -8,13 +8,13 @@ import DataStat from "../components/Charts/DataStat";
 // 반려 데이터 목록 컴포넌트
 import RejectedDataListComp from "../components/DataListView/RejectedDataListComp";
 // 엑셀 파일 export/ import 컴포넌트
-import ExcelController from "../components/SingleData/excelContr";
+import ExcelController from "../components/DataDetailPage/excelContr";
 // mui 
 import { Box, Button, } from "@mui/material";
 
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
-function DataManage() { 
+function DataListManage() { 
   // 목록/ 통계/ 반려함 탭 메뉴
   const [value, setValue] = useState('list');
   const [period, setPeriod] = useState(7);
@@ -46,14 +46,14 @@ function DataManage() {
         </div>
       </Box >
 
-      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate} pageType={'list'}/> : <></> }
+      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate} /> : <></> }
       { value === "stat" ? <DataStat startDate={startDate} endDate={endDate}/> : <></> }
       { value === "reject" ? <RejectedDataListComp startDate={startDate} endDate={endDate}/>: <></>}
     </div>
   );
 }
 
-export default DataManage;
+export default DataListManage;
 
 
 const styles={
