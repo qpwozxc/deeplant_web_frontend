@@ -20,6 +20,8 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Deeplant_big_logo from "../../src_assets/Deeplant_big_logo.png";
+import Layer_1 from "../../src_assets/Layer_1.png";
+import BackGround from "../../src_assets/BackGround.png";
 import { id } from "date-fns/locale";
 
 const defaultTheme = createTheme();
@@ -126,107 +128,103 @@ const LogInField = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          minHeight: "100vh", // 전체 화면 높이
+          minWidth: "100vw", // 전체 화면 너비
+          backgroundImage: `url(${BackGround})`, // 경로를 실제 파일 경로로 변경
+          backgroundSize: "cover", // 배경 이미지 크기 조절 (cover는 화면 전체를 채우도록 설정)
+          backgroundRepeat: "no-repeat", // 배경 이미지 반복 방지
+        }}
+      >
         <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage:
-              "url(https://static.wixstatic.com/media/3b5756_a962e05dd635419aa597ac8ea972cc70~mv2.jpg/v1/fill/w_1359,h_622,al_c,q_85,enc_auto/3b5756_a962e05dd635419aa597ac8ea972cc70~mv2.jpg)",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "95% ",
-            backgroundPosition: "center",
+        <img
+          src={Layer_1}
+          style={{
+            width: 300,
+            height: "auto",
+            marginBottom: "20px",
+            marginTop: "200px",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+
+        <Box
+          component="form"
+          noValidate
+          sx={{
+            display: "flex", // 요소들을 flex로 배치
+            flexDirection: "column", // 세로로 배치
+            width: "450px", // 너비를 450px로 설정
+            height: "594px",
+            bgcolor: "white",
+            paddingX: "42px", // 가로 패딩
+            paddingY: "44px", // 세로 패딩
+            borderRadius: "20px",
+            mb: "160px",
+          }}
+        >
+          <TextField
+            required
+            id="email"
+            label="이메일을 입력하세요."
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={loginEmail}
+            onChange={(event) => {
+              setLoginEmail(event.target.value);
             }}
+            onKeyPress={handleKeyPress}
+            sx={{
+              width: "365px", // 너비를 365px로 설정
+              height: "72px", // 높이를 72px로 설정
+            }}
+          />
+
+          <TextField
+            margin="normal"
+            required
+            name="password"
+            label="비밀번호를 입력하세요."
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={loginPassword}
+            onChange={(event) => {
+              setLoginPassword(event.target.value);
+            }}
+            onKeyPress={handleKeyPress}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={rememberMe}
+                onChange={(event) => setRememberMe(event.target.checked)}
+                color="primary"
+                checked={rememberMe}
+              />
+            }
+            label="아이디 저장"
+          />
+          {loginError && (
+            <Typography variant="caption" color="error">
+              {loginError}
+            </Typography>
+          )}
+          <Button
+            onClick={login}
+            variant="contained"
+            sx={{ mt: "162px", bgcolor: "#7BD758" }}
           >
-            <img
-              src={Deeplant_big_logo}
-              style={{ width: 300, height: "auto" }}
-            />
-
-            <Box component="form" noValidate sx={{ mt: 3 }}>
-              {
-                <Box component="form" noValidate sx={{ mt: 1 }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="이메일 주소"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    value={loginEmail}
-                    onChange={(event) => {
-                      setLoginEmail(event.target.value);
-                    }}
-                    onKeyPress={handleKeyPress}
-                  />
-
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="비밀번호"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    value={loginPassword}
-                    onChange={(event) => {
-                      setLoginPassword(event.target.value);
-                    }}
-                    onKeyPress={handleKeyPress}
-                  />
-                </Box>
-              }
-              {loginError && (
-                <Typography variant="caption" color="error">
-                  {loginError}
-                </Typography>
-              )}
-              <>
-                <Button
-                  onClick={login}
-                  fullWidth
-                  variant="contained"
-                  color="success"
-                  sx={{ mt: 3, mb: 2, bgcolor: "green" }}
-                >
-                  로그인
-                </Button>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value={rememberMe}
-                      onChange={(event) => setRememberMe(event.target.checked)}
-                      color="primary"
-                      checked={rememberMe} // Set checked prop based on the "rememberMe" state
-                    />
-                  }
-                  label="아이디 저장"
-                />
-              </>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+            로그인
+          </Button>
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 };

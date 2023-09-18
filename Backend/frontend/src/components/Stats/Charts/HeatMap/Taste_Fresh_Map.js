@@ -11,17 +11,10 @@ export default function Taste_Fresh_Map({ startDate, endDate }) {
         const response = await fetch(
           `http://3.38.52.82/meat/statistic?type=4&start=${startDate}&end=${endDate}`
         );
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-
-        for (const key in data) {
-          data[key].unique_values = data[key].unique_values.map((value) =>
-            value === null ? 0 : value
-          );
-        }
         setChartData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -61,7 +54,7 @@ export default function Taste_Fresh_Map({ startDate, endDate }) {
       max: 10, // Adjust the max value as needed
     },
     title: {
-      text: "처리육 관능데이터 범위별 분포(빈도수)",
+      text: "원육 맛데이터 범위별 분포(빈도수)",
     },
     grid: {
       padding: {

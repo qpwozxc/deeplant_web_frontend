@@ -15,8 +15,6 @@ import DataPredict from "./routes/DataPredict";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/Base/Sidebar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-import BackGroundImage from "./src_assets/BackGround.jpg";
 const defaultTheme = createTheme();
 
 function App() {
@@ -94,10 +92,7 @@ function App() {
                       <Box
                         component="main"
                         sx={{
-                          backgroundColor: (theme) =>
-                            theme.palette.mode === "light"
-                              ? theme.palette.grey[100]
-                              : theme.palette.grey[900],
+                          backgroundColor: "#FAFBFC",
                           flexGrow: 1,
                           height: "100vh",
                           overflow: "auto",

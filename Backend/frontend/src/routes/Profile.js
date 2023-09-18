@@ -28,19 +28,16 @@ export default function Profile() {
         },
         body: JSON.stringify({
           userId: UserInfo.userId,
-          createdAt: UserInfo.createdAt,
-          updatedAt: UserInfo.updatedAt,
           password: UserInfo.password,
           name: modifiedUserInfo.name, // <-- Use the updated name
           company: modifiedUserInfo.company, // <-- Use the updated company
           jobTitle: modifiedUserInfo.jobTitle, // <-- Use the updated jobTitle
           homeAddr: modifiedUserInfo.homeAddr, // <-- Use the updated homeAddr
-          loginAt: UserInfo.loginAt,
           alarm: UserInfo.alarm,
           type: UserInfo.type,
         }),
       });
-      console.log(response);
+      console.log(UserInfo.userId);
       if (response.ok) {
         const updatedData = await response.json();
         setUpdatedUserInfo(updatedData);
