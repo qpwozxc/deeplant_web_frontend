@@ -6,65 +6,53 @@ import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import deeplantLogo from "../src_assets/deeplant-logo.png";
-import MeatImage from "../src_assets/Meat.png";
-import StatisticImage from "../src_assets/StatisticImage.avif";
 import CardActionArea from "@mui/material/CardActionArea";
-import UserImage from "../src_assets/UserImage2.png";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
-import { CardActions } from "@mui/material";
-import ProfileImage from "../src_assets/Profile.jpg";
-import LogOutImage from "../src_assets/LogOut.svg";
-import DataImage from "../src_assets/Data.png";
+
+import home1 from "../src_assets/home1.png";
+import home2 from "../src_assets/home2.png";
+import home3 from "../src_assets/home3.png";
+import home4 from "../src_assets/home4.png";
+import home5 from "../src_assets/home5.png";
+import home6 from "../src_assets/home6.png";
+
 const defaultTheme = createTheme();
 
 const cards = [
   {
     title: "홈",
-    description: "딥플랜트 홈",
-    sub_description: "홈페이지",
-    image: deeplantLogo,
+    image: home1,
     imageSize: { height: 140, width: 140 },
     link: "/Home",
   },
   {
     title: "대시보드",
-    description: "대시보드",
-    sub_description: "대시보드",
-    image: MeatImage,
+    image: home2,
     imageSize: { height: 140, width: "100%" },
     link: "/DataManage",
   },
   {
-    title: "데이터 예측",
-    description: "데이터 예측",
-    sub_description: "데이터 예측",
-    image: DataImage,
-    imageSize: { height: 140, width: "55%" },
-    link: "/PA",
-  },
-  {
     title: "통계 분석",
-    description: "통계 분석",
-    sub_description: "",
-    image: StatisticImage,
+    image: home3,
     imageSize: { height: 140, width: "100%" },
     link: "/stats",
   },
   {
+    title: "데이터 예측",
+    image: home4,
+    imageSize: { height: 140, width: "55%" },
+    link: "/PA",
+  },
+  {
     title: "사용자 관리",
-    description: "사용자 입력정보 열람 및 확인",
-    sub_description: "사용자 입력정보 열람 및 확인",
-    image: UserImage,
+    image: home5,
     imageSize: { height: 140, width: "100%" },
     link: "/UserManagement",
   },
   {
     title: "프로필",
-    description: "프로필 조회/수정",
-    sub_description: "프로필",
-    image: ProfileImage,
+    image: home6,
     imageSize: { height: 140, width: "60%" },
     link: "/Profile",
   },
@@ -82,12 +70,15 @@ function Home() {
           <Grid item xs={12} sm={4} md={4} lg={4} key={card}>
             <Box
               sx={{
-                maxWidth: 300,
+                maxWidth: 261,
+                maxHeight: 238,
                 margin: "0 auto",
-                border: "1px solid #e0e0e0",
-                borderRadius: "30px",
+                border: "1px solid rgba(238, 238, 238, 0.50)",
+                borderRadius: "40px",
                 overflow: "hidden",
                 backgroundColor: "white",
+                boxShadow:
+                  "box-shadow: 0px 4px 20px 0px rgba(238, 238, 238, 0.50)",
               }}
             >
               <CardActionArea onClick={() => handleCardClick(card.link)}>
@@ -101,9 +92,6 @@ function Home() {
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {card.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {card.description}
                   </Typography>
                 </CardContent>
               </CardActionArea>

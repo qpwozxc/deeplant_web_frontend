@@ -10,6 +10,7 @@ const DataListComp=({startDate, endDate})=>{
   const [meatList, setMeatList] = useState([]);
   // 페이지네이션 - api로 부터 받아오는 정보 전체 데이터 개수
   const [totalData, setTotalData] = useState(0);
+
   // 페이지네이션 컴포넌트와 공유하는 변수 -> current page 변화하면 api 새로 가져옴 
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 2; // 페이지네이션 원소 개수 

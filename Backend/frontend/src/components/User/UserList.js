@@ -60,21 +60,6 @@ function UserList() {
         return;
       }
 
-      // Prompt the user to reauthenticate before performing the delete operation
-      const email = user.email; // You can get the user's email from the `user` object or ask for it from the user.
-      const password = "user's password here"; // Ask the user to enter their password to reauthenticate.
-
-      const credential = EmailAuthProvider.credential(email, password);
-
-      try {
-        await reauthenticateWithCredential(user, credential);
-      } catch (error) {
-        showSnackbar(
-          "재인증에 실패했습니다. 올바른 이메일과 비밀번호를 입력해주세요.",
-          "error"
-        );
-        return;
-      }
 
       // If reauthentication is successful, proceed with the account deletion
       const response = await fetch(

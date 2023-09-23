@@ -59,7 +59,7 @@ const mainListItems = [
   },
 ];
 
-const drawerWidth = 240;
+const drawerWidth = 345; //사이드바 가로 길이
 const defaultTheme = createTheme();
 
 const Drawer = styled(MuiDrawer, {
@@ -74,7 +74,8 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
-    backgroundColor: "#e0e2e4",
+    backgroundColor: "#FFFFFF", //사이드바 배경
+    boxShadow: "5px 0px 30px 0px #EEE", // 사이드바 그림자
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
@@ -97,7 +98,9 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  backgroundColor: "#cfe0e8",
+  backgroundColor: "#FFFFFF",
+  boxShadow: "none",
+  height: "120px",
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -197,7 +200,6 @@ function Sidebar() {
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>
-        <Divider />
         <List component="nav">
           {mainListItems.map((item) => (
             <Tooltip title={item.label} placement="right" arrow>
@@ -210,7 +212,7 @@ function Sidebar() {
                   marginBottom: 1,
                   ...(location.pathname === item.path && {
                     "& .MuiSvgIcon-root, .MuiTypography-root": {
-                      color: "#87bdd8",
+                      color: "#FFF",
                     },
                   }),
                 }}
