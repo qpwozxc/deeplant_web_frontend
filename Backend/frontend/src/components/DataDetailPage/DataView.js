@@ -278,7 +278,7 @@ function DataView({page, currentUser ,dataProps}){
     const handleAlignment = (event, newAlignment) => {
         setConfirmVal(newAlignment);
     };
-    //승인 여부 변경 API 호출 
+    //[검토] 승인 여부 변경 API 호출 
     const handleConfirmSaveClick=()=>{
         try{
             const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);

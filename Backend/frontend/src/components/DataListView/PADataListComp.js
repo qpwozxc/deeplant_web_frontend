@@ -88,7 +88,6 @@ const PADataListComp=({startDate, endDate})=>{
   return (
     <div style={style.wrapper}>
       <div style={style.listContainer} >
-        <></>
         {
           //meatList.length!==0
           //? (//데이터가 로드된 경우 데이터 목록 반환
