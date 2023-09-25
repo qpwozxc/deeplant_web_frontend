@@ -2,7 +2,7 @@ import { useParams,Link } from "react-router-dom";
 
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import { FaAngleDoubleLeft } from "react-icons/fa";
-import ExcelController from "./excelContr";
+import ExcelController from "../DataListView/excelContr";
 
 function navBar(){
     return(

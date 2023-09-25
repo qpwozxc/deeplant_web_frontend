@@ -53,7 +53,7 @@ function DataListManage() {
   );
 }
 
-export default DataListManage;
+export default Dashboard;
 
 
 const styles={
