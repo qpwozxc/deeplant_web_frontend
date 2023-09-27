@@ -22,7 +22,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
     
-    // 탭으로 클릭시 
+    // 탭으로 클릭시 조회기간 변경
     const handleDr = (event)=>
     {
         setDuration(event.target.value);
@@ -53,14 +53,8 @@ function SearchFilterBar({setStartDate, setEndDate}){
 
     },[duration]);
 
-    // 직접 입력할 시 api
-    /*const handleSearchDr=()=>{
-        if (isDur){
-            //call api
-            console.log(duration);
-        }
-    };*/
-   
+    // 직접 입력할 시 api 조회기간 변경
+
     const handleBtn=()=>{
         if (!isDur ){ 
             console.log(start,end);
@@ -79,6 +73,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
        }
     }
 
+    // pop over 결정 
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {

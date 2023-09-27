@@ -41,17 +41,16 @@ function Dashboard() {
       </Box>
     
       <Box sx={styles.fixed}>
-        
         <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-        <ExcelController/>
+          <ExcelController/>
         </div>
       </Box>
 
       <Box sx={styles.fixedTab}>
         <div style={{display:'flex'}}>
-          <Button  style = {value === "list" && styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
-          <Button  style = {value === "stat"&& styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
+          <Button  style = {value === "list" ? {} : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
+          <Button  style = {value === "stat" ? {} : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
         </div>
       </Box >
 
