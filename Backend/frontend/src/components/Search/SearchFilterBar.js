@@ -1,14 +1,17 @@
-import { useEffect, useState , useRef} from "react";
+// import react
+import { useEffect, useState} from "react";
+// import mui
 import {Button, Box, Card,Popover,Divider,Typography,} from '@mui/material';
+// import react-icons
 import {FaArrowRotateLeft, FaFilter}  from "react-icons/fa6";
-import {FaSearch}  from "react-icons/fa";
+// import date-picker 
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from 'dayjs';
-
-const TIME_ZONE = 9 * 60 * 60 * 1000;
+// import timezone
+import { TIME_ZONE } from "../../config";
 
 function SearchFilterBar({setStartDate, setEndDate}){
     const [isDur, setIsDur] = useState(true);
@@ -164,5 +167,4 @@ const styles = {
         height:'35px',
         fontWeight:'500',
     },
-
 }

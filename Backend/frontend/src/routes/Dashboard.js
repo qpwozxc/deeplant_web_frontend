@@ -11,8 +11,8 @@ import RejectedDataListComp from "../components/DataListView/RejectedDataListCom
 import ExcelController from "../components/DataListView/excelContr";
 // mui 
 import { Box, Button, } from "@mui/material";
-
-const TIME_ZONE = 9 * 60 * 60 * 1000;
+// import timezone
+import { TIME_ZONE } from "../config";
 
 function Dashboard() { 
   // 목록/ 통계/ 반려함 탭 메뉴
@@ -30,7 +30,14 @@ function Dashboard() {
   return (
     <div style={{overflow: 'overlay', width:'100%', marginTop:'0px'}}>
       <Box>
-      <h1>Dashboard</h1>
+        {
+          value === "reject"
+          ? <h1>Dashboard {'>'} 반려함</h1>
+          : <h1>Dashboard</h1>
+        }
+        <div>
+          <Button  style = {value === "reject"? {} : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
+        </div>
       </Box>
     
       <Box sx={styles.fixed}>
@@ -43,17 +50,14 @@ function Dashboard() {
 
       <Box sx={styles.fixedTab}>
         <div style={{display:'flex'}}>
-          <Button  style = {value === "list"? {} : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
-          <Button  style = {value === "stat"? {} : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
-        </div>
-        <div>
-          <Button  style = {value === "reject"? {} : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
+          <Button  style = {value === "list" && styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
+          <Button  style = {value === "stat"&& styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
         </div>
       </Box >
 
-      { value === "list" ? <DataListComp startDate={startDate} endDate={endDate} /> : <></> }
-      { value === "stat" ? <DataStat startDate={startDate} endDate={endDate}/> : <></> }
-      { value === "reject" ? <RejectedDataListComp startDate={startDate} endDate={endDate}/>: <></>}
+      { value === "list" && <DataListComp startDate={startDate} endDate={endDate}/> }
+      { value === "stat" && <DataStat startDate={startDate} endDate={endDate}/>}
+      { value === "reject" && <RejectedDataListComp startDate={startDate} endDate={endDate}/> }
     </div>
   );
 }

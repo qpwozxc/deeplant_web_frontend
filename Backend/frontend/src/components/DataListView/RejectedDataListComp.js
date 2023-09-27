@@ -36,7 +36,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
   
       //데이터 api 로 부터 fetch
     useEffect(() => {
-      getMeatList(currentPage - 1);
+      //getMeatList(currentPage - 1);
     }, [startDate, endDate, currentPage]);
 
 

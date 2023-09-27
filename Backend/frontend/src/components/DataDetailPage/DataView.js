@@ -20,8 +20,8 @@ import ProcessedTable from "./tablesComps/processedTable";
 import HeatTable from "./tablesComps/heatTable";
 import LabTable from "./tablesComps/labTable";
 import ApiTable from "./tablesComps/apiTable";
-
-const TIME_ZONE = 9 * 60 * 60 * 1000;
+// import timezone
+import { TIME_ZONE } from "../../config";
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);

@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import SearchFilterBar from "../components/Search/SearchFilterBar";
 import { useState, useEffect, useRef } from "react";
-const TIME_ZONE = 9 * 60 * 60 * 1000;
+import { TIME_ZONE } from "../config";
 
 function Stats() {
   const s = new Date();

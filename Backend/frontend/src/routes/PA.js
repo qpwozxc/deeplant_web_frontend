@@ -4,8 +4,8 @@ import SearchFilterBar from "../components/Search/SearchFilterBar";
 import PADataListComp from "../components/DataListView/PADataListComp";
 // mui 
 import { Box, Button, } from "@mui/material";
-
-const TIME_ZONE = 9 * 60 * 60 * 1000;
+// import timezone
+import { TIME_ZONE } from "../config";
 
 function PA(){
     const s = new Date();
