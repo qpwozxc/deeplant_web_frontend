@@ -27,7 +27,22 @@ function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
     
     //데이터 받아오기 -> props 로 전달로 변경
-    const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data, processed_data, heated_data ,lab_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
+    const { 
+        id, 
+        userId, 
+        createdAt,
+        qrImagePath,
+        raw_img_path, 
+        raw_data, 
+        processed_data, 
+        heated_data ,
+        lab_data,
+        api_data, 
+        processed_data_seq, 
+        processed_minute , 
+        processed_img_path 
+    } = dataProps;
+    
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
     //탭 정보 
     const tabFields = [rawField, deepAgingField,heatedField,/* tongueField,*/ labField, apiField,];

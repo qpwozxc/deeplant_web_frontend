@@ -1,12 +1,13 @@
 import { useEffect, useState , useRef} from "react";
-import {Button, Stack, Card,} from '@mui/material';
-import {FaArrowRotateLeft}  from "react-icons/fa6";
+import {Button, Box, Card,Popover,Divider,Typography,} from '@mui/material';
+import {FaArrowRotateLeft, FaFilter}  from "react-icons/fa6";
 import {FaSearch}  from "react-icons/fa";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from 'dayjs';
+
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
 function SearchFilterBar({setStartDate, setEndDate}){
@@ -74,49 +75,81 @@ function SearchFilterBar({setStartDate, setEndDate}){
            // setClicked(false);
        }
     }
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+  
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
  
     return(
-        <Card style={{display: "flex", justifyContent: "center", alignItems: "center", padding:'0px 10px',
-        //width: "string",
-        gap: '10px', gridTemplateColumns: 'minmax(400px, max-content) 1fr', width:'fit-content', height: "70px", borderRadius:'10px'}}>
-            {duration === 'week'
-            ?<Button variant="contained" value="week" style={styles.button} >1주</Button>
-            :<Button variant="outlined" value="week" style={styles.button} onClick={handleDr} >1주</Button>
-            }
-            {
-            duration === 'month'
-            ?<Button variant="contained" value="month" style={styles.button}>1개월</Button>
-            :<Button variant="outlined" value="month" style={styles.button} onClick={handleDr}>1개월</Button>
-            }
-            {
-            duration === "quarter" 
-            ?<Button variant="contained" value="quarter" style={styles.button}>1분기</Button>
-            :<Button variant="outlined" value="quarter" style={styles.button} onClick={handleDr}>1분기</Button>
-            }
-            {
-            duration === "year"
-            ?<Button variant="contained" value="year" style={styles.button}>1년</Button>
-            :<Button variant="outlined" value="year" style={styles.button} onClick={handleDr}>1년</Button>
-            }
-          
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DatePicker"]} sx={{  mx: "auto" }}>
-                <div style={{display:'flex', marginLeft:'20px'}}>
-                
-                <DatePicker disableFuture onChange={(newVal)=>{setStart(newVal); setIsDur(false);}} value={isDur? null : start} label="시작날짜" slotProps={{ textField: { size: 'small' } }} style={{width:'150px'}} format={"YYYY-MM-DD"}/>
-                ~
-                <DatePicker disableFuture minDate={start? start:dayjs('1970-01-01')}  onChange={(newVal)=>{setEnd(newVal); setIsDur(false);}} value={isDur? null :end} label="종료날짜" slotProps={{ textField: { size: 'small' } }}  format={"YYYY-MM-DD"}/>
-                </div>
-                
-              </DemoContainer>
-            </LocalizationProvider>
-            <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn();}}>
-            <FaSearch />
-            </button>
-            <button onClick={()=>{setDuration('week'); setStart(null); setEnd(null); setIsDur(true);}}>
-            <FaArrowRotateLeft />
-            </button>
-    </Card>
+        <div>
+            <Button  aria-describedby={id} variant="contained" onClick={handleClick}>
+               <FaFilter/> Filter
+            </Button>
+            <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+            }}
+            >
+                <Card style={{justifyContent: "center", alignItems: "center", padding:'0px 10px',
+                //width: "string",
+                gap: '10px', gridTemplateColumns: 'minmax(400px, max-content) 1fr', width:'fit-content', height: "", borderRadius:'10px'}}>
+                    <Box id="" style={{display:"flex"}}>
+                        <Typography>조회기간</Typography>
+                        {duration === 'week'
+                        ?<Button variant="contained" value="week" style={styles.button} >1주</Button>
+                        :<Button variant="outlined" value="week" style={styles.button} onClick={handleDr} >1주</Button>
+                        }
+                        {
+                        duration === 'month'
+                        ?<Button variant="contained" value="month" style={styles.button}>1개월</Button>
+                        :<Button variant="outlined" value="month" style={styles.button} onClick={handleDr}>1개월</Button>
+                        }
+                        {
+                        duration === "quarter" 
+                        ?<Button variant="contained" value="quarter" style={styles.button}>1분기</Button>
+                        :<Button variant="outlined" value="quarter" style={styles.button} onClick={handleDr}>1분기</Button>
+                        }
+                        {
+                        duration === "year"
+                        ?<Button variant="contained" value="year" style={styles.button}>1년</Button>
+                        :<Button variant="outlined" value="year" style={styles.button} onClick={handleDr}>1년</Button>
+                        }
+                    </Box>
+                    <Box style={{display:"flex"}}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={["DatePicker"]} sx={{  mx: "auto" }}>
+                                <div style={{display:'flex', marginLeft:'20px'}}>
+                                    <DatePicker disableFuture onChange={(newVal)=>{setStart(newVal); setIsDur(false);}} value={isDur? null : start} label="시작날짜" slotProps={{ textField: { size: 'small' } }} style={{width:'100px'}} format={"YYYY-MM-DD"}/>
+                                    ~
+                                    <DatePicker disableFuture minDate={start? start:dayjs('1970-01-01')}  onChange={(newVal)=>{setEnd(newVal); setIsDur(false);}} value={isDur? null :end} label="종료날짜" slotProps={{ textField: { size: 'small' } }}  format={"YYYY-MM-DD"}/>
+                                </div>
+                            </DemoContainer>
+                        </LocalizationProvider>
+                    </Box>
+                    <Divider variant="middle" style={{margin:"10px 0px"}}/>
+                    <Box style={{display:'flex', justifyContent:'end'}}>
+                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn();}}>완료</button>
+                    </Box>
+                </Card>
+            </Popover>
+            <button onClick={()=>{setDuration('week'); setStart(null); setEnd(null); setIsDur(true);}}><FaArrowRotateLeft/></button>
+                    
+        </div>
+        
     );
   
 }
@@ -127,7 +160,7 @@ const styles = {
     button:{
         borderRadius : '50px',
         padding: '0px 15px',
-        width:'100px',
+        width:'70px',
         height:'35px',
         fontWeight:'500',
     },

@@ -8,13 +8,13 @@ import DataStat from "../components/Charts/DataStat";
 // 반려 데이터 목록 컴포넌트
 import RejectedDataListComp from "../components/DataListView/RejectedDataListComp";
 // 엑셀 파일 export/ import 컴포넌트
-import ExcelController from "../components/DataDetailPage/excelContr";
+import ExcelController from "../components/DataListView/excelContr";
 // mui 
 import { Box, Button, } from "@mui/material";
 
 const TIME_ZONE = 9 * 60 * 60 * 1000;
 
-function DataListManage() { 
+function Dashboard() { 
   // 목록/ 통계/ 반려함 탭 메뉴
   const [value, setValue] = useState('list');
   const [period, setPeriod] = useState(7);
@@ -28,8 +28,13 @@ function DataListManage() {
   },[startDate, endDate]);
 
   return (
-    <div style={{overflow: 'overlay', width:'100%', marginTop:'140px'}}>
+    <div style={{overflow: 'overlay', width:'100%', marginTop:'0px'}}>
+      <Box>
+      <h1>Dashboard</h1>
+      </Box>
+    
       <Box sx={styles.fixed}>
+        
         <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
         <ExcelController/>
@@ -58,20 +63,20 @@ export default Dashboard;
 
 const styles={
   fixed:{
-    position: 'fixed', 
-    top:'70px',
+    //position: 'fixed', 
+    //top:'170px',
     right:'0',
     left:'65px',
     zIndex: 1,
     width:'100%',
     borderRadius:'0',
     display:'flex',
-    justifyContent:'center',
+    justifyContent:'space-between',
     backgroundColor:'white',
   },
   fixedTab:{
-    position: 'fixed', 
-    top:'120px',
+    //position: 'fixed', 
+    //top:'240px',
     right:'0',
     left:'0px',
     width:'100%',

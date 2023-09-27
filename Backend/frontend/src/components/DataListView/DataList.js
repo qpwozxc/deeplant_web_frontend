@@ -127,11 +127,8 @@ function DataList({meatList, pageProp, setChecked, offset, count, setFilter, set
                         hoverStates[headCell.id+'Hover'] 
                         &&<FaArrowUp key={headCell.id}/>
                         }
-                        </IconButton>
-                        
-                        
+                        </IconButton>             
                     </div>
-                   
                     </TableCell>
                 ))}
             </TableRow>

@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import DataView from "./DataView";
 import DataPAView from "./DataPAView";
-//import json files  
-import processedMeat from './processedMeat.json';
-//import rawMeat from "./rawMeat.json";
+
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
 
 export function DataLoad(id, page, currentUser) {
-  //const sampleJson = JSON.stringify(sample);
-  const samples = [sample];
+
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState(null);
@@ -168,10 +164,5 @@ export function DataLoad(id, page, currentUser) {
     return <DataView page={page} currentUser={currentUser} dataProps={data}/>;
   }
 }
-  //data;
 }
-// 처리육 포함 데이터
-const sample = processedMeat;
-// 처리육 없는 데이터
-//const sample = rawMeat;
-//data 받는 쪽에서 props 검사
+
