@@ -5,6 +5,7 @@ import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIc
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import { Box, Button,SvgIcon,} from "@mui/material";
 
+const navy =  '#0F3659';
 
 function ExcelController(){
     const fileRef = useRef(null);
@@ -54,7 +55,7 @@ function ExcelController(){
         <Box sx={{ display: 'flex', gap: 1, width: "100%", marginTop: "0px" , backgroundColor:'white',border:'1px solid #cfd8dc', marginLeft:'10px',borderRadius:'5px'}}>
           <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
             onChange={(e) => {handleFileChange(e);}} style={{display:'none' }}/>
-          <Button color="info" onClick={()=>{fileRef.current.click();}}>
+          <Button style={{color:navy}} onClick={()=>{fileRef.current.click();}}>
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
                 <ArrowUpOnSquareIcon />
@@ -62,7 +63,7 @@ function ExcelController(){
             <span>Import</span>
             </div>  
           </Button>
-          <Button color="primary" onClick={()=>{}}>
+          <Button style={{color:navy}} onClick={()=>{}}>
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
                   <ArrowDownOnSquareIcon />

@@ -82,7 +82,7 @@ export default DataListComp;
 const style = {
   wrapper : {
     position: "fixed", 
-    top: "200px", 
+    //top: "200px", 
     left: "30px", 
     width: "100%",
   },

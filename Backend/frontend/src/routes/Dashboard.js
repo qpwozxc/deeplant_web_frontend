@@ -14,6 +14,8 @@ import { Box, Button, } from "@mui/material";
 // import timezone
 import { TIME_ZONE } from "../config";
 
+const navy =  '#0F3659';
+
 function Dashboard() { 
   // 목록/ 통계/ 반려함 탭 메뉴
   const [value, setValue] = useState('list');
@@ -35,8 +37,8 @@ function Dashboard() {
           ? <h1>Dashboard {'>'} 반려함</h1>
           : <h1>Dashboard</h1>
         }
-        <div>
-          <Button  style = {value === "reject"? {} : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
+        <div style={{display:'flex', width:'100%', justifyContent:'end'}}>
+          <Button  style = {value === "reject"? styles.tabBtnCilcked : styles.tabBtn} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>반려함</Button>
         </div>
       </Box>
     
@@ -49,8 +51,8 @@ function Dashboard() {
 
       <Box sx={styles.fixedTab}>
         <div style={{display:'flex'}}>
-          <Button  style = {value === "list" ? {} : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
-          <Button  style = {value === "stat" ? {} : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
+          <Button  style = {value === "list" ? styles.tabBtnCilcked : styles.tabBtn} value="list" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>목록</Button>
+          <Button  style = {value === "stat" ? styles.tabBtnCilcked : styles.tabBtn} value="stat" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>통계</Button>
         </div>
       </Box >
 
@@ -97,7 +99,11 @@ const styles={
   },
   tabBtn:{
     border:'none',
-    color:'#9e9e9e',
+    color:navy,
+  },
+  tabBtnCilcked:{
+    border: `1px solid ${navy}`,
+    color:navy,
   },
  
 }

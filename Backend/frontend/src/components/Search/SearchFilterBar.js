@@ -12,6 +12,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from 'dayjs';
 // import timezone
 import { TIME_ZONE } from "../../config";
+const navy =  '#0F3659';
 
 function SearchFilterBar({setStartDate, setEndDate}){
     const [isDur, setIsDur] = useState(true);
@@ -89,7 +90,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
  
     return(
         <div>
-            <Button  aria-describedby={id} variant="contained" onClick={handleClick}>
+            <Button  aria-describedby={id} variant="contained" onClick={handleClick} style={{backgroundColor:navy}}>
                <FaFilter/> Filter
             </Button>
             <Popover
@@ -105,42 +106,55 @@ function SearchFilterBar({setStartDate, setEndDate}){
                 <Card style={{justifyContent: "center", alignItems: "center", padding:'0px 10px',
                 //width: "string",
                 gap: '10px', gridTemplateColumns: 'minmax(400px, max-content) 1fr', width:'fit-content', height: "", borderRadius:'10px'}}>
-                    <Box id="" style={{display:"flex"}}>
+                    <Box id="" style={{display:"flex",justifyContent: "space-between", margin:'0px 20px'}}>
                         <Typography>조회기간</Typography>
                         {duration === 'week'
                         ?<Button variant="contained" value="week" style={styles.button} >1주</Button>
-                        :<Button variant="outlined" value="week" style={styles.button} onClick={handleDr} >1주</Button>
+                        :<Button variant="outlined" value="week" style={styles.unClickedbutton} onClick={handleDr} >1주</Button>
                         }
                         {
                         duration === 'month'
                         ?<Button variant="contained" value="month" style={styles.button}>1개월</Button>
-                        :<Button variant="outlined" value="month" style={styles.button} onClick={handleDr}>1개월</Button>
+                        :<Button variant="outlined" value="month" style={styles.unClickedbutton} onClick={handleDr}>1개월</Button>
                         }
                         {
                         duration === "quarter" 
                         ?<Button variant="contained" value="quarter" style={styles.button}>1분기</Button>
-                        :<Button variant="outlined" value="quarter" style={styles.button} onClick={handleDr}>1분기</Button>
+                        :<Button variant="outlined" value="quarter" style={styles.unClickedbutton} onClick={handleDr}>1분기</Button>
                         }
                         {
                         duration === "year"
                         ?<Button variant="contained" value="year" style={styles.button}>1년</Button>
-                        :<Button variant="outlined" value="year" style={styles.button} onClick={handleDr}>1년</Button>
+                        :<Button variant="outlined" value="year" style={styles.unClickedbutton} onClick={handleDr}>1년</Button>
                         }
                     </Box>
                     <Box style={{display:"flex"}}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DemoContainer components={["DatePicker"]} sx={{  mx: "auto" }}>
                                 <div style={{display:'flex', marginLeft:'20px'}}>
-                                    <DatePicker disableFuture onChange={(newVal)=>{setStart(newVal); setIsDur(false);}} value={isDur? null : start} label="시작날짜" slotProps={{ textField: { size: 'small' } }} style={{width:'100px'}} format={"YYYY-MM-DD"}/>
+                                    <DatePicker 
+                                    disableFuture 
+                                    onChange={(newVal)=>{setStart(newVal); setIsDur(false);}} 
+                                    value={isDur? null : start} 
+                                    label="시작날짜" 
+                                    slotProps={{ textField: { size: 'small', }}} 
+                                    format={"YYYY-MM-DD"}/>
                                     ~
-                                    <DatePicker disableFuture minDate={start? start:dayjs('1970-01-01')}  onChange={(newVal)=>{setEnd(newVal); setIsDur(false);}} value={isDur? null :end} label="종료날짜" slotProps={{ textField: { size: 'small' } }}  format={"YYYY-MM-DD"}/>
+                                    <DatePicker 
+                                    disableFuture 
+                                    minDate={start? start:dayjs('1970-01-01')}  
+                                    onChange={(newVal)=>{setEnd(newVal); setIsDur(false);}} 
+                                    value={isDur? null :end} 
+                                    label="종료날짜" 
+                                    slotProps={{ textField: { size: 'small' } }}  
+                                    format={"YYYY-MM-DD"}/>
                                 </div>
                             </DemoContainer>
                         </LocalizationProvider>
                     </Box>
                     <Divider variant="middle" style={{margin:"10px 0px"}}/>
                     <Box style={{display:'flex', justifyContent:'end'}}>
-                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn();}}>완료</button>
+                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn();}} style={styles.finishBtn}>완료</button>
                     </Box>
                 </Card>
             </Popover>
@@ -158,8 +172,24 @@ const styles = {
     button:{
         borderRadius : '50px',
         padding: '0px 15px',
-        width:'70px',
-        height:'35px',
+        //width:'70px',
+        height:'30px',
         fontWeight:'500',
+        backgroundColor : navy,
     },
+    unClickedbutton:{
+        borderRadius : '50px',
+        padding: '0px 15px',
+        //width:'70px',
+        height:'30px',
+        fontWeight:'500',
+        color : navy,
+        border : `1px solid ${navy}`,
+    },
+    finishBtn : {
+        color: navy,
+        border : 'none',
+        backgroundColor : 'white',
+        fontWeight:'600',
+    }
 }

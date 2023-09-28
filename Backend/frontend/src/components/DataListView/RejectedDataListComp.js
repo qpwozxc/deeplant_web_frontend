@@ -7,6 +7,7 @@ import TransitionsModal from "./WarningComp";
 import Spinner from "react-bootstrap/Spinner";
 import PaginationComp from "./paginationComp";
 import './DataListComp.module.css'
+const navy =  '#0F3659';
 
 const RejectedDataListComp=({startDate, endDate})=>{
     const [isLoaded, setIsLoaded] = useState(true);
@@ -56,6 +57,9 @@ const RejectedDataListComp=({startDate, endDate})=>{
     return(
         <div style={style.wrapper}>
         <div style={style.listContainer}>
+        <Box sx={style.deletBtnContainer}>
+          <Button variant="contained" style={style.deleteBtn} onClick={handleDeleteBtn}>삭제</Button>
+        </Box>
         {isLoaded ? (
           //데이터가 로드된 경우 데이터 목록 반환
           <DataList meatList={meatList} pageProp={'reject'} setChecked={setDeleteItems} offset={offset} count={count}/>
@@ -64,9 +68,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
           <Spinner animation="border"/>
         )}
         </div>
-        <Box sx={style.deletBtnContainer}>
-          <Button variant="contained" onClick={handleDeleteBtn}>삭제</Button>
-        </Box>
+       
         <Box sx={style.paginationBar}>
           <PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
         </Box>
@@ -83,7 +85,7 @@ export default RejectedDataListComp;
 const style = {
   wrapper : {
     position: "fixed", 
-    top: "200px", 
+    //top: "200px", 
     left: "30px", 
     width: "100%",
   },
@@ -102,6 +104,15 @@ const style = {
     justifyContent: "center",
   },
   deletBtnContainer : {
-    display:'flex', margin:'20px 0', padding:'0px 100px', width:'100%', justifyContent:'start'
+    display:'flex', 
+    margin:'20px 0', 
+    padding:'0px 100px', 
+    width:'100%', 
+    justifyContent:'start'
+  },
+  deleteBtn :{
+    backgroundColor:"transparent",
+    color : navy,
+    fontWeight : '600',
   }
 }
