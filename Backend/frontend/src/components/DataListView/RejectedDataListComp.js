@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import PaginationComp from "./paginationComp";
 import './DataListComp.module.css'
 const navy =  '#0F3659';
+const apiIP = '3.38.52.82';
 
 const RejectedDataListComp=({startDate, endDate})=>{
     const [isLoaded, setIsLoaded] = useState(true);
@@ -24,7 +25,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
     //api fetch
     const getMeatList = async (offset) => {
       const json = await (
-        await fetch(`http://3.38.52.82/meat/status?statusType=1&offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
+        await fetch(`http://${apiIP}/meat/status?statusType=1&offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
       ).json();
       console.log('fetch done!');
       // 전체 데이터 수 fetch
@@ -37,7 +38,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
   
       //데이터 api 로 부터 fetch
     useEffect(() => {
-      //getMeatList(currentPage - 1);
+      getMeatList(currentPage - 1);
     }, [startDate, endDate, currentPage]);
 
 

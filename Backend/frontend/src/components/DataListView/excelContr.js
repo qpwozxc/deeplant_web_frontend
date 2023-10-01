@@ -6,6 +6,7 @@ import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import { Box, Button,SvgIcon,} from "@mui/material";
 
 const navy =  '#0F3659';
+const apiIP = '3.38.52.82';
 
 function ExcelController(){
     const fileRef = useRef(null);
@@ -40,7 +41,7 @@ function ExcelController(){
             console.log("cols: ", resp.cols, "rows: ", resp.rows);
             console.log('toJson', toJson)
             
-            fetch(`http://localhost:8080/meat/update`, {
+            fetch(`http://${apiIp}/meat/update`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

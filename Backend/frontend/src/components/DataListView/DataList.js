@@ -7,7 +7,7 @@ import {FaArrowUp, FaArrowDown} from "react-icons/fa6";
 import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
-function DataList({meatList, pageProp, setChecked, offset, count, setFilter, setFilterAsc}){
+function DataList({meatList, pageProp, setChecked, offset, count, }){
     
     // 체크된 아이템 배열 
     const [checkItems, setCheckItems] = useState([]);
@@ -54,45 +54,7 @@ function DataList({meatList, pageProp, setChecked, offset, count, setFilter, set
         setDelId(id);
     }
   
-    // 필터링
-    const [ishover, setIshover] = useState(false);
-    // hover 한 경우 true -> json 배열로 저장 
-    const [hoverStates, setHoverStates] = useState({
-        trackingNoHover: false,
-        idHover: false,
-        farmAddrHover: false,
-        userNameHover: false,
-        userTypeHover: false,
-        companyHover: false,
-        createdAtHover: false,
-        acceptHover: false,
-        deleteHover: false,
-    });
-
-    // hover state를 관리하는 헬퍼 함수
-    const updateHoverState = (key, value) => {
-        setHoverStates(prevHoverStates => ({
-            ...prevHoverStates,
-            [key]: value,
-        }));
-    };
-    
-    const handleMouseEnter= key => {
-        updateHoverState(key, true);
-    };
-
-    const handleMouseLeave = key => {
-        updateHoverState(key, false);
-    };
-
-    const handleFilterOnclick=(e)=>{
-        let innerText = e.target.parentElement.parentElement.innerText;
-        //if (innerText === "") 
-        //     console.log(e.target.parentElement.parentElement.parentElement);//innerText = e.target.parentElement.parentElement.parentElement.innerText:innerText= innerText;
-        //console.log(innerText);
-        //setFilter(e.target.value);
-        //setFilterAsc(e.target.value);
-    }
+   
     // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
         return (
@@ -117,17 +79,10 @@ function DataList({meatList, pageProp, setChecked, offset, count, setFilter, set
                     key={headCell.id}
                     align={headCell.align}
                     padding={headCell.disablePadding ? 'none'  :'none'} // normal
-                    sortDirection={orderBy === headCell.id ? order : false}  
-                    sx= {ishover &&{width:'fitContent',  borderRight:'1px solid #eeeeee', lineHeight:'5px'}} 
+                    sortDirection={orderBy === headCell.id ? order : false}   
                     >
-                    <div key={headCell.id} style={{display:'flex',alignItems:'center',padding:'16px'}} onMouseEnter={()=>{ handleMouseEnter(headCell.id+'Hover'); setIshover(true);}} onMouseLeave={()=>{handleMouseLeave(headCell.id+'Hover'); setIshover(false);}}>
-                        {headCell.label}
-                        <IconButton  key={headCell.id} size="small" sx={{paddingLeft:'5px',height:'25px', width:'25px',}} onClick={(e)=>handleFilterOnclick(e)} onMouseEnter={()=>{ handleMouseEnter(headCell.id+'Hover'); setIshover(true);}}>
-                        {
-                        hoverStates[headCell.id+'Hover'] 
-                        &&<FaArrowUp key={headCell.id}/>
-                        }
-                        </IconButton>             
+                    <div key={headCell.id} style={{display:'flex',alignItems:'center',padding:'16px'}} >
+                        {headCell.label}           
                     </div>
                     </TableCell>
                 ))}

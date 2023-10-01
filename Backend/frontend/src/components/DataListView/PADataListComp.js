@@ -7,6 +7,8 @@ import HandlePredictClick from "../API/predictPOST";
 import GetSingleData from "../API/detailMeatGet";
 import useGetDetail from "../API/useGetDetail";
 
+const apiIP = '3.38.52.82';
+
 const PADataListComp=({startDate, endDate})=>{
   const [isLoaded, setIsLoaded] = useState(true);
   const [meatList, setMeatList] = useState([]);
@@ -28,7 +30,7 @@ const PADataListComp=({startDate, endDate})=>{
   const getMeatList = async (offset,) => {
     const json = await (
       await fetch(
-        `http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
+        `http://${apiIp}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
       )
     ).json();
     console.log("fetch done!", json);

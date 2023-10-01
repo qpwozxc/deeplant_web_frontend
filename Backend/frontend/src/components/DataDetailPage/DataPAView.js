@@ -8,6 +8,8 @@ import Divider from '@mui/material/Divider';
 import './imgRot.css';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 
+const apiIP = '3.38.52.82';
+
 function DataPAView({ currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
     //데이터 받아오기 -> props 로 전달로 변경
@@ -33,7 +35,7 @@ function DataPAView({ currentUser ,dataProps}){
     const [dataPA, setDataPA] = useState(null);
     const getData = async (seqno) => {
         try {
-            const response = await fetch(`http://3.38.52.82/predict/get?id=${id}&seqno=${seqno}`);
+            const response = await fetch(`http://${apiIP}/predict/get?id=${id}&seqno=${seqno}`);
             if (!response.ok){
                 throw new Error('Network response was not ok');
             }
@@ -95,7 +97,7 @@ function DataPAView({ currentUser ,dataProps}){
     
             const res = JSON.stringify(req);
             try{
-                fetch(`http://3.38.52.82/predict`, {
+                fetch(`http://${apiIP}/predict`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

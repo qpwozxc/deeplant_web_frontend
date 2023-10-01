@@ -23,6 +23,8 @@ import ApiTable from "./tablesComps/apiTable";
 // import timezone
 import { TIME_ZONE } from "../../config";
 
+const apiIP = '3.38.52.82';
+
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
     
@@ -174,7 +176,7 @@ function DataView({page, currentUser ,dataProps}){
             const res = JSON.stringify(req);
             
             try{
-                const response  = fetch(`http://3.38.52.82/meat/add/heatedmeat_eval`, {
+                const response  = fetch(`http:/4${apiIP}/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -208,7 +210,7 @@ function DataView({page, currentUser ,dataProps}){
             // api 연결 /meat/add/probexpt_data
             const res = JSON.stringify(req);
             try{
-                fetch(`http://3.38.52.82/meat/add/probexpt_data`, {
+                fetch(`http://${apiIP}/meat/add/probexpt_data`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -273,7 +275,7 @@ function DataView({page, currentUser ,dataProps}){
             console.log(res);
             
             try{
-                fetch(`http://3.38.52.82/meat/add/sensory_eval`, {
+                fetch(`http://${apiIP}/meat/add/sensory_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -296,7 +298,7 @@ function DataView({page, currentUser ,dataProps}){
     //[검토] 승인 여부 변경 API 호출 
     const handleConfirmSaveClick=()=>{
         try{
-            const resp = fetch(`http://3.38.52.82/meat/${confirmVal}?id=${id}`);
+            const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
             navigate({pathname : '/DataManage'});
         }catch(err){
             console.error(err);

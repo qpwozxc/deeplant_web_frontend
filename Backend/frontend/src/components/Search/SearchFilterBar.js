@@ -93,6 +93,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
             <Button  aria-describedby={id} variant="contained" onClick={handleClick} style={{backgroundColor:navy}}>
                <FaFilter/> Filter
             </Button>
+
             <Popover
             id={id}
             open={open}
@@ -103,9 +104,7 @@ function SearchFilterBar({setStartDate, setEndDate}){
             horizontal: 'left',
             }}
             >
-                <Card style={{justifyContent: "center", alignItems: "center", padding:'0px 10px',
-                //width: "string",
-                gap: '10px', gridTemplateColumns: 'minmax(400px, max-content) 1fr', width:'fit-content', height: "", borderRadius:'10px'}}>
+                <Card style={styles.cardStyle}>
                     <Box id="" style={{display:"flex",justifyContent: "space-between", margin:'0px 20px'}}>
                         <Typography>조회기간</Typography>
                         {duration === 'week'
@@ -152,9 +151,11 @@ function SearchFilterBar({setStartDate, setEndDate}){
                             </DemoContainer>
                         </LocalizationProvider>
                     </Box>
+
                     <Divider variant="middle" style={{margin:"10px 0px"}}/>
+
                     <Box style={{display:'flex', justifyContent:'end'}}>
-                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn();}} style={styles.finishBtn}>완료</button>
+                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn(); setAnchorEl(null);}} style={styles.finishBtn}>완료</button>
                     </Box>
                 </Card>
             </Popover>
@@ -191,5 +192,16 @@ const styles = {
         border : 'none',
         backgroundColor : 'white',
         fontWeight:'600',
+    },
+    cardStyle : {
+        justifyContent: "center", 
+        alignItems: "center", 
+        padding:'10px 10px',
+        //width: "string",
+        gap: '10px', 
+        gridTemplateColumns: 'minmax(400px, max-content) 1fr', 
+        width:'fit-content', 
+        height: 'fit-content', 
+        borderRadius:'10px'
     }
 }

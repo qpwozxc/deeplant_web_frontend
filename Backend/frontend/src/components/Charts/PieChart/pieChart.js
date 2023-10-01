@@ -10,6 +10,8 @@ import { fNumber } from './formatNumber';
 import useChart from './usePieChart';
 import { useEffect, useState } from "react";
 
+const apiIP = '3.38.52.82';
+
 const CHART_HEIGHT = 300;
 const LEGEND_HEIGHT = 50;
 const TITLE = '신선육/숙성육';
@@ -62,7 +64,7 @@ const PieChart = ({ subheader, chartColors, startDate,endDate,...other }) => {
       // pie 차트 데이터 받아오는 함수
       const getPieData = async() => {
         const json = await(
-        await fetch(`http://3.38.52.82//meat/statistic?type=0&start=${startDate}&end=${endDate}`)
+        await fetch(`http://${apiIp}/meat/statistic?type=0&start=${startDate}&end=${endDate}`)
         ).json();
         setData(json);
         setChartSeries([json['total_counts']['raw'], json['total_counts']['processed']]);

@@ -1,12 +1,14 @@
 import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 
+const apiIP = '3.38.52.82';
+
 export default function TransitionsModal({id, setIsDelClick}) {
     //화면 창 닫기
     const [open, setOpen] = useState(true);
     const handleClose = () => {setOpen(false); setIsDelClick(false)};
     const ondelete = async(id) =>{
-      const resp= await fetch(`http://3.38.52.82/meat/delete?id=${id}`);
+      const resp= await fetch(`http://${apiIp}/meat/delete?id=${id}`);
       console.log('response', resp, id);
      // window.location.reload();
     }

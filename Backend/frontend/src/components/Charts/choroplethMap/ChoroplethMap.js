@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import * as d3 from 'd3';
 import 'leaflet/dist/leaflet.css';
 
+const apiIP = '3.38.52.82';
+
 const ChoroplethMap = ({data,startDate,endDate})=>{
     // 지역별 개수 API 데이터 받아오기\
     const [cattleCnt, setCattleCnt] = useState({});
@@ -13,7 +15,7 @@ const ChoroplethMap = ({data,startDate,endDate})=>{
     useEffect(()=>{
       const getData = async() =>{
         const mapData = await(
-          await fetch(`http://3.38.52.82/meat/statistic?type=3&start=${startDate}&end=${endDate}`)
+          await fetch(`http://${apiIp}/meat/statistic?type=3&start=${startDate}&end=${endDate}`)
         ).json();
 
         //데이터 set

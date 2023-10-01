@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DataView from "./DataView";
 import DataPAView from "./DataPAView";
 
+const apiIP = '3.38.52.82';
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
 
 export function DataLoad(id, page, currentUser) {
@@ -14,7 +15,7 @@ export function DataLoad(id, page, currentUser) {
   // API fetch
   const getData = async (id) => {
     const json = await (
-      await fetch(`http://3.38.52.82/meat/get?id=${id}`)
+      await fetch(`http://${apiIp}/meat/get?id=${id}`)
     ).json();
     console.log("connected!!", json);
     //console.log(json);

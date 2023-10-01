@@ -4,6 +4,8 @@ import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
 
+const apiIP = '3.38.52.82';
+
 const DataListComp=({startDate, endDate})=>{
   //console.log("date", startDate, endDate);
   const [isLoaded, setIsLoaded] = useState(true);
@@ -18,15 +20,11 @@ const DataListComp=({startDate, endDate})=>{
   // 페이지네이션 - 전체 페이지 개수 
   const totalPages = Math.ceil(totalData / count);
 
-  // 필터 -> api 연결되면 바꾸기
-  const [filter, setFilter] = useState('createdAt');
-  const [filterAsc, setFilterAsc] = useState(true);
-
   //API로부터 fetch 하는 함수
   const getMeatList = async (offset,) => {
     const json = await (
       await fetch(
-        `http://3.38.52.82/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
+        `http://${apiIp}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=true`
       )
     ).json();
     console.log("fetch done!", json);
@@ -45,8 +43,8 @@ const DataListComp=({startDate, endDate})=>{
 
   //데이터 api 로 부터 fetch
   useEffect(() => {
-    //getMeatList(currentPage - 1 );
-  }, [startDate, endDate, currentPage, filter, filterAsc]);
+    getMeatList(currentPage - 1 );
+  }, [startDate, endDate, currentPage, ]);
 
   return (
     <div style={style.wrapper}>
@@ -59,8 +57,6 @@ const DataListComp=({startDate, endDate})=>{
             pageProp={'list'}
             offset={currentPage-1}
             count={count}
-            setFilter={setFilter}
-            setFilterAsc={setFilterAsc}
           />
           // )
           // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
