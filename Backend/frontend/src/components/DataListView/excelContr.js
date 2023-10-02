@@ -53,10 +53,10 @@ function ExcelController(){
         });
     };
     return(
-        <Box sx={{ display: 'flex', gap: 1, width: "100%", marginTop: "0px" , backgroundColor:'white',border:'1px solid #cfd8dc', marginLeft:'10px',borderRadius:'5px'}}>
+        <Box>
           <input class="form-control" accept=".csv,.xlsx,.xls" type="file" id="formFile" ref={fileRef}
             onChange={(e) => {handleFileChange(e);}} style={{display:'none' }}/>
-          <Button style={{color:navy}} onClick={()=>{fileRef.current.click();}}>
+          <Button style={{color:navy, marginRight:'10px', backgroundColor:'white', border:`1px solid ${navy}`, height:'35px', borderRadius:'10px'}} onClick={()=>{fileRef.current.click();}}>
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
                 <ArrowUpOnSquareIcon />
@@ -64,7 +64,7 @@ function ExcelController(){
             <span>Import</span>
             </div>  
           </Button>
-          <Button style={{color:navy}} onClick={()=>{}}>
+          <Button style={{color:navy , backgroundColor:'white', border:`1px solid ${navy}`, height:'35px', borderRadius:'10px'}} onClick={()=>{}}>
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
                   <ArrowDownOnSquareIcon />
