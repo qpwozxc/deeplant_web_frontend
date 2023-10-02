@@ -52,7 +52,7 @@ const DataListComp=({startDate, endDate})=>{
   }, [startDate, endDate, currentPage, ]);
 
   return (
-    <div style={style.wrapper}>
+    <div >
       <div style={style.listContainer} >
         {
           //meatList.length!==0
@@ -81,17 +81,13 @@ export default DataListComp;
 
 
 const style = {
-  wrapper : {
-    position: "fixed", 
-    //top: "200px", 
-    left: "30px", 
-    width: "100%",
-  },
   listContainer :{
     textAlign: "center",
     width: "100%",
-    padding: "0px 120px",
+    paddingRight:'0px',
+    //padding: "0px 120px",
     paddingBottom: "0",
+    height:'400px',
   },
   paginationBar : {
     display: "flex",

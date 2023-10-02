@@ -3,7 +3,7 @@ import {Link as RouterLink} from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button,Checkbox , IconButton} from '@mui/material';
-import {FaArrowUp, FaArrowDown} from "react-icons/fa6";
+import {FaRegTrashAlt} from "react-icons/fa";
 import Dot from "../Dot";
 import TransitionsModal from "./WarningComp";
 import PropTypes from 'prop-types';
@@ -81,7 +81,7 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
                     padding={headCell.disablePadding ? 'none'  :'none'} // normal
                     sortDirection={orderBy === headCell.id ? order : false}   
                     >
-                    <div key={headCell.id} style={{display:'flex',alignItems:'center',padding:'16px'}} >
+                    <div key={headCell.id} style={{display:'flex',alignItems:'center',padding:'6px', fontWeight:'600', color:'#90a4ae'}} >
                         {headCell.label}           
                     </div>
                     </TableCell>
@@ -105,7 +105,7 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
     
     return (
-        <Box style={{backgroundColor:"white", borderRadius:'5px'}}>
+        <Box style={{backgroundColor:"white", borderRadius:'5px', height:'100%'}}>
         <TableContainer
             sx={{
             width: '100%',
@@ -117,6 +117,7 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
             padding:'10px',
             boxShadow:1,
             borderRadius:'5px',
+            height:'100%',
             }}
         >
             <Table
@@ -137,13 +138,13 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
                     <TableRow
                     hover
                     role="checkbox"
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } , height:'70px'}}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={index}
                     selected={isItemSelected}
                     >
-                    {//반려함이나 예측 페이지인 경우 삭제 체크박스 추가
+                        {//반려함이나 예측 페이지인 경우 삭제 체크박스 추가
                         (pageProp === 'reject' || pageProp === 'pa')
                         &&
                         <TableCell>
@@ -154,38 +155,40 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
                              onChange={(e)=> handleSingleCheck(e.target.checked, content.id)} 
                              inputProps={{ 'aria-label': 'controlled' }}/>
                         </TableCell>
-                    }
-                        <TableCell component="th" id={labelId} scope="row" align="left" style={{padding:"5px"}}> {(index+1)+(offset*count)} </TableCell>
-                        <TableCell align="center" style={{padding:"5px"}}>
-                            <Link color="#000000" component={RouterLink} 
-                                to={pageProp === 'pa' ?{pathname:`/dataPA/${content.id}`} 
-                                : content.statusType === "승인"? {pathname : `/dataView/${content.id}`}
-                                :{pathname : `/DataConfirm/${content.id}`}}>
+                        }
+                        <TableCell component="th" id={labelId} scope="row" align="center" style={style.tableCell}> 
+                            {(index+1)+(offset*count)} 
+                        </TableCell>
+                        <TableCell align="center" style={style.tableCell}>
+                            <Link 
+                                color="#000000" 
+                                component={RouterLink}
+                                style={{textDecorationLine:'none',}} 
+                                to= {pageProp === 'pa' 
+                                    ?{pathname:`/dataPA/${content.id}`} 
+                                    : content.statusType === "승인" ? {pathname : `/dataView/${content.id}`}
+                                                                    :{pathname : `/DataConfirm/${content.id}`}}>
                                 {content.id}
                             </Link>
                         </TableCell>
-                        <TableCell align="center"> {content.farmAddr? content.farmAddr : '없음'} </TableCell>
-                        <TableCell align="center"> {content.name} </TableCell>
-                        <TableCell align="center"> {content.type } </TableCell>
-                        <TableCell align="center"> {content.company} </TableCell>
-                        <TableCell align="center"> {content.createdAt.replace('T',' ')} </TableCell>
-                        <TableCell align="center" style={{padding:"5px"}}>
+                        <TableCell align="center" style={style.tableCell}> 
+                            {content.farmAddr? content.farmAddr : '-'} 
+                        </TableCell>
+                        <TableCell align="center" style={style.tableCell}> 
+                            {content.name} 
+                        </TableCell>
+                        <TableCell align="center" style={style.tableCell}> {content.type } </TableCell>
+                        <TableCell align="center" style={style.tableCell}> {content.company} </TableCell>
+                        <TableCell align="center" style={style.tableCell}> {content.createdAt.replace('T',' ')} </TableCell>
+                        <TableCell align="center" style={style.tableCell}>
                             {content.statusType === '반려' && <OrderStatus status={0} />}
                             {content.statusType === '승인' && <OrderStatus status={1} />}
                             {content.statusType === '대기중' && <OrderStatus status={2} />}
                         </TableCell>
-                        {/*
-                        content.statusType === "승인"
-                        ?<TableCell></TableCell>
-                        :<TableCell>
-                            <Link color="#000000" component={RouterLink} to={{pathname : `/DataConfirm/${content.id}`}}>
-                                <Button>검토</Button>
-                            </Link>
-                        </TableCell>
-                        */
-                        }
-                        <TableCell align="center" style={{padding:"5px", paddingRight:'24px'}}>
-                            <IconButton aria-label="delete" color="primary" onClick={()=>handleDelete(content.id)} > <DeleteIcon /> </IconButton>
+                        <TableCell align="center" style={style.tableCell }>
+                            <IconButton aria-label="delete" color="#90a4ae" onClick={()=>handleDelete(content.id)} > 
+                                <FaRegTrashAlt/> 
+                            </IconButton>
                         </TableCell>
                     </TableRow>
                 );
@@ -204,11 +207,19 @@ function DataList({meatList, pageProp, setChecked, offset, count, }){
 
 export default DataList;
 
+const style={
+    tableCell : {
+        fontSize:'17px',
+        fontWeight:'600',
+        padding:'5px',
+    }
+}
+
 // 테이블 헤더 CELL
 const headCells = [
     {
       id: 'trackingNo',
-      align: 'left',
+      align: 'center',
       disablePadding: false,
       label: 'No.'
     },
@@ -273,18 +284,22 @@ const headCells = [
 const OrderStatus = ({ status }) => {
     let color;
     let title;
+    let backgroundColor;
 
     switch (status) {
     case 0:
-        color = 'error';
+        backgroundColor = '#ffcdd2';
+        color = '#e53935';
         title = '반려';
         break;
     case 1:
-        color = 'success';
+        backgroundColor = '#b9f6ca';
+        color = '#00e676';
         title = '승인';
         break;
     case 2:
-        color = 'secondary';
+        backgroundColor = '#bcaaa4';
+        color = '#5d4037';
         title = '대기';
         break;
     default:
@@ -294,8 +309,11 @@ const OrderStatus = ({ status }) => {
 
     return (
     <Stack direction="row" spacing={1} alignItems="center">
-        <Dot color={color} />
-        <Typography>{title}</Typography>
+        <Button style={{backgroundColor:backgroundColor, height:'30px', width:'35px', borderRadius:'10px'}}>
+            <span style={{color:color,fontSize:'15px',fontWeight:'600',padding:'5px',}}>
+                {title}
+            </span>
+        </Button>
     </Stack>
     );
 };
