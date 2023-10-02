@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import "bootstrap/dist/css/bootstrap.css"; 
-import { FaAngleDoubleLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
+
+const navy =  '#0F3659';
+
 function DataEdit(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
@@ -14,13 +17,16 @@ function DataEdit(){
      const idParam  = useParams();
 
     return (
-      <Box sx={{ display: "flex"}}>
-        <Box sx={style.fixed}>
-          <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
-            <Link to={{pathname : '/DataManage'}} >
-              <IconButton sx={{backgroundColor:'white'}} size="large">
-              <FaAngleDoubleLeft/>
+      <Box>
+        <Box >
+          <div style={style.fixed/*{display:'flex', alignItems:'center', marginLeft:'10px'}*/}>
+            <Link to={{pathname : '/DataManage'}} style={{textDecorationLine:'none',display:'flex', alignItems:'center',}}>
+              <IconButton style={{color:`${navy}`, backgroundColor:'white', border:`1px solid ${navy}`, borderRadius:'10px', marginRight:'10px'}}>
+                <FaArrowLeft/>
               </IconButton>
+              <span style={{textDecoration:'none', color:`${navy}`, fontSize:'30px', fontWeight:'600'}}>
+               {idParam.id}
+              </span>
             </Link>
           </div>
         </Box>
@@ -34,15 +40,16 @@ export default DataEdit;
 const style={
   fixed:{
     position: 'fixed', 
-    top:'70px',
+    top:'120px',
     right:'0',
-    left:'65px',
+    left:'80px',
     zIndex: 1,
     width:'fit-content',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    backgroundColor:'#F5F5F5',
+    alignItems : 'center',
+    //backgroundColor:'tran',
     height: "70px",
   },
 

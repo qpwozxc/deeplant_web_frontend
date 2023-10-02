@@ -8,7 +8,7 @@ import Tabs from "react-bootstrap/Tabs";
 // modal component
 import InputTransitionsModal from "./InputWarningComp";
 // icons
-import {FaAngleLeft,FaAngleRight} from  "react-icons/fa6";
+import {FaArrowLeft,FaArrowRight, FaUpload} from  "react-icons/fa";
 // mui 
 import { Box, Button,Paper, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, } from '@mui/material';
 // firebase 
@@ -24,6 +24,7 @@ import ApiTable from "./tablesComps/apiTable";
 import { TIME_ZONE } from "../../config";
 
 const apiIP = '3.38.52.82';
+const navy =  '#0F3659';
 
 function DataView({page, currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
@@ -396,61 +397,101 @@ function DataView({page, currentUser ,dataProps}){
     return(
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
-            <Card style={{ width: "100%"}}>
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                
-                <Button variant="contained" size="small" sx={{height:'40px'}} onClick={handlePrevClick}><FaAngleLeft/></Button>
-                <div>
-                {// 이미지 설명 
-                currentIdx === 0
-                ?<div style={{backgroundColor:'#002984', color:'white'}}>원육이미지</div>
-                :<div style={{backgroundColor:'#002984', color:'white'}}>딥에이징 {currentIdx}회차 이미지</div>
-                }
-                {// 실제 이미지 
-                imgArr[currentIdx]
-                ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
-                :<div style={{height:'350px',width:"400px", display:'flex', justifyContent:'center', alignItems:'center'}}>이미지가 존재하지 않습니다.</div>
-                }
-
-                <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
-                    {// 페이지네이션 
-                         Array.from({ length: imgArr.length }, (_, idx)=>(
-                            <div value={idx} style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv} onClick={(e)=>handleImgClick(e)}>{idx + 1}</div>
-                         ))
-                    }
-                    
-                </div>
-                </div>
-                <Button variant="contained" size="small" sx={{height:'40px'}}  onClick={handleNextClick}><FaAngleRight/></Button>
-            </div>
-            
-            <Card.Body>         
-                <Card.Text >
-                <div style={{display:'flex'}}>
-                    <div><img src={qrImagePath} style={{width:'150px'}}/></div>              
-                    <ListGroup variant="flush">
-                        <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                        <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
-                        <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
-                        {page === '수정및조회'
-                        ?<ListGroup.Item>
-                            <input className="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
-                                onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
-                            {
-                            edited
-                            ?<Button type="button" className="btn btn-success" style={{height:"50px"}} onClick={()=>{fileRef.current.click()}}>이미지 업로드</Button>
-                            :<Button type="button" className="btn btn-success" style={{height:"50px"}} disabled>이미지 업로드</Button>
-                            }
-                        </ListGroup.Item>
-                        :<></>
+            {/* 1. 관리번호 고기에 대한 사진 -> 컴포넌트 따로 만들기*/}
+            <Card style={{ width: "27vw", margin:'0px 10px'}}>
+                {/* 1.1. 이미지 */}
+                <Card.Body>
+                    <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                        {// 이미지 제목 
+                            currentIdx === 0
+                            ?<div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>원육이미지</div>
+                            :<div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>딥에이징 {currentIdx}회차 이미지</div>
                         }
-                    </ListGroup>
-                </div>    
-                </Card.Text>
-            </Card.Body>
+                        <div style={{display:'flex'}}>            
+                            {page === '수정및조회'
+                            ?<div>
+                                <input className="form-control" accept="image/jpg,impge/png,image/jpeg,image/gif" type="file" id="formFile" ref={fileRef}
+                                    onChange={(e) => {setImgFile(e.target.files[0]); }} style={{ marginRight: "20px", display:'none' }}/>
+                                {
+                                edited
+                                ?
+                                <IconButton type="button" className="btn btn-success" style={{height:"40px", width:'160px',border:`1px solid ${navy}`, borderRadius:'5px'}} onClick={()=>{fileRef.current.click()}}>
+                                    <span style={{color:`${navy}`, fontSize:'16px', marginRight:'5px'}}>
+                                        이미지 업로드
+                                    </span>
+                                    <FaUpload/>
+                                </IconButton>
+                                :
+                                <IconButton type="button" className="btn btn-success" style={{height:"40px", width:'160px' , border:`1px solid ${navy}`, borderRadius:'5px'}} disabled>
+                                    <span style={{color:`${navy}`,fontSize:'16px', marginRight:'5px'}}>
+                                        이미지 업로드
+                                    </span>
+                                    <FaUpload/>
+                                </IconButton>
+                                }
+                            </div>
+                            :<></>
+                            }
+                        </div> 
+                    </Card.Text>
+                    <Card.Text>  
+                        <div>
+                            {// 실제 이미지 
+                            imgArr[currentIdx]
+                            ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
+                            :<div style={{height:'350px',width:"400px", display:'flex', justifyContent:'center', alignItems:'center'}}>이미지가 존재하지 않습니다.</div>
+                            }
+                        </div>
+                    </Card.Text>
+                    <Card.Text style={{display:'flex'}}>
+                        <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
+                            {// 페이지네이션 
+                                Array.from({ length: imgArr.length }, (_, idx)=>(
+                                    <div value={idx} style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv} onClick={(e)=>handleImgClick(e)}>{idx + 1}</div>
+                                ))
+                            }
+                            
+                        </div>
+                        <IconButton variant="contained" size="small" sx={{height:'40px', width:'40px', borderRadius:'10px', marginRight:'5px', padding:'0', border:'1px solid black'}} onClick={handlePrevClick}><FaArrowLeft/></IconButton>
+                        <IconButton variant="contained" size="small" sx={{height:'40px', width:'40px', borderRadius:'10px', padding:'0', border:'1px solid black'}}  onClick={handleNextClick}><FaArrowRight/></IconButton>
+                    </Card.Text>
+                </Card.Body>
             </Card>
-            <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
-            <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'40vw'}}>
+
+            {/* 2. QR코드와 데이터에 대한 기본 정보*/}
+            <Card style={{width:'27vw', height:'65vh',margin:'0px 10px'}}>
+                <Card.Body>
+                    <Card.Text>
+                        <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>
+                            상세정보
+                        </div>
+                    </Card.Text>
+                    <Card.Text>
+                        <img src={qrImagePath} style={{width:'300px'}}/> 
+                    </Card.Text> 
+                    <Card.Text>
+                              
+                        <ListGroup variant="flush">
+                            <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>관리번호 </span>
+                                <span>{id}</span>
+                            </ListGroup.Item>
+                            <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>등록인 이메일  </span>
+                                <span>{userId}</span>
+                            </ListGroup.Item>
+                            <ListGroup.Item  style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>저장 시간 </span>
+                                <span>{createdAt}</span>
+                            </ListGroup.Item>       
+                        </ListGroup>
+                        
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+            {/* 3. 세부 데이터 정보*/}
+            <Card style={{ width:'27vw', margin:'0px 10px'}}>    
+            <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'100%'}}>
                 <Tab value='raw' eventKey='rawMeat' title='원육' >
                     <RawTable data={rawInput}/>                  
                 </Tab>
@@ -464,7 +505,7 @@ function DataView({page, currentUser ,dataProps}){
                         inputValue={processedToggleValue} 
                         onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                         options={options.slice(1,)} 
-                        sx={{ width: 300 ,marginBottom:'10px'}} 
+                        sx={{ width: "fit-content" ,marginBottom:'10px'}} 
                         renderInput={(params) => <TextField {...params}/>}
                     />
                     <ProcessedTable 
@@ -482,7 +523,7 @@ function DataView({page, currentUser ,dataProps}){
                 </Tab>
                 <Tab value='heat' eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
-                    id={"controllable-states-heated"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    id={"controllable-states-heated"} options={options} sx={{ width: "fit-content" ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <HeatTable 
                         edited ={edited} 
@@ -494,7 +535,7 @@ function DataView({page, currentUser ,dataProps}){
                 </Tab>
                 <Tab value='lab' eventKey='labData' title='실험실' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle4}  size="small" onChange={(event, newValue) => {setToggle4(newValue)}} inputValue={toggle4Value} onInputChange={(event, newInputValue) => {setToggle4Value(newInputValue)}}
-                    id={"controllable-states-api"} options={options} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                    id={"controllable-states-api"} options={options} sx={{ width: "fit-content" ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
                     />
                     <LabTable 
                         edited={edited} 
@@ -512,15 +553,15 @@ function DataView({page, currentUser ,dataProps}){
                     />
                 </Tab>
             </Tabs>         
-            </div>
+            </Card>
         </div> 
         {
         page === '수정및조회'
         &&<div style={style.editBtnWrapper}>
         { 
         edited
-        ?<button type="button" className="btn btn-outline-success" onClick={onClickSubmitBtn}>완료</button>
-        :<button type="button" className="btn btn-success" onClick={onClickEditBtn}>수정</button>
+        ?<button type="button" style={{border:`1px solid ${navy}`, color: `${navy}`, borderRadius:'5px', width:'60px', height:'35px'}} onClick={onClickSubmitBtn}>완료</button>
+        :<button type="button" style={{backgroundColor:`${navy}`, border:'none' ,color:'white', borderRadius:'5px', width:'60px', height:'35px'}} onClick={onClickEditBtn}>수정</button>
         }
        </div> 
        }
@@ -566,24 +607,23 @@ const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
 
 const style={
     singleDataWrapper:{
-      height:'fit-content',
-      marginTop:'70px',
-      padding: "20px 50px",
+      //height:'fit-content',
+      marginTop:'120px',
+      padding: "20px 10px",
       paddingBottom: "0px",
       display: "flex",
       justifyContent: "space-between", 
-      backgroundColor:'white', 
+      //backgroundColor:'white', 
       borderTopLeftRadius:'10px' , 
       borderTopRightRadius:'10px',
-      width: "100%",
+      width: "85vw",
     },
     editBtnWrapper:{
         padding:"5px 10px",
         paddingTop:'0px',
         width:'100%' ,
         display:'flex',
-        justifyContent:'end', 
-        backgroundColor:'white', 
+        justifyContent:'end',  
         marginTop:'auto', 
         borderBottomLeftRadius:'10px', 
         borderBottomRightRadius:'10px'

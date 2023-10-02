@@ -8,7 +8,7 @@ export default function TransitionsModal({id, setIsDelClick}) {
     const [open, setOpen] = useState(true);
     const handleClose = () => {setOpen(false); setIsDelClick(false)};
     const ondelete = async(id) =>{
-      const resp= await fetch(`http://${apiIp}/meat/delete?id=${id}`);
+      const resp= await fetch(`http://${apiIP}/meat/delete?id=${id}`);
       console.log('response', resp, id);
      // window.location.reload();
     }

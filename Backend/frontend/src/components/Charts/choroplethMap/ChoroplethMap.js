@@ -15,7 +15,7 @@ const ChoroplethMap = ({data,startDate,endDate})=>{
     useEffect(()=>{
       const getData = async() =>{
         const mapData = await(
-          await fetch(`http://${apiIp}/meat/statistic?type=3&start=${startDate}&end=${endDate}`)
+          await fetch(`http://${apiIP}/meat/statistic?type=3&start=${startDate}&end=${endDate}`)
         ).json();
 
         //데이터 set

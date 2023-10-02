@@ -41,7 +41,7 @@ function ExcelController(){
             console.log("cols: ", resp.cols, "rows: ", resp.rows);
             console.log('toJson', toJson)
             
-            fetch(`http://${apiIp}/meat/update`, {
+            fetch(`http://${apiIP}/meat/add/sensory_eval`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

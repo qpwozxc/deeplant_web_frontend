@@ -3,6 +3,7 @@ import { Box, } from "@mui/material";
 import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
 import Spinner from "react-bootstrap/Spinner";
+import listData from "../../Data/pagination.json"
 
 const apiIP = '3.38.52.82';
 
@@ -22,12 +23,16 @@ const DataListComp=({startDate, endDate})=>{
 
   //API로부터 fetch 하는 함수
   const getMeatList = async (offset,) => {
-    const json = await (
+    let json = await (
       await fetch(
-        `http://${apiIp}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=true`
+        `http://${apiIP}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=true`
       )
     ).json();
     console.log("fetch done!", json);
+
+    // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
+    json = listData;
+    console.log(json)
     // 전체 데이터 수
     setTotalData(json["DB Total len"]);
     // 데이터

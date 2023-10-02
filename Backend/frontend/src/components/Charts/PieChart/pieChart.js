@@ -64,7 +64,7 @@ const PieChart = ({ subheader, chartColors, startDate,endDate,...other }) => {
       // pie 차트 데이터 받아오는 함수
       const getPieData = async() => {
         const json = await(
-        await fetch(`http://${apiIp}/meat/statistic?type=0&start=${startDate}&end=${endDate}`)
+        await fetch(`http://${apiIP}/meat/statistic?type=0&start=${startDate}&end=${endDate}`)
         ).json();
         setData(json);
         setChartSeries([json['total_counts']['raw'], json['total_counts']['processed']]);
