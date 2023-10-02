@@ -34,6 +34,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
+import { Box } from "@mui/material";
 
 function UserList() {
   const [registerShow, setRegisterShow] = useState(false);
@@ -98,12 +99,12 @@ function UserList() {
   ////////////
 
   const columns = [
-    { field: "name", headerName: "이름", width: 70 },
-    { field: "userId", headerName: "아이디", width: 180 },
+    { field: "name", headerName: "이름", width: 100 },
+    { field: "userId", headerName: "아이디", width: 250 },
     {
       field: "type",
-      headerName: "권한",
-      width: 150,
+      headerName: "소속",
+      width: 200,
       renderCell: (params) => (
         <CustomEditCell
           id={params.id}
@@ -129,7 +130,7 @@ function UserList() {
     },
     {
       field: "actions",
-      headerName: "작업",
+      headerName: "",
       width: 120,
       renderCell: (params) => (
         <div>
@@ -255,22 +256,28 @@ function UserList() {
       </Select>
     );
   };
+
+  
   return (
     <div>
       <Toolbar />
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Typography component="h2" variant="h4" color="primary" gutterBottom>
-          사용자 관리
-        </Typography>
-        <div style={{ marginLeft: "auto" }}>
-          <Button
-            className="mb-3"
-            variant="success"
-            onClick={handleRegisterShow}
-          >
-            +신규 회원 등록
-          </Button>
-        </div>
+      <Typography
+  component="h2"
+  variant="h4"
+  gutterBottom
+  style={{
+    color: '#151D48',
+    fontFamily: 'Poppins',
+    fontSize: `${(36 / 1920) * 100}vw`,
+    fontStyle: 'normal',
+    fontWeight: 600,
+    lineHeight: `${(36 / 1920) * 100 * 1.4}vw`,
+  }}
+>
+  User Management
+</Typography>
+        
       </div>
       <Modal
         show={registerShow}
@@ -286,34 +293,52 @@ function UserList() {
           <UserRegister handleClose={handleRegisterClose} />
         </Modal.Body>
       </Modal>
-      <Paper
+      <div style={{ display: "flex", alignItems: "center" }}>
+      <Box
         component="form"
         sx={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "16px",
+          marginBottom: `${(16 / 1080) * 100}vh`,
+          paddingX: `${(16 / 1920) * 100}vw`,
+          paddingY: `${(12 / 1080) * 100}vh`,
+          width: `${(513 / 1920) * 100}vw`,
+          height : `${(60 / 1080) * 100}vh`,
+          backgroundColor: '#FFF'
         }}
       >
+          <SearchIcon />
         <InputBase
-          sx={{ ml: 1, flex: 1 }}
           placeholder="사용자 검색"
           onChange={(event) => handleSearch(event)}
+          sx={{
+            color: '#737791',
+            fontFamily: 'Poppins',
+            fontSize: `${(20 / 1920) * 100}vw`,
+            fontStyle: 'normal',
+            fontWeight: 500,
+            lineHeight: `${(20 / 1080) * 100}vh`,
+          }}
         />
-        <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-      </Paper>
-      <Paper
-        sx={{
-          p: 2,
-          flexDirection: "column",
-          minHeight: "380px",
-          minWidth: "800px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      </Box>
+
+      <div style={{ marginLeft: "auto" }}>
+          <Button
+            className="mb-3"
+            onClick={handleRegisterShow}
+            style={{
+              display: "inline-flex",
+              paddingX: `${(12 / 1920) * 100}vw`,
+              paddingY:`${(16 / 1080) * 100}vh`,
+              alignItems: "center",
+              gap: `${(8 / 1920) * 100}vw`,
+              borderRadius: `${(10 / 1920) * 100}vw`,
+    background: "#0F3659",
+            }}
+          >
+            +신규 회원 등록
+          </Button>
+        </div>
+      </div>
+      
         {isLoading ? (
           <CircularProgress />
         ) : (
@@ -335,11 +360,16 @@ function UserList() {
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
             sx={{
-              minHeight: "370px",
+              width: `${(1470 / 1920) * 100}vw`,
+              height: `${(560 / 1080) * 100}vh`,
+              flexShrink:0,
+              borderRadius: `${(20 / 1920) * 100}vw`,
+              border: '1px solid #F8F9FA',
+              backgroundColor: '#FFF',
+              boxShadow: `${(0 / 1920) * 100}vw ${(4 / 1080) * 100}vh ${(20 / 1920) * 100}vw ${(0 / 1080) * 100}vh rgba(238, 238, 238, 0.50)`,
             }}
           />
         )}
-      </Paper>
       <CustomSnackbar
         open={snackbarOpen}
         message={snackbarMessage}

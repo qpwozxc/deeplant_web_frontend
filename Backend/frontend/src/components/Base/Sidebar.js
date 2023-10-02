@@ -59,7 +59,7 @@ const mainListItems = [
   },
 ];
 
-const drawerWidth = 345; //사이드바 가로 길이
+const drawerWidth = `${(345 / 1920) * 100}vw`; //사이드바 가로 길이
 const defaultTheme = createTheme();
 
 const Drawer = styled(MuiDrawer, {
@@ -75,7 +75,7 @@ const Drawer = styled(MuiDrawer, {
     }),
     boxSizing: "border-box",
     backgroundColor: "#FFFFFF", //사이드바 배경
-    boxShadow: "5px 0px 30px 0px #EEE", // 사이드바 그림자
+    boxShadow:`${(5 / 1920) * 100}vw 0px ${(30 / 1080) * 100}vh 0px rgba(238, 238, 238, 0.50)`, // 사이드바 그림자
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
@@ -100,7 +100,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   backgroundColor: "#FFFFFF",
   boxShadow: "none",
-  height: "120px",
+  height: `${(120 / 1080) * 100}vh`,
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -161,20 +161,21 @@ function Sidebar() {
             <Badge color="secondary">
               <PersonIcon />
             </Badge>
-            {UserInfo.name ? (
-              <Typography
-                component="h1"
-                variant="h6"
-                noWrap
-                sx={{ flexGrow: 1 }}
-              >
-                {UserInfo.name}님
-              </Typography>
-            ) : (
-              <Typography component="span" variant="body1" sx={{ flexGrow: 1 }}>
-                Loading... {/* or any loading message */}
-              </Typography>
-            )}
+            {UserInfo && UserInfo.name ? (
+  <Typography
+    component="h1"
+    variant="h6"
+    noWrap
+    sx={{ flexGrow: 1 }}
+  >
+    {UserInfo.name}님
+  </Typography>
+) : (
+  <Typography component="span" variant="body1" sx={{ flexGrow: 1 }}>
+    Loading... {/* 또는 원하는 로딩 메시지 */}
+  </Typography>
+)}
+
           </IconButton>
 
           <IconButton onClick={logout}>
@@ -188,18 +189,7 @@ function Sidebar() {
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            px: [1],
-          }}
-        >
-          <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </Toolbar>
+        
         <List component="nav">
           {mainListItems.map((item) => (
             <Tooltip title={item.label} placement="right" arrow>
@@ -228,6 +218,18 @@ function Sidebar() {
             </Tooltip>
           ))}
         </List>
+        <Toolbar
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            px: [1],
+          }}
+        >
+          <IconButton onClick={toggleDrawer}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </Toolbar>
       </Drawer>
     </ThemeProvider>
   );
