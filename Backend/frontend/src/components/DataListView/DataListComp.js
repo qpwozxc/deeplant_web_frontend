@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Box, } from "@mui/material";
 import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
+import PaginationV2 from "./PaginationV2";
 import Spinner from "react-bootstrap/Spinner";
 import listData from "../../Data/pagination.json"
 
@@ -71,7 +72,9 @@ const DataListComp=({startDate, endDate})=>{
         }
       </div>
       <Box sx={style.paginationBar}>
-        <PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+        {//<PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+        }
+        <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       </Box>
     </div>
   );

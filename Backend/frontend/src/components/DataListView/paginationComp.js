@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import Pagination from "react-bootstrap/Pagination";
 
+const navy = '#0F3659';
+
 function PaginationComp({totalPages, limit,currentPage, setCurrentPage }){
     const [currentPageArray, setCurrentPageArray] = useState([]);
     const [totalSlicedPageArray, setTotalSlicedPageArray] = useState([]);
@@ -36,7 +38,7 @@ function PaginationComp({totalPages, limit,currentPage, setCurrentPage }){
 
     return(
         <Pagination>
-          <Pagination.First onClick={()=>setCurrentPage(1)} disabled = {currentPage === 1}/>
+          <Pagination.First onClick={()=>setCurrentPage(1)} disabled = {currentPage === 1} />
           <Pagination.Prev onClick={()=> setCurrentPage(currentPage- 1)} disabled={currentPage === 1} />
           {currentPageArray
             ? currentPageArray.map((m) => {
@@ -45,6 +47,7 @@ function PaginationComp({totalPages, limit,currentPage, setCurrentPage }){
                     key={m + 1}
                     onClick={() =>setCurrentPage(m +1)}
                     active={m +1 === currentPage}
+                    style={{}}
                   >
                     {m + 1}
                   </Pagination.Item>
@@ -52,7 +55,7 @@ function PaginationComp({totalPages, limit,currentPage, setCurrentPage }){
               })
             : null}
           <Pagination.Next  onClick={()=>setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} />
-          <Pagination.Last onClick={()=>setCurrentPage(totalPages)} disabled={currentPage === totalPages}/>
+          <Pagination.Last onClick={()=>setCurrentPage(totalPages)} disabled={currentPage === totalPages }/>
           
         </Pagination>
     );

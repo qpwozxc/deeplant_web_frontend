@@ -401,7 +401,7 @@ function DataView({page, currentUser ,dataProps}){
             <Card style={{ width: "27vw", margin:'0px 10px'}}>
                 {/* 1.1. 이미지 */}
                 <Card.Body>
-                    <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                    <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center',}}>
                         {// 이미지 제목 
                             currentIdx === 0
                             ?<div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>원육이미지</div>
@@ -435,7 +435,7 @@ function DataView({page, currentUser ,dataProps}){
                         </div> 
                     </Card.Text>
                     <Card.Text>  
-                        <div>
+                        <div style={{height:'350px',width:"100%", border:'1px solid black'}}>
                             {// 실제 이미지 
                             imgArr[currentIdx]
                             ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
@@ -443,17 +443,38 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div>
                     </Card.Text>
-                    <Card.Text style={{display:'flex'}}>
-                        <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
+                    <Card.Text style={{display:'flex', justifyContent:'center',alignItems:'center'}}>
+                        <IconButton 
+                            variant="contained" 
+                            size="small" 
+                            sx={{height:'35px', width:'35px', borderRadius:'10px', padding:'0', border:'1px solid black'}} 
+                            onClick={handlePrevClick}
+                            disabled={currentIdx === 0}
+                        >
+                            <FaArrowLeft/>
+                        </IconButton>
+                        <div style={{display:'flex',  justifyContent:'center', margin:'0px 5px',}}>
                             {// 페이지네이션 
                                 Array.from({ length: imgArr.length }, (_, idx)=>(
-                                    <div value={idx} style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv} onClick={(e)=>handleImgClick(e)}>{idx + 1}</div>
+                                    <div 
+                                        value={idx} 
+                                        style={currentIdx === idx ? divStyle.currDiv : divStyle.notCurrDiv} 
+                                        onClick={(e)=>handleImgClick(e)}>
+                                        {idx + 1}
+                                    </div>
                                 ))
                             }
                             
                         </div>
-                        <IconButton variant="contained" size="small" sx={{height:'40px', width:'40px', borderRadius:'10px', marginRight:'5px', padding:'0', border:'1px solid black'}} onClick={handlePrevClick}><FaArrowLeft/></IconButton>
-                        <IconButton variant="contained" size="small" sx={{height:'40px', width:'40px', borderRadius:'10px', padding:'0', border:'1px solid black'}}  onClick={handleNextClick}><FaArrowRight/></IconButton>
+                        <IconButton 
+                            variant="contained" 
+                            size="small" 
+                            sx={{height:'35px', width:'35px', borderRadius:'10px', padding:'0', border:'1px solid black'}} 
+                            onClick={handleNextClick}
+                            disabled={currentIdx === imgArr.length-1}
+                        >
+                            <FaArrowRight/>
+                        </IconButton>
                     </Card.Text>
                 </Card.Body>
             </Card>
@@ -467,7 +488,9 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                     </Card.Text>
                     <Card.Text>
-                        <img src={qrImagePath} style={{width:'300px'}}/> 
+                        <div  style={{height:'280px',width:"100%", border:'1px solid black'}}>
+                            <img src={qrImagePath} style={{width:'300px'}}/> 
+                        </div>
                     </Card.Text> 
                     <Card.Text>
                               
@@ -665,18 +688,18 @@ const style={
         width:"fit-content", 
         padding:'10px',
         borderRadius : '5px',
-        backgroundColor:'#002984', 
-        color:'white',
-        border:'1px solid white'
+        //backgroundColor:'#002984', 
+        color:navy,
+        //border:'1px solid white'
     },
     notCurrDiv :{
         height:"100%", 
         width:"fit-content", 
         borderRadius : '5px',
         padding:'10px',
-        backgroundColor:'white', 
-        color:'#002984',
-        border:'1px solid #002984'
+        //backgroundColor:'white', 
+        color:'#b0bec5',
+        //border:'1px solid #002984'
     }
 }
 
