@@ -1,7 +1,7 @@
 // import react
 import { useEffect, useState} from "react";
 // import mui
-import {Button, Box, Card,Popover,Divider,Typography,} from '@mui/material';
+import {Button, Box, Card,Popover,Divider,Typography, IconButton,} from '@mui/material';
 // import react-icons
 import {FaArrowRotateLeft, FaFilter}  from "react-icons/fa6";
 // import date-picker 
@@ -90,10 +90,10 @@ function SearchFilterBar({setStartDate, setEndDate}){
  
     return(
         <div>
-            <Button  aria-describedby={id} variant="contained" onClick={handleClick} style={{backgroundColor:navy}}>
-               <FaFilter/> Filter
+            <Button variant="contained" onClick={handleClick} style={{backgroundColor:navy, height:'35px', borderRadius:'10px', width:'fit-content', fontSize:'15px', textTransform:'none'}}>
+               <FaFilter style={{marginRight:'4px'}}/> 
+               Filter
             </Button>
-
             <Popover
             id={id}
             open={open}
@@ -159,7 +159,13 @@ function SearchFilterBar({setStartDate, setEndDate}){
                     </Box>
                 </Card>
             </Popover>
-            <button onClick={()=>{setDuration('week'); setStart(null); setEnd(null); setIsDur(true);}}><FaArrowRotateLeft/></button>
+            
+            <IconButton
+            style={{border:`1px solid ${navy}`, borderRadius:'10px', width:'35px', height:'35px', marginLeft:'10px'}}
+            size="small"
+            onClick={()=>{setDuration('week'); setStart(null); setEnd(null); setIsDur(true);}}>
+                <FaArrowRotateLeft/>
+            </IconButton>
                     
         </div>
         

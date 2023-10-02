@@ -19,7 +19,7 @@ function DataEdit(){
     return (
       <Box>
         <Box >
-          <div style={style.fixed/*{display:'flex', alignItems:'center', marginLeft:'10px'}*/}>
+          <div style={style.fixed}>
             <Link to={{pathname : '/DataManage'}} style={{textDecorationLine:'none',display:'flex', alignItems:'center',}}>
               <IconButton style={{color:`${navy}`, backgroundColor:'white', border:`1px solid ${navy}`, borderRadius:'10px', marginRight:'10px'}}>
                 <FaArrowLeft/>
@@ -48,7 +48,6 @@ const style={
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    alignItems : 'center',
     //backgroundColor:'tran',
     height: "70px",
   },
