@@ -40,7 +40,7 @@ export default DataEdit;
 const style={
   fixed:{
     position: 'fixed', 
-    top:'120px',
+    top:'95px',
     right:'0',
     left:'80px',
     zIndex: 1,

@@ -401,6 +401,7 @@ function DataView({page, currentUser ,dataProps}){
             <Card style={{ width: "27vw", margin:'0px 10px',boxShadow: 24,}}>
                 {/* 1.1. 이미지 */}
                 <Card.Body>
+                    {/**이미지 제목 */}
                     <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center',}}>
                         {// 이미지 제목 
                             currentIdx === 0
@@ -434,6 +435,7 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div> 
                     </Card.Text>
+                    {/**이미지 */}
                     <Card.Text>  
                         <div style={{height:'350px',width:"100%", border:'1px solid black'}}>
                             {// 실제 이미지 
@@ -443,6 +445,7 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div>
                     </Card.Text>
+                    {/**페이지네이션 */}
                     <Card.Text style={{display:'flex', justifyContent:'center',alignItems:'center',}}>
                         <IconButton 
                             variant="contained" 
@@ -492,8 +495,7 @@ function DataView({page, currentUser ,dataProps}){
                             <img src={qrImagePath} style={{width:'300px'}}/> 
                         </div>
                     </Card.Text> 
-                    <Card.Text>
-                              
+                    <Card.Text>             
                         <ListGroup variant="flush">
                             <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
                                 <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>관리번호 </span>
@@ -508,7 +510,6 @@ function DataView({page, currentUser ,dataProps}){
                                 <span>{createdAt}</span>
                             </ListGroup.Item>       
                         </ListGroup>
-                        
                     </Card.Text>
                 </Card.Body>
             </Card>
@@ -522,12 +523,12 @@ function DataView({page, currentUser ,dataProps}){
                     <Autocomplete 
                         id={"controllable-states-processed"} 
                         label="처리상태" 
-                        size="small" 
                         value={processed_toggle} 
                         onChange={(event, newValue) => {setProcessedToggle(newValue);}}
                         inputValue={processedToggleValue} 
                         onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                         options={options.slice(1,)} 
+                        size="small" 
                         sx={{ width: "fit-content" ,marginBottom:'10px'}} 
                         renderInput={(params) => <TextField {...params}/>}
                     />
