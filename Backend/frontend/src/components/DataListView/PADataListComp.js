@@ -7,6 +7,8 @@ import Spinner from "react-bootstrap/Spinner";
 import HandlePredictClick from "../API/predictPOST";
 import GetSingleData from "../API/detailMeatGet";
 import useGetDetail from "../API/useGetDetail";
+// 임시로 local data 사용 
+import listData from "../../Data/pagination.json";
 
 const apiIP = '3.38.52.82';
 
@@ -34,6 +36,10 @@ const PADataListComp=({startDate, endDate})=>{
         `http://${apiIP}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
       )
     ).json();
+
+    // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
+    json = listData;
+
     console.log("fetch done!", json);
     // 전체 데이터 수
     setTotalData(json["DB Total len"]);
@@ -89,7 +95,7 @@ const PADataListComp=({startDate, endDate})=>{
   }
 
   return (
-    <div style={style.wrapper}>
+    <div>
       <div style={style.listContainer} >
         {
           //meatList.length!==0
@@ -111,9 +117,6 @@ const PADataListComp=({startDate, endDate})=>{
       </div>
       
       <Box sx={style.paginationBar}>
-        <Box sx={style.PABtnContainer}>
-            <Button variant="contained" onClick={handlePredict}>예측</Button>
-        </Box>
         <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       </Box>
     </div>
@@ -124,17 +127,13 @@ export default PADataListComp;
 
 
 const style = {
-  wrapper : {
-    position: "fixed", 
-    top: "170px", 
-    left: "30px", 
-    width: "100%",
-  },
   listContainer :{
     textAlign: "center",
     width: "100%",
-    padding: "0px 120px",
+    paddingRight:'0px',
+    //padding: "0px 120px",
     paddingBottom: "0",
+    height:'500px'
   },
   paginationBar : {
     display: "flex",

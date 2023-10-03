@@ -3,7 +3,7 @@ import { Paper,  Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
     return(
         <TableContainer key='labData' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
-            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow key={'labData-explanation'}>
                         <TableCell key={'labData-exp-col'}>{}</TableCell>

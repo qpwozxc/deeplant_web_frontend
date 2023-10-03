@@ -177,7 +177,7 @@ function DataView({page, currentUser ,dataProps}){
             const res = JSON.stringify(req);
             
             try{
-                const response  = fetch(`http:/4${apiIP}/meat/add/heatedmeat_eval`, {
+                const response  = fetch(`http:/${apiIP}/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -398,7 +398,7 @@ function DataView({page, currentUser ,dataProps}){
         <div style={{width:'100%'}}>
         <div style={style.singleDataWrapper}>
             {/* 1. 관리번호 고기에 대한 사진 -> 컴포넌트 따로 만들기*/}
-            <Card style={{ width: "27vw", margin:'0px 10px'}}>
+            <Card style={{ width: "27vw", margin:'0px 10px',boxShadow: 24,}}>
                 {/* 1.1. 이미지 */}
                 <Card.Body>
                     <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center',}}>
@@ -443,7 +443,7 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div>
                     </Card.Text>
-                    <Card.Text style={{display:'flex', justifyContent:'center',alignItems:'center'}}>
+                    <Card.Text style={{display:'flex', justifyContent:'center',alignItems:'center',}}>
                         <IconButton 
                             variant="contained" 
                             size="small" 
@@ -480,7 +480,7 @@ function DataView({page, currentUser ,dataProps}){
             </Card>
 
             {/* 2. QR코드와 데이터에 대한 기본 정보*/}
-            <Card style={{width:'27vw', height:'65vh',margin:'0px 10px'}}>
+            <Card style={{width:'27vw', height:'65vh',margin:'0px 10px',boxShadow: 24,}}>
                 <Card.Body>
                     <Card.Text>
                         <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>
@@ -513,7 +513,7 @@ function DataView({page, currentUser ,dataProps}){
                 </Card.Body>
             </Card>
             {/* 3. 세부 데이터 정보*/}
-            <Card style={{ width:'27vw', margin:'0px 10px'}}>    
+            <Card style={{ width:'27vw', margin:'0px 10px', boxShadow: 24,}}>    
             <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'100%'}}>
                 <Tab value='raw' eventKey='rawMeat' title='원육' >
                     <RawTable data={rawInput}/>                  

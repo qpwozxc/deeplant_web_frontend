@@ -16,7 +16,7 @@ const ProcessedTable = ({edited,modal,setModal,processed_img_path, processedMinu
 
     return(
         <TableContainer key='processedmeat' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
-            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
                         <TableCell>{}</TableCell>

@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Box, Button,  } from "@mui/material";
 // 데이터 목록 컴포넌트
 import DataList from "./DataList";
-// 삭제 경고창 컴포넌트
-import TransitionsModal from "./WarningComp";
 import Spinner from "react-bootstrap/Spinner";
-import PaginationComp from "./paginationComp";
+import PaginationV2 from "./PaginationV2";
 import './DataListComp.module.css'
 const navy =  '#0F3659';
 const apiIP = '3.38.52.82';
@@ -41,60 +39,40 @@ const RejectedDataListComp=({startDate, endDate})=>{
       getMeatList(currentPage - 1);
     }, [startDate, endDate, currentPage]);
 
-
-    // 삭제할 데이터 목록
-    const [deleteItems, setDeleteItems] = useState([]);
-    const [isDelClick, setIsDelClick] = useState(false);
-    const setDelete =(items)=>{
-        setDeleteItems(items);
-    }
-
-    // 삭제버튼 클릭
-    const handleDeleteBtn = () =>{
-        // 경고 창
-        setIsDelClick(true);
-    }
-    
-    return(
-        <div style={style.wrapper}>
-        <div style={style.listContainer}>
-        <Box sx={style.deletBtnContainer}>
+/**
+ * 
+ * <Box sx={style.deletBtnContainer}>
           <Button variant="contained" style={style.deleteBtn} onClick={handleDeleteBtn}>삭제</Button>
         </Box>
-        {isLoaded ? (
-          //데이터가 로드된 경우 데이터 목록 반환
-          <DataList meatList={meatList} pageProp={'reject'} setChecked={setDeleteItems} offset={offset} count={count}/>
-        ) : (
-          // 데이터가 로드되지 않은 경우 로딩중 반환
-          <Spinner animation="border"/>
-        )}
-        </div>
-       
-        <Box sx={style.paginationBar}>
-          <PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
-        </Box>
-        {
-          isDelClick       
-          ?<TransitionsModal id={deleteItems} setIsDelClick={setIsDelClick}/>
-          :<></>
-        }
+ */
+    
+    return(
+        <div>
+          <div style={style.listContainer}>
+            {isLoaded ? (
+              //데이터가 로드된 경우 데이터 목록 반환
+              <DataList meatList={meatList} pageProp={'reject'} offset={offset} count={count} totalPages={totalPages}/>
+            ) : (
+              // 데이터가 로드되지 않은 경우 로딩중 반환
+              <Spinner animation="border"/>
+            )}
+          </div>
+          <Box sx={style.paginationBar}>
+            <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+          </Box>
       </div>
     );
 }
 
 export default RejectedDataListComp;
 const style = {
-  wrapper : {
-    position: "fixed", 
-    //top: "200px", 
-    left: "30px", 
-    width: "100%",
-  },
   listContainer :{
     textAlign: "center",
     width: "100%",
-    padding: "0px 150px",
+    paddingRight:'0px',
+    //padding: "0px 150px",
     paddingBottom: "0",
+    height:'400px',
   },
   paginationBar : {
     display: "flex",
