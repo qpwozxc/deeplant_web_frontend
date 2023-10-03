@@ -26,6 +26,7 @@ export function DataLoad(id, page, currentUser) {
     // items에 가져온 데이터 넣고 로딩 완료로 전환
     setItems([localProcessedData]);//setItems([json]);
     console.log('localdata', localProcessedData)
+    // 원래 주석 되어있던 부분 
     /*const response = await (fetch('/meat').catch(handleError));
     if (response.ok){
         const json = await(response).json();

@@ -1,5 +1,4 @@
 import { useState, useEffect , useRef} from "react";
-import { useNavigate } from 'react-router-dom';
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
@@ -8,7 +7,16 @@ import Divider from '@mui/material/Divider';
 import './imgRot.css';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 
+// import tables
+import RawTable from "./tablesComps/rawTable";
+import ProcessedTable from "./tablesComps/processedTable";
+import HeatTable from "./tablesComps/heatTable";
+import LabTable from "./tablesComps/labTable";
+import ApiTable from "./tablesComps/apiTable";
+
 const apiIP = '3.38.52.82';
+const navy =  '#0F3659';
+
 
 function DataPAView({ currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
@@ -30,7 +38,7 @@ function DataPAView({ currentUser ,dataProps}){
     const [dataXAIImg ,setDataXAIImg] = useState(null);
     const [gradeXAIImg, setGradeXAIImg] = useState(null);
 
-   // 예측 API fetch
+   // 예측 데이터 fetch
     const [loaded, setLoaded] = useState(false);
     const [dataPA, setDataPA] = useState(null);
     const getData = async (seqno) => {
@@ -54,7 +62,7 @@ function DataPAView({ currentUser ,dataProps}){
     };
 
     useEffect(()=>{
-        getData(seqno);
+        //getData(seqno);
         dataPA && setDataXAIImg(dataPA.xai_imagePath);
         dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
     },[seqno, id]);
@@ -120,7 +128,7 @@ function DataPAView({ currentUser ,dataProps}){
     }
     
     
-// 탭변환 -> 데이터 로드
+// 탭변환에 맞는 -> 데이터 로드
     const [tabKey, setTabKey] = useState('0');
     //const [originImage, setOrImg] = useState(previewImage);
    /* useEffect(()=>{
