@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DataView from "./DataView";
 import DataPAView from "./DataPAView";
 import detailProcessedData from "../../Data/processedMeat.json"
+import detailRawMeatConfirm from "../../Data/rawMeatConfirm.json"
 
 const apiIP = '3.38.52.82';
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
@@ -21,7 +22,7 @@ export function DataLoad(id, page, currentUser) {
     console.log("connected!!", json);*/
     //console.log(json);
 // 임시로 데이터 로컬에서 가져오기
-    const localProcessedData = detailProcessedData;
+    const localProcessedData = detailRawMeatConfirm;//detailProcessedData;
 
     // items에 가져온 데이터 넣고 로딩 완료로 전환
     setItems([localProcessedData]);//setItems([json]);
