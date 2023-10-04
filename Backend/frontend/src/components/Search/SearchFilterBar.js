@@ -155,7 +155,9 @@ function SearchFilterBar({setStartDate, setEndDate}){
                     <Divider variant="middle" style={{margin:"10px 0px"}}/>
 
                     <Box style={{display:'flex', justifyContent:'end'}}>
-                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn(); setAnchorEl(null);}} style={styles.finishBtn}>완료</button>
+                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn(); setAnchorEl(null);}} style={styles.finishBtn}>
+                            완료
+                        </button>
                     </Box>
                 </Card>
             </Popover>
