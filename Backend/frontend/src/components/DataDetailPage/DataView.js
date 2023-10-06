@@ -537,8 +537,8 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                     </Card.Text>
                     <Card.Text>
-                        <div  style={{height:'280px',width:"100%", border:'1px solid black'}}>
-                            <img src={qrImagePath} style={{width:'300px'}}/> 
+                        <div  style={{height:'280px',width:"100%",display:'flex', justifyContent:'center', alignItems:'center', }}>
+                            <img src={qrImagePath} style={{width:'180px'}}/> 
                         </div>
                     </Card.Text> 
                     <Card.Text>             
