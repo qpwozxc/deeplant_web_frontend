@@ -23,37 +23,37 @@ const cards = [
   {
     title: "홈",
     image: home1,
-    imageSize: { height: 140, width: 140 },
+    imageSize: {  height: '106px', width: '104px' },
     link: "/Home",
   },
   {
     title: "대시보드",
     image: home2,
-    imageSize: { height: 140, width: "100%" },
+    imageSize: { height: '107px', width: '177px'},
     link: "/DataManage",
   },
   {
     title: "통계 분석",
     image: home3,
-    imageSize: { height: 140, width: "100%" },
+    imageSize: { height: `104px`, width: `158px` },
     link: "/stats",
   },
   {
     title: "데이터 예측",
     image: home4,
-    imageSize: { height: 140, width: "55%" },
+    imageSize: {  height: '128px', width: '122px' },
     link: "/PA",
   },
   {
     title: "사용자 관리",
     image: home5,
-    imageSize: { height: 140, width: "100%" },
+    imageSize: { height: '128px', width: '107px'},
     link: "/UserManagement",
   },
   {
     title: "프로필",
     image: home6,
-    imageSize: { height: 140, width: "60%" },
+    imageSize: { height: '112px', width: '147px' },
     link: "/Profile",
   },
 ];
@@ -65,32 +65,42 @@ function Home() {
 
   return (
     <Container maxWidth="md">
+      <Typography variant="h4" // Typography의 variant를 조정하여 원하는 스타일과 크기를 선택할 수 있습니다.
+  sx={{
+    color: "#151D48",
+    fontFamily: "Poppins",
+    fontSize: `${(36 / 1920) * 100}vw`, // 상대적인 크기
+    fontStyle: "normal",
+    fontWeight: 600,
+    lineHeight: `${(50.4 / 1080) * 100}vh`, // 상대적인 크기
+  }}>
+    원하시는 작업을 선택해주세요
+  </Typography>
       <Grid container spacing={5}>
         {cards.map((card) => (
           <Grid item xs={12} sm={4} md={4} lg={4} key={card}>
             <Box
-              sx={{
-                maxWidth: 261,
-                maxHeight: 238,
-                margin: "0 auto",
-                border: "1px solid rgba(238, 238, 238, 0.50)",
-                borderRadius: "40px",
-                overflow: "hidden",
-                backgroundColor: "white",
-                boxShadow:
-                  "box-shadow: 0px 4px 20px 0px rgba(238, 238, 238, 0.50)",
-              }}
+             sx={{
+              width: `${(261 / 1920) * 100}vw`, // Relative width
+              height: `${(238 / 1080) * 100}vh`, // Relative height
+              border: `${(1 / 1920) * 100}vw solid rgba(238, 238, 238, 0.50)`, // Relative border
+              borderRadius: `${(40 / 1920) * 100}vw`, // Relative border radius
+              overflow: "hidden",
+              backgroundColor: "white",
+              boxShadow: `${(0 / 1920) * 100}vw ${(4 / 1080) * 100}vh ${(20 / 1920) * 100}vw 0px rgba(238, 238, 238, 0.50)`, // Relative boxShadow
+            }}
+            
             >
               <CardActionArea onClick={() => handleCardClick(card.link)}>
                 <CardMedia
                   sx={{
                     ...card.imageSize,
-                    margin: "0 auto",
+                    margin: " auto",
                   }}
                   image={card.image}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography >
                     {card.title}
                   </Typography>
                 </CardContent>

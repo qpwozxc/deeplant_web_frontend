@@ -23,6 +23,7 @@ import Deeplant_big_logo from "../../src_assets/Deeplant_big_logo.png";
 import Layer_1 from "../../src_assets/Layer_1.png";
 import BackGround from "../../src_assets/BackGround.png";
 import { id } from "date-fns/locale";
+import styles from './LogInField.module.css';
 
 const defaultTheme = createTheme();
 const LogInField = () => {
@@ -135,7 +136,6 @@ const LogInField = () => {
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          minHeight: "100vh", // 전체 화면 높이
           minWidth: "100vw", // 전체 화면 너비
           backgroundImage: `url(${BackGround})`, // 경로를 실제 파일 경로로 변경
           backgroundSize: "cover", // 배경 이미지 크기 조절 (cover는 화면 전체를 채우도록 설정)
@@ -146,10 +146,9 @@ const LogInField = () => {
         <img
           src={Layer_1}
           style={{
-            width: 300,
-            height: "auto",
-            marginBottom: "20px",
-            marginTop: "200px",
+            width: `${(323 / 1920) * 100}vw`,
+            marginBottom: `${(48 / 1080) * 100}vh`,
+            marginTop: `${(200 / 1080) * 100}vh`,
           }}
         />
 
@@ -157,49 +156,58 @@ const LogInField = () => {
           component="form"
           noValidate
           sx={{
-            display: "flex", // 요소들을 flex로 배치
             flexDirection: "column", // 세로로 배치
-            width: "450px", // 너비를 450px로 설정
-            height: "594px",
+          justifyContent: "center",
+            width: `${(450 / 1920) * 100}vw`, // 너비를 450px로 설정
+            height: `${(594 / 1080) * 100}vh`,
+            flexShrink: 0,
             bgcolor: "white",
-            paddingX: "42px", // 가로 패딩
-            paddingY: "44px", // 세로 패딩
-            borderRadius: "20px",
+            paddingX: `${(42 / 1920) * 100}vw`, // 가로 패딩
+            borderRadius: `${(20 / 1920) * 100}vw`,
             mb: "160px",
           }}
         >
-          <TextField
-            required
-            id="email"
-            label="이메일을 입력하세요."
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={loginEmail}
-            onChange={(event) => {
-              setLoginEmail(event.target.value);
-            }}
-            onKeyPress={handleKeyPress}
-            sx={{
-              width: "365px", // 너비를 365px로 설정
-              height: "72px", // 높이를 72px로 설정
-            }}
-          />
+          <Typography className={styles.customText} sx={{ alignSelf: 'center', textAlign: 'center',marginTop:`${(44 / 1080) * 100}vh`,marginBottom:`${(54 / 1080) * 100}vh` }}>
+          Login
+        </Typography>
+        <input
+  required
+  id="email"
+  type="email"
+  placeholder="이메일을 입력하세요."
+  name="email"
+  autoComplete="email"
+  autoFocus
+  value={loginEmail}
+  onChange={(event) => {
+    setLoginEmail(event.target.value);
+  }}
+  onKeyPress={handleKeyPress}
+  style={{
+    width: `${(365 / 1920) * 100}vw`, // 너비를 365px로 설정
+    height: `${(72 / 1080) * 100}vh`, // 높이를 72px로 설정
+    padding: "8px", // Add padding for styling if needed
+  }}
+/>
 
-          <TextField
-            margin="normal"
-            required
-            name="password"
-            label="비밀번호를 입력하세요."
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={loginPassword}
-            onChange={(event) => {
-              setLoginPassword(event.target.value);
-            }}
-            onKeyPress={handleKeyPress}
-          />
+<input
+  required
+  id="password"
+  type="password"
+  placeholder="비밀번호를 입력하세요."
+  name="password"
+  autoComplete="current-password"
+  value={loginPassword}
+  onChange={(event) => {
+    setLoginPassword(event.target.value);
+  }}
+  onKeyPress={handleKeyPress}
+  style={{
+    width: `${(365 / 1920) * 100}vw`, // 너비를 365px로 설정
+    height: `${(72 / 1080) * 100}vh`, // 높이를 72px로 설정
+    padding: "8px", // Add padding for styling if needed
+  }}
+/>
           <FormControlLabel
             control={
               <Checkbox
@@ -219,7 +227,12 @@ const LogInField = () => {
           <Button
             onClick={login}
             variant="contained"
-            sx={{ mt: "162px", bgcolor: "#7BD758" }}
+            sx={{
+              width:`${(366 / 1920) * 100}vw`,
+              height: `${(64 / 1080) * 100}vh`,
+            marginTop: `${(125 / 1080) * 100}vh`,
+            mb:`${(44 / 1080) * 100}vh`, 
+            bgcolor: "#7BD758" }}
           >
             로그인
           </Button>
