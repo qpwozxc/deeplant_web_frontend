@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DataView from "./DataView";
 import DataPAView from "./DataPAView";
 import detailProcessedData from "../../Data/processedMeat.json"
+import detailRawMeatConfirm from "../../Data/rawMeatConfirm.json"
 
 const apiIP = '3.38.52.82';
 //하나의 관리번호에 대한 고기 데이터를 API에서 GET해서 json 객체로 넘겨줌 
@@ -15,17 +16,18 @@ export function DataLoad(id, page, currentUser) {
   //const id  = useParams().id;
   // API fetch
   const getData = async (id) => {
-    /*const json = await (
+    const json = await (
       await fetch(`http://${apiIP}/meat/get?id=${id}`)
     ).json();
-    console.log("connected!!", json);*/
+    console.log("connected!!", json);
     //console.log(json);
 // 임시로 데이터 로컬에서 가져오기
-    const localProcessedData = detailProcessedData;
+    //const localProcessedData = detailRawMeatConfirm;//detailProcessedData;
 
     // items에 가져온 데이터 넣고 로딩 완료로 전환
-    setItems([localProcessedData]);//setItems([json]);
-    console.log('localdata', localProcessedData)
+    setItems([json]);//setItems([localProcessedData])_;
+    //console.log('localdata', localProcessedData)
+    // 원래 주석 되어있던 부분 
     /*const response = await (fetch('/meat').catch(handleError));
     if (response.ok){
         const json = await(response).json();
@@ -37,33 +39,7 @@ export function DataLoad(id, page, currentUser) {
         setError();
         return Promise.reject(response);
     }*/
-    /*
-        await fetch(
-            'http://localhost:8080/meat'
-            //`https://yts.mx/api/v2/list_movies.json?minimum_rating=9&sort_by=year`
-            ).then((response) => {
-                console.log("responses");
-                console.log(response);
-                
-            // 네트워크 에러가 난 경우
-            if (response.status >= 400 && response.status < 600) {
-              throw new Error("Bad response from server");
-            }
-            return response;
-        }).then((returnedResponse) => {
-           // response객체가 성공적으로 반환 된 경우
-           console.log('success');
-           console.log(returnedResponse.json());
-           const json = (returnedResponse.data.json());
-           setItems(json);
-            setIsLoaded(true);
-        }).catch((error) => {
-          // 에러가 발생한 경우
-          console.warn(error);
-          setIsLoaded(true);
-          setError(error);
-        });
-        */
+
   };
 
   // API GET으로 데이터 가져오기 
@@ -106,7 +82,7 @@ export function DataLoad(id, page, currentUser) {
   }
   else{
     
-    console.log(items)
+    console.log('items', items);
 
   // 3. API fetch가 정상적으로 일어난 경우 데이터를 JSON객체로 변환해서 반환
 

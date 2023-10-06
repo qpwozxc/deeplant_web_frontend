@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import "bootstrap/dist/css/bootstrap.css"; 
-import { FaAngleDoubleLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
+
+const navy =  '#0F3659';
+
 function DataPredict(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com");
@@ -17,11 +20,15 @@ function DataPredict(){
       <Box sx={{ display: "flex"}}>
         <Box sx={style.fixed}>
           <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
-            <Link to={{pathname : '/PA'}} >
-              <IconButton sx={{backgroundColor:'white'}} size="large">
-              <FaAngleDoubleLeft/>
+            <Link to={{pathname : '/PA'}} style={{textDecorationLine:'none',display:'flex', alignItems:'center',}} >
+              <IconButton style={{color:`${navy}`, backgroundColor:'white', border:`1px solid ${navy}`, borderRadius:'10px', marginRight:'10px'}}>
+                <FaArrowLeft/>
               </IconButton>
             </Link>
+            {/**컴포넌트화 시키기 */}
+            <span style={{textDecoration:'none', color:`${navy}`, fontSize:'30px', fontWeight:'600'}}>
+               {idParam.id}
+            </span>
           </div>
         </Box>
         {DataLoad(idParam.id, "예측", currentUser)}
@@ -34,15 +41,15 @@ export default DataPredict;
 const style={
   fixed:{
     position: 'fixed', 
-    top:'70px',
+    top:'95px',
     right:'0',
-    left:'65px',
+    left:'80px',
     zIndex: 1,
     width:'fit-content',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    backgroundColor:'#F5F5F5',
+    //backgroundColor:'#F5F5F5',
     height: "70px",
   },
 

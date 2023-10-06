@@ -19,11 +19,11 @@ const ProcessedTable = ({edited,modal,setModal,processed_img_path, processedMinu
             <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>{}</TableCell>
-                        <TableCell align="right">1회차</TableCell>
+                        <TableCell style={{background:'#cfd8dc'}}>{}</TableCell>
+                        <TableCell align="right" style={{background:'#cfd8dc'}}>1회차</TableCell>
                         {// 2회차 이상부터
                             Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
-                                <TableCell align="right">{arr_idx+2}회차</TableCell>
+                                <TableCell align="right" style={{background:'#cfd8dc'}}>{arr_idx+2}회차</TableCell>
                             ))
                         }
                     </TableRow>

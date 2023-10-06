@@ -31,14 +31,14 @@ const PADataListComp=({startDate, endDate})=>{
   //API로부터 fetch 하는 함수
   // ***** 우선 전체 fetch 했는데 나중에 예측된 것 , 안된것 토글 만들기 ****
   const getMeatList = async (offset,) => {
-    const json = await (
+     const json = await (
       await fetch(
         `http://${apiIP}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
       )
     ).json();
 
     // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
-    json = listData;
+    //json = listData;
 
     console.log("fetch done!", json);
     // 전체 데이터 수

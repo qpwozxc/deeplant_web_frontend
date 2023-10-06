@@ -177,7 +177,7 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
                         selected={isItemSelected}
                         >
                             {//반려함이나 예측 페이지인 경우 삭제 체크박스 추가
-                            (pageProp === 'reject' || pageProp === 'pa')
+                            (pageProp === 'reject')
                             &&
                             <TableCell>
                                 <Checkbox 
@@ -265,6 +265,7 @@ const style={
         fontSize:'17px',
         fontWeight:'600',
         padding:'5px',
+        //height:'35px',
     }
 }
 

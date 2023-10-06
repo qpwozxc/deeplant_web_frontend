@@ -7,8 +7,10 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 // modal component
 import InputTransitionsModal from "./InputWarningComp";
+import AcceptModal from "./acceptModal";
+import RejectModal from "./rejectModal";
 // icons
-import {FaArrowLeft,FaArrowRight, FaUpload} from  "react-icons/fa";
+import {FaArrowLeft,FaArrowRight, FaUpload, FaRegCheckCircle, FaRegTimesCircle} from  "react-icons/fa";
 // mui 
 import { Box, Button,Paper, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, } from '@mui/material';
 // firebase 
@@ -95,7 +97,7 @@ function DataView({page, currentUser ,dataProps}){
     },[]); 
     // 처리육 모달창 여부
     const [modal, setModal] = useState(false);
-    // input 변화 감지
+    // input 변화 감지해서 이미지가 입력되어있지 않으면 모달 창 띄우기 
     const handleInputChange= (e, idx, valueIdx)=>{
         const value = e.target.value;
         // 처리육의 경우 사진을 먼저 업로드 해야함
@@ -290,21 +292,6 @@ function DataView({page, currentUser ,dataProps}){
             }
         }
     };
-
-    // 검토 승인 여부 변경 토글 버튼
-    const [confirmVal, setConfirmVal] = useState(null);
-    const handleAlignment = (event, newAlignment) => {
-        setConfirmVal(newAlignment);
-    };
-    //[검토] 승인 여부 변경 API 호출 
-    const handleConfirmSaveClick=()=>{
-        try{
-            const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
-            navigate({pathname : '/DataManage'});
-        }catch(err){
-            console.error(err);
-        }
-    };
     
     // 1.이미지 파일 변경 
     const [imgFile, setImgFile] = useState(null);
@@ -394,13 +381,73 @@ function DataView({page, currentUser ,dataProps}){
         console.log('change');
     }
 
+    // [데이터 승인/반려 페이지] 검토 승인 여부 변경 토글 버튼
+    /*const [confirmVal, setConfirmVal] = useState(null);
+    const handleAlignment = (event, newAlignment) => {
+        setConfirmVal(newAlignment);
+    };
+    <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
+                <ToggleButton value="confirm" aria-label="left aligned">
+                    승인
+                </ToggleButton>
+                <ToggleButton value="reject" aria-label="left aligned">
+                    반려
+                </ToggleButton>
+            </ToggleButtonGroup>
+            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>
+                저장
+            </button>
+    */
+    const [confirmVal, setConfirmVal] = useState(null);
+    
+    // [데이터 승인/반려 페이지] 승인 여부 변경 API 호출 
+    const handleConfirmSaveClick=(confirmVal)=>{
+        try{
+            /*const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
+            navigate({pathname : '/DataManage'});*/
+        }catch(err){
+            console.error(err);
+        }
+    };
+
     return(
-        <div style={{width:'100%'}}>
+        <div style={{width:'100%', marginTop:'70px'}}>
+        { // 데이터 승인/반려 페이지인 경우
+        page === "검토"
+        &&
+        <div style={style.editBtnWrapper}>
+            <IconButton 
+                style={{backgroundColor:'#00e676',color:'white', fontSize:'15px', borderRadius:'5px', width:'80px', height:'35px'}} 
+                onClick={()=>setConfirmVal('confirm')}
+            >
+                <FaRegCheckCircle/>
+                승인
+            </IconButton>
+            <IconButton 
+                style={{backgroundColor:'#e53935',color:'white', fontSize:'15px', borderRadius:'5px', width:'80px', height:'35px', marginLeft:'20px'}}
+                onClick={()=>setConfirmVal('reject')}
+            >
+                <FaRegTimesCircle/>
+                반려
+            </IconButton>
+        </div>
+       }         
+       {// 승인 팝업 페이지
+        confirmVal === 'confirm'
+        &&
+        <AcceptModal id={id} confirmVal={confirmVal} setConfirmVal={setConfirmVal}/>
+       }
+       {// 반려 팝업 페이지
+        confirmVal === 'reject'
+        &&
+        <RejectModal id={id} confirmVal={confirmVal} setConfirmVal={setConfirmVal}/>
+       }
         <div style={style.singleDataWrapper}>
             {/* 1. 관리번호 고기에 대한 사진 -> 컴포넌트 따로 만들기*/}
             <Card style={{ width: "27vw", margin:'0px 10px',boxShadow: 24,}}>
                 {/* 1.1. 이미지 */}
                 <Card.Body>
+                    {/**이미지 제목 */}
                     <Card.Text style={{display:'flex', justifyContent:'space-between', alignItems:'center',}}>
                         {// 이미지 제목 
                             currentIdx === 0
@@ -434,6 +481,7 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div> 
                     </Card.Text>
+                    {/**이미지 */}
                     <Card.Text>  
                         <div style={{height:'350px',width:"100%", border:'1px solid black'}}>
                             {// 실제 이미지 
@@ -443,6 +491,7 @@ function DataView({page, currentUser ,dataProps}){
                             }
                         </div>
                     </Card.Text>
+                    {/**페이지네이션 */}
                     <Card.Text style={{display:'flex', justifyContent:'center',alignItems:'center',}}>
                         <IconButton 
                             variant="contained" 
@@ -488,12 +537,11 @@ function DataView({page, currentUser ,dataProps}){
                         </div>
                     </Card.Text>
                     <Card.Text>
-                        <div  style={{height:'280px',width:"100%", border:'1px solid black'}}>
-                            <img src={qrImagePath} style={{width:'300px'}}/> 
+                        <div  style={{height:'280px',width:"100%",display:'flex', justifyContent:'center', alignItems:'center', }}>
+                            <img src={qrImagePath} style={{width:'180px'}}/> 
                         </div>
                     </Card.Text> 
-                    <Card.Text>
-                              
+                    <Card.Text>             
                         <ListGroup variant="flush">
                             <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
                                 <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>관리번호 </span>
@@ -508,7 +556,6 @@ function DataView({page, currentUser ,dataProps}){
                                 <span>{createdAt}</span>
                             </ListGroup.Item>       
                         </ListGroup>
-                        
                     </Card.Text>
                 </Card.Body>
             </Card>
@@ -522,12 +569,12 @@ function DataView({page, currentUser ,dataProps}){
                     <Autocomplete 
                         id={"controllable-states-processed"} 
                         label="처리상태" 
-                        size="small" 
                         value={processed_toggle} 
                         onChange={(event, newValue) => {setProcessedToggle(newValue);}}
                         inputValue={processedToggleValue} 
                         onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
                         options={options.slice(1,)} 
+                        size="small" 
                         sx={{ width: "fit-content" ,marginBottom:'10px'}} 
                         renderInput={(params) => <TextField {...params}/>}
                     />
@@ -588,21 +635,6 @@ function DataView({page, currentUser ,dataProps}){
         }
        </div> 
        }
-       {
-        page === "검토"
-        &&<div style={style.editBtnWrapper}>
-
-            <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="confirm" aria-label="left aligned">
-                    승인
-                </ToggleButton>
-                <ToggleButton value="reject" aria-label="left aligned">
-                    반려
-                </ToggleButton>
-            </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>저장</button>
-        </div>
-       }         
     </div>
     );
 }
@@ -631,15 +663,11 @@ const jsonFields = [ 'fresh','deepAging','heated',/* 'tongue',*/ 'lab', 'api'];
 const style={
     singleDataWrapper:{
       //height:'fit-content',
-      marginTop:'120px',
-      padding: "20px 10px",
-      paddingBottom: "0px",
+      marginTop:'50px',
+      //padding: "20px 10px",
+      //paddingBottom: "0px",
       display: "flex",
-      justifyContent: "space-between", 
-      //backgroundColor:'white', 
-      borderTopLeftRadius:'10px' , 
-      borderTopRightRadius:'10px',
-      width: "85vw",
+      justifyContent: "space-between",
     },
     editBtnWrapper:{
         padding:"5px 10px",

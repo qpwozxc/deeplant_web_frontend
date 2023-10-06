@@ -3,7 +3,9 @@ import { useParams,Link } from "react-router-dom";
 import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
 import DataView from "../components/DataDetailPage/DataView";
 import { Box, Typography, Button, IconButton} from '@mui/material';
-import { FaAngleDoubleLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
+
+const navy =  '#0F3659';
 
 function DataConfirm(){
     //현재 로그인한 유저 이메일
@@ -11,16 +13,21 @@ function DataConfirm(){
     const idParam  = useParams();
     return(
         <Box sx={{ display: "flex"}}>
-        <Box sx={style.fixed}>
-          
-            <Link to={{pathname : '/DataManage'}} >
-              <IconButton sx={{backgroundColor:'white'}} size="large">
-              <FaAngleDoubleLeft/>
-              </IconButton>
-            </Link>
-         
-        </Box>
-        {DataLoad(idParam.id, "검토", currentUser)}
+          <Box sx={style.fixed}>
+            <div style={{display:'flex', alignItems:'center', marginLeft:'10px'}}>
+              {/**link 컴포넌트화하기 */}
+              <Link to={{pathname : '/DataManage'}}  style={{textDecorationLine:'none',display:'flex', alignItems:'center',}} >
+                <IconButton style={{color:`${navy}`, backgroundColor:'white', border:`1px solid ${navy}`, borderRadius:'10px', marginRight:'10px'}}>
+                  <FaArrowLeft/>
+                </IconButton>
+              </Link>
+              {/**컴포넌트화 시키기 */}
+              <span style={{textDecoration:'none', color:`${navy}`, fontSize:'30px', fontWeight:'600'}}>
+                {idParam.id}
+              </span>
+            </div> 
+          </Box>
+          {DataLoad(idParam.id, "검토", currentUser)}
         
         </Box>
     );
@@ -31,15 +38,14 @@ export default DataConfirm;
 const style={
   fixed:{
     position: 'fixed', 
-    top:'70px',
+    top:'95px',
     right:'0',
-    left:'65px',
+    left:'80px',
     zIndex: 1,
     width:'fit-content',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
-    backgroundColor:'#F5F5F5',
     height: "70px",
   },
   

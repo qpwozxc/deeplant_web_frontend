@@ -32,7 +32,7 @@ const DataListComp=({startDate, endDate})=>{
     console.log("fetch done!", json);
 
     // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
-    json = listData;
+    //json = listData;
     console.log(json)
     // 전체 데이터 수
     setTotalData(json["DB Total len"]);

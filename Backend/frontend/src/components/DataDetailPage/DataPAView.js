@@ -1,5 +1,4 @@
 import { useState, useEffect , useRef} from "react";
-import { useNavigate } from 'react-router-dom';
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
@@ -8,7 +7,15 @@ import Divider from '@mui/material/Divider';
 import './imgRot.css';
 import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
 
+// import tables
+import RawTable from "./tablesComps/rawTable";
+import PredictedRawTable from "./tablesComps/predictedRawTable";
+import ProcessedTablePA from "./tablesComps/processedTablePA";
+import PredictedProcessedTablePA from "./tablesComps/predictedProcessedTablePA";
+
 const apiIP = '3.38.52.82';
+const navy =  '#0F3659';
+
 
 function DataPAView({ currentUser ,dataProps}){
     const [dataLoad, setDataLoad] = useState(null);
@@ -30,7 +37,7 @@ function DataPAView({ currentUser ,dataProps}){
     const [dataXAIImg ,setDataXAIImg] = useState(null);
     const [gradeXAIImg, setGradeXAIImg] = useState(null);
 
-   // 예측 API fetch
+   // 예측 데이터 fetch
     const [loaded, setLoaded] = useState(false);
     const [dataPA, setDataPA] = useState(null);
     const getData = async (seqno) => {
@@ -54,7 +61,7 @@ function DataPAView({ currentUser ,dataProps}){
     };
 
     useEffect(()=>{
-        getData(seqno);
+        //getData(seqno);
         dataPA && setDataXAIImg(dataPA.xai_imagePath);
         dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
     },[seqno, id]);
@@ -114,13 +121,10 @@ function DataPAView({ currentUser ,dataProps}){
                 console.error(err);
             }
         }
-       
-        
-        
     }
     
     
-// 탭변환 -> 데이터 로드
+// 탭변환에 맞는 -> 데이터 로드
     const [tabKey, setTabKey] = useState('0');
     //const [originImage, setOrImg] = useState(previewImage);
    /* useEffect(()=>{
@@ -144,239 +148,135 @@ function DataPAView({ currentUser ,dataProps}){
      console.log('preview image ',previewImage);
 
     return(
-        <div style={{width:'100%'}}>
+        <div style={{width:'100%', marginTop:'70px'}}>
+            <div style={style.editBtnWrapper}>
+                <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handlePredictClick}>예측</button>
+            </div>  
             <div style={style.singleDataWrapper}>
-                <Card style={{ width: "100%"}}>
-                    <div>
-                        <div style={{backgroundColor:'#002984', color:'white'}}>원본이미지</div>
-                        <div style={{ width: "100%",padding:'10px 0px'}}>
-                            {
-                            previewImage
-                            ?<img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
-                            :<div style={{height:'190px',width:'100%',display:'flex',justifyContent:'center', alignItems:'center'}}>데이터 이미지가 존재하지 않습니다.</div>
-                            }
+                {/* 1. 관리번호 고기에 대한 사진 -> 컴포넌트 따로 만들기*/}
+                <div>
+                    {/* 1.1. 원본이미지 */}
+                    <Card style={{ width: "23vw", margin:'0px 10px',marginBottom:'20px', boxShadow: 24,}}>    
+                        <Card.Body>
+                            <Card.Text>
+                                <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>원본이미지</div>
+                                <div style={{ width: "100%",padding:'10px 0px'}}>
+                                    {
+                                    previewImage
+                                    ?<img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
+                                    :<div style={{height:'170px',width:'100%',display:'flex',justifyContent:'center', alignItems:'center'}}>데이터 이미지가 존재하지 않습니다.</div>
+                                    }
+                                    
+                                </div>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                             
-                        </div>
-                    </div>
-                    
-                    <Divider />
-                    <div>
-                        <div style={{backgroundColor:'#002984', color:'white'}}>XAI이미지 [데이터/등급예측]</div>
-                        <div style={{width: "100%",display:'flex', justifyContent:'center',padding:'10px 0px'}}> 
-                            {dataXAIImg && loaded
-                            ?<div className="imgContainer"><img src={dataXAIImg} style={{height:'190px',width:'100%',objectFit:'contain',marginRight:'30px'}}/></div>
-                            :<div style={{height:'190px',width:'150px',display:'flex',marginRight:'20px' ,justifyContent:'center', alignItems:'center'}}>데이터 XAI 이미지가 존재하지 않습니다.</div>
-                            }
-                            {gradeXAIImg && loaded
-                            ?<div className="imgContainer"><img src={gradeXAIImg}  style={{height:'190px',width:'100%',objectFit:'contain',}}/></div>
-                            :<div style={{height:'190px',width:'150px',display:'flex', justifyContent:'center', alignItems:'center'}}>등급 XAI 이미지가 존재하지 않습니다.</div>
-                            }
-                            
-                        </div> 
-                    </div>
-
+                    {/** 1.2. XAI 이미지 */}
+                    <Card style={{ width: "23vw", margin:'0px 10px',boxShadow: 24,}}>
+                        <Card.Body>
+                            <Card.Text>
+                                <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>XAI이미지 [데이터/등급예측]</div>
+                                <div style={{width: "100%",display:'flex', justifyContent:'center',padding:'10px 0px'}}> 
+                                    {dataXAIImg && loaded
+                                    ?<div className="imgContainer">
+                                        <img src={dataXAIImg} style={{height:'190px',width:'100%',objectFit:'contain',marginRight:'30px'}}/>
+                                    </div>
+                                    :<div style={{height:'170px',width:'100%',display:'flex',margin:'0px 20px',marginRight:'20px' ,justifyContent:'center', alignItems:'center'}}>
+                                        <span style={{color:'#546e7a',  fontSize:'15px'}}>
+                                            데이터 XAI 이미지가 존재하지 않습니다.
+                                        </span>
+                                    
+                                    </div>
+                                    }
+                                    {gradeXAIImg && loaded
+                                    ?<div className="imgContainer">
+                                        <img src={gradeXAIImg}  style={{height:'190px',width:'100%',objectFit:'contain',}}/>
+                                    </div>
+                                    :<div style={{height:'170px',width:'100%',display:'flex', justifyContent:'center', alignItems:'center',margin:'0px 20px',}}>
+                                        <span style={{color:'#546e7a',  fontSize:'15px'}}>
+                                            등급 XAI 이미지가 존재하지 않습니다.
+                                        </span>
+                                    </div>
+                                    }
+                                    
+                                </div> 
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </div>
+                
+                
+                {/* 2. QR코드와 데이터에 대한 기본 정보*/}
+                <Card style={{width:'23vw', margin:'0px 10px',boxShadow: 24,}}>
                     <Card.Body> 
-                        <Card.Text >
-                        <div style={{display:'flex'}}>
-                            <div ><img src={qrImagePath} style={{width:'100px'}}/></div>
-                            <ListGroup variant="flush">
-                                <ListGroup.Item>관리번호: {id}</ListGroup.Item>
-                                <ListGroup.Item>등록인 이메일 : {userId}</ListGroup.Item>
-                                <ListGroup.Item>저장 시간: {createdAt}</ListGroup.Item>       
-                            </ListGroup>
-                        </div>                  
+                        <Card.Text>
+                            <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>
+                                상세정보
+                            </div>
                         </Card.Text>
+
+                        <Card.Text >
+                        <div  style={{height:'280px',width:"100%", border:'1px solid black'}}>
+                            <img src={qrImagePath} style={{width:'100px'}}/>
+                        </div>
+                        </Card.Text> 
+
+                        <Card.Text>
+                            <ListGroup variant="flush">
+                            <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>관리번호 </span>
+                                <span>{id}</span>
+                            </ListGroup.Item>
+                            <ListGroup.Item style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>등록인 이메일  </span>
+                                <span>{userId}</span>
+                            </ListGroup.Item>
+                            <ListGroup.Item  style={{display:'flex', justifyContent:'space-between'}}>
+                                <span style={{color:'#546e7a', fontWeight:'600', fontSize:'15px'}}>저장 시간 </span>
+                                <span>{createdAt}</span>
+                            </ListGroup.Item> 
+                            </ListGroup>
+                        </Card.Text>     
+
                     </Card.Body>
                 </Card>
-                <div style={{margin:'0px 20px', backgroundColor:'white'}}>    
-                <Tabs defaultActiveKey='0'  id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'40vw'}} onSelect={handleSelect}>
+                
+                {/* 3. 세부 데이터 정보*/}
+                <Card style={{ width:'24vw', margin:'0px 10px', boxShadow: 24,}}>     
+                <Tabs defaultActiveKey='0'  id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'100%'}} onSelect={handleSelect}>
                     <Tab eventKey='0' title='원육' style={{backgroundColor:'white'}}>
-                        <div key='rawmeat' className="container">
-                            {rawField.map((f, idx)=>{
-                                return(
-                                    <div key={'raw-'+idx} className="row" >
-                                        <div key={'raw-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                        <div key={'raw-'+idx+'col2'} className="col-2" style={style.dataContainer}>      
-                                            {raw_data[f] ? raw_data[f] : ""}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div key='rawmeatPA' className="container" style={{marginTop:'40px'}}>
-                            {rawPAField.map((f, idx)=>{
-                                return(
-                                    <div key={'rawPA-'+idx} className="row" >
-                                        <div key={'rawPA-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                        <div key={'rawPA-'+idx+'col2'} className="col-2" style={style.dataContainer}>
-                                            {/*console.log(dataPA?"xai : "+ dataPA['xai_gradeNum']:"")*/}
-                                            {dataPA
-                                                ?f === 'xai_gradeNum'
-                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
-                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
-                                                :""}
-                                            {// 오차
-                                                f !== "xai_gradeNum"
-                                                && 
-                                                (
-                                                    <div style={{marginLeft:'10px'}}>
-                                                        {dataPA
-                                                        ? dataPA[f] 
-                                                            ? <span style={(dataPA[f].toFixed(2) - raw_data[f] )>0?{color:'red'}:{color:'blue'}}>
-                                                                {
-                                                                    (dataPA[f].toFixed(2) - raw_data[f])>0
-                                                                    ? '(+'+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
-                                                                    : '('+(dataPA[f].toFixed(2) - raw_data[f]).toFixed(2)+')'
-                                                                }
-                                                                
-                                                                </span>  
-                                                            : <span></span>
-                                                        :""}
-                                                        
-                                                    </div>
-                                                )
-                                            }
-                                            
-                                        </div>
-                                    </div>
-                                );
-                            })}
-
-                        </div>
+                        <RawTable data={raw_data}/>
+                        <PredictedRawTable raw_data={raw_data} dataPA={dataPA}/>
                     </Tab>
                     <Tab eventKey='1' title='처리육' style={{backgroundColor:'white'}}>
-                        <Autocomplete value={processed_toggle}  size="small" onChange={(event, newValue) => {setProcessedToggle(newValue);}}
-                        inputValue={processedToggleValue} onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
-                        id={"controllable-states-processed"} options={options.slice(1,)} sx={{ width: 300 ,marginBottom:'10px'}} renderInput={(params) => <TextField {...params} label="처리상태" />}
+                        <Autocomplete 
+                            id={"controllable-states-processed"}
+                            label="처리상태"
+                            value={processed_toggle}
+                            onChange={(event, newValue) => {setProcessedToggle(newValue);}}
+                            inputValue={processedToggleValue} 
+                            onInputChange={(event, newInputValue) => {setProcessedToggleValue(newInputValue); console.log('deepading seq',newInputValue)/*이미지 바꾸기 */}}
+                            options={options.slice(1,)}   
+                            size="small" 
+                            sx={{ width: 300 ,marginBottom:'10px'}} 
+                            renderInput={(params) => <TextField {...params}/>}
                         />
-                        <div key='processedmeat' className="container">
-                            <div key={'processed-explanation'} className="row" >
-                                <div key={'processed-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
-                                <div key={'processed-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>
-                                {
-                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
-                                        <div key={'processed-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
-                                            {arr_idx+2}회차
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                            {deepAgingField.map((f, idx)=>{
-                            return(
-                                <div key={'processed-'+idx} className="row" >
-                                    <div key={'processed-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                    <div key={'processed-'+idx+'col2'} className="col-3" style={style.dataContainer}>  
-                                    {
-                                        f === 'minute' 
-                                        ?(processedMinute[0]? processedMinute[0] : '')
-                                        :(processed_data[0]?.[f] ? processed_data[0]?.[f] : "")
-                                    }
-                                    </div>
-                                    {
-                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
-                                        <div key={'processed-'+arr_idx+'-col'+arr_idx} className="col-3" style={style.dataContainer}>
-                                        {
-                                            f === 'minute' 
-                                            ?(processedMinute[arr_idx+1]? processedMinute[arr_idx+1] : '')
-                                            :processed_data[arr_idx+ 1]?.[f] ? processed_data[arr_idx+ 1]?.[f] : ""
-                                        }   
-                                        </div>
-                                    ))
-                                    }
-                                </div>
-                                );
-                            })}
-                        </div>
-                        <div key='processedmeatPA' className="container">
-                            <div key={'processedPA-explanation'} className="row" >
-                                <div key={'processedPA-exp-col'} className="col-3" style={style.dataFieldColumn}>{}</div>
-                                <div key={'processedPA-exp-col0'} className="col-3" style={style.dataExpColumn}>1회차</div>
-                                {
-                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx)=> ( 
-                                        <div key={'processedPA-exp-col'+(arr_idx+1)} class="col-3" style={style.dataExpColumn}>
-                                            {arr_idx+2}회차
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                            {deepAgingPAField.map((f, idx)=>{
-                            return(
-                                <div key={'processedPA-'+idx} className="row" >
-                                    <div key={'processedPA-'+idx+'col1'} className="col-3" style={style.dataFieldContainer}>{f}</div>
-                                    <div key={'processedPA-'+idx+'col2'} className="col-3" style={style.dataContainer}>  
-                                    
-                                            {dataPA
-                                                ?f === 'xai_gradeNum'
-                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
-                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
-                                                :""}
-                                            {// 오차
-                                                (f !== "xai_gradeNum" &&f !== 'seqno' &&f !== 'period')
-                                                && 
-                                                (
-                                                    <div style={{marginLeft:'10px'}}>
-                                                        {dataPA
-                                                        ? dataPA[f] 
-                                                            ? <span style={(dataPA[f].toFixed(2) - processed_data[0]?.[f] )>0?{color:'red'}:{color:'blue'}}>
-                                                                {
-                                                                    (dataPA[f].toFixed(2) - processed_data[0]?.[f])>0
-                                                                    ? '(+'+(dataPA[f].toFixed(2) - processed_data[0]?.[f]).toFixed(2)+')'
-                                                                    : '('+(dataPA[f].toFixed(2) - processed_data[0]?.[f]).toFixed(2)+')'
-                                                                }
-                                                                
-                                                                </span>  
-                                                            : <span></span>
-                                                        :""}
-                                                        
-                                                    </div>
-                                                )
-                                            }
-                                    </div>
-                                    {
-                                    Array.from({ length: Number(processedToggleValue.slice(0, -1))-1 }, (_, arr_idx) => (
-                                        <div key={'processedPA-'+arr_idx+'-col'+arr_idx} className="col-3" style={style.dataContainer}>
-                                        {dataPA
-                                                ?f === 'xai_gradeNum'
-                                                    ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
-                                                    : dataPA[f] ? dataPA[f].toFixed(2) : ""
-                                                :""}
-                                            {// 오차
-                                                f !== "xai_gradeNum"
-                                                && 
-                                                (
-                                                    <div style={{marginLeft:'10px'}}>
-                                                        {dataPA
-                                                        ? dataPA[f] 
-                                                            ? <span style={(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f] )>0?{color:'red'}:{color:'blue'}}>
-                                                                {
-                                                                    (dataPA[f].toFixed(2) - processed_data[f])>0
-                                                                    ? '(+'+(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f]).toFixed(2)+')'
-                                                                    : '('+(dataPA[f].toFixed(2) - processed_data[arr_idx+ 1]?.[f]).toFixed(2)+')'
-                                                                }
-                                                                
-                                                                </span>  
-                                                            : <span></span>
-                                                        :""}
-                                                        
-                                                    </div>
-                                                )
-                                            }  
-                                        </div>
-                                    ))
-                                    }
-                                </div>
-                                );
-                            })}
-                        </div>
+                        <ProcessedTablePA
+                            processedMinute={processedMinute}
+                            processedToggleValue={processedToggleValue}
+                            processed_data={processed_data}
+                        />
+                        <PredictedProcessedTablePA
+                            processedToggleValue={processedToggleValue}
+                            processed_data={processed_data}
+                            dataPA={dataPA}
+                        />
                     </Tab>
                     
                 </Tabs>         
-                </div>
-            </div> 
-        
-            <div style={style.editBtnWrapper}>
-                <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handlePredictClick}>예측</button>
-            </div>     
+                </Card>
+            </div>    
         </div>
     );
 }
@@ -388,21 +288,16 @@ let options = ['원육',];
 
 //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
 //'imagepPath','period', 'seqno', 'userId''createdAt',
-const rawField =['marbling','color','texture','surfaceMoisture','overall',];
-const rawPAField =['marbling','color','texture','surfaceMoisture','overall','xai_gradeNum'];
-const deepAgingField = ['marbling','color','texture','surfaceMoisture','overall',/*'createdAt',*/ 'seqno', 'period'];
-const deepAgingPAField = ['marbling','color','texture','surfaceMoisture','overall',/*'createdAt',*/ 'seqno', 'period','xai_gradeNum'];
 const style={
     singleDataWrapper:{
       height:'fit-content',
-      marginTop:'70px',
-      padding: "20px 50px",
-      paddingBottom: "0px",
+      marginTop:'50px',
+     // padding: "0px 50px",
       display: "flex",
       justifyContent: "space-between", 
-      backgroundColor:'white', 
-      borderTopLeftRadius:'10px' , 
-      borderTopRightRadius:'10px',
+     // backgroundColor:'white', 
+     // borderTopLeftRadius:'10px' , 
+     // borderTopRightRadius:'10px',
       width: "100%",
     },
     editBtnWrapper:{
@@ -411,7 +306,7 @@ const style={
         width:'100%' ,
         display:'flex',
         justifyContent:'end', 
-        backgroundColor:'white', 
+        //backgroundColor:'white', 
         marginTop:'auto', 
         borderBottomLeftRadius:'10px', 
         borderBottomRightRadius:'10px'

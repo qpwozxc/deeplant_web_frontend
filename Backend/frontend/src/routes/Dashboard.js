@@ -9,6 +9,7 @@ import DataStat from "../components/Charts/DataStat";
 import RejectedDataListComp from "../components/DataListView/RejectedDataListComp";
 // 엑셀 파일 export/ import 컴포넌트
 import ExcelController from "../components/DataListView/excelContr";
+import StatsExport from "../components/DataListView/statsExport";
 // mui 
 import { Box, Button, } from "@mui/material";
 // import timezone
@@ -63,7 +64,8 @@ function Dashboard() {
       <Box sx={styles.fixed}>
         <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
-          <ExcelController/>
+          { value === "list" && <ExcelController/>}
+          { value === "stat" && <StatsExport/>}
         </div>
       </Box>
 
