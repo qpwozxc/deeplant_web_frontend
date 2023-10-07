@@ -130,7 +130,7 @@ export function DataLoad(id, page, currentUser) {
     createdAt: items[0].createdAt.replace('T', ' '),
     qrImagePath: items[0].imagePath,
     raw_data: items[0].rawmeat.sensory_eval,
-    raw_img_path : items[0].rawmeat.sensory_eval.imagePath,
+    raw_img_path : items[0].rawmeat.sensory_eval? items[0].rawmeat.sensory_eval.imagePath : "null",
     processed_data: processedData,
     heated_data : heatedData,
     lab_data: labData,

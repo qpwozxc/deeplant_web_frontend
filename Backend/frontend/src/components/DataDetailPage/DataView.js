@@ -86,7 +86,7 @@ function DataView({page, currentUser ,dataProps}){
     useEffect(()=>{
         tabFields.map((t,index)=>{
             // 데이터가 없는 경우 ""값으로 
-            if (datas[index].length === 0 || datas[index] === null){
+            if ( datas[index] === null || datas[index].length === 0){
                 t.forEach((f)=>{
                     setInputFields[index].setter((currentField)=>({
                         ...currentField,
@@ -384,23 +384,6 @@ function DataView({page, currentUser ,dataProps}){
         console.log('change');
     }
 
-    // [데이터 승인/반려 페이지] 검토 승인 여부 변경 토글 버튼
-    /*const [confirmVal, setConfirmVal] = useState(null);
-    const handleAlignment = (event, newAlignment) => {
-        setConfirmVal(newAlignment);
-    };
-    <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="confirm" aria-label="left aligned">
-                    승인
-                </ToggleButton>
-                <ToggleButton value="reject" aria-label="left aligned">
-                    반려
-                </ToggleButton>
-            </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>
-                저장
-            </button>
-    */
     const [confirmVal, setConfirmVal] = useState(null);
     
     // [데이터 승인/반려 페이지] 승인 여부 변경 API 호출 
