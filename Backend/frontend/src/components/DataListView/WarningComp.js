@@ -1,18 +1,20 @@
 import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 import {FaRegTrashAlt} from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
 export default function TransitionsModal({id, setIsDelClick}) {
     //화면 창 닫기
+    const navigate = useNavigate();
     const [open, setOpen] = useState(true);
-    const handleClose = () => {setOpen(false); setIsDelClick(false)};
+    const handleClose = () => {setOpen(false); setIsDelClick(false); window.location.reload();};
     const ondelete = async(id) =>{
       const resp= await fetch(`http://${apiIP}/meat/delete?id=${id}`);
       console.log('response', resp, id);
-     // window.location.reload();
+      //window.location.reload();
     }
   
     let idArr = [];

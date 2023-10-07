@@ -13,8 +13,8 @@ export default function RejectModal({id, setConfirmVal, confirmVal}) {
     // 승인 상태 변경 api 호출
     const changeConfirmState=()=>{
         try{
-            /*const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
-            navigate({pathname : '/DataManage'});*/
+            const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
+            //navigate({pathname : '/DataManage'});
             setStateChanged(true);
             //handleClose();
         }catch(err){
