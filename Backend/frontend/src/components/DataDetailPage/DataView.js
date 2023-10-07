@@ -25,6 +25,9 @@ import ApiTable from "./tablesComps/apiTable";
 // import timezone
 import { TIME_ZONE } from "../../config";
 
+
+
+
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
@@ -410,6 +413,8 @@ function DataView({page, currentUser ,dataProps}){
         }
     };
 
+
+
     return(
         <div style={{width:'100%', marginTop:'70px'}}>
         { // 데이터 승인/반려 페이지인 경우
@@ -483,7 +488,7 @@ function DataView({page, currentUser ,dataProps}){
                     </Card.Text>
                     {/**이미지 */}
                     <Card.Text>  
-                        <div style={{height:'350px',width:"100%", border:'1px solid black'}}>
+                        <div style={{height:'350px',width:"100%",borderRadius:'10px'}}>
                             {// 실제 이미지 
                             imgArr[currentIdx]
                             ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
@@ -560,8 +565,10 @@ function DataView({page, currentUser ,dataProps}){
                 </Card.Body>
             </Card>
             {/* 3. 세부 데이터 정보*/}
-            <Card style={{ width:'27vw', margin:'0px 10px', boxShadow: 24,}}>    
+            <Card style={{ width:'27vw', margin:'0px 10px', boxShadow: 24, height:'65vh',}}>    
+            
             <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'100%'}}>
+            
                 <Tab value='raw' eventKey='rawMeat' title='원육' >
                     <RawTable data={rawInput}/>                  
                 </Tab>
@@ -590,6 +597,7 @@ function DataView({page, currentUser ,dataProps}){
                         processedToggleValue={processedToggleValue} 
                         handleInputChange={handleInputChange}                     
                     />
+                  
                 </Tab>
                 <Tab value='heat' eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
@@ -622,7 +630,8 @@ function DataView({page, currentUser ,dataProps}){
                         setApiInput={setApiInput}
                     />
                 </Tab>
-            </Tabs>         
+            </Tabs>     
+                
             </Card>
         </div> 
         {

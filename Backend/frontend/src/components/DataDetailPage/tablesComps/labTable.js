@@ -1,9 +1,13 @@
 import { Paper,  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 
 const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
+
     return(
-        <TableContainer key='labData' component={Paper} sx={{minWidth:'fitContent',maxWidth:'680px',overflow:'auto'}}>
+        
+        <TableContainer key='labData' component={Paper} sx={{maxWidth:'680px',maxHeight:'50vh',overflow:'auto'}}>
+        
             <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
+            
                 <TableHead>
                     <TableRow key={'labData-explanation'}>
                         <TableCell key={'labData-exp-col'}>{}</TableCell>
@@ -15,9 +19,12 @@ const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
                         }
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                
+                <TableBody >
+                
                 {labField.map((f, idx)=>{
                 return(
+                        
                     <TableRow key={'lab-'+idx}>
                         <TableCell key={'lab-'+idx+'col1'}>{f}</TableCell>
                         <TableCell key={'lab-'+idx+'col2'}>
@@ -41,11 +48,15 @@ const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
                         ))
                         }
                     </TableRow>
+                    
                     );
                 })
                 }
+               
                 </TableBody>
+               
             </Table>
+           
         </TableContainer>
     );
 }
