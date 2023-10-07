@@ -1,6 +1,8 @@
 import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 
+const navy =  '#0F3659';
+
 export default function InputTransitionsModal({ setModal}) {
     //화면 창 닫기
     const [open, setOpen] = useState(true);
@@ -24,10 +26,12 @@ export default function InputTransitionsModal({ setModal}) {
           <Fade in={open}>
             <Box sx={style}>
               <Typography id="transition-modal-title" variant="h6" component="h2">
+                <span style={{color:navy, fontSize:'20px', fontWeight:'600'}}>
                 이미지를 먼저 업로드해야 합니다.
+                </span>
               </Typography>
-              <div style={{display:'flex', width:'100%', justifyContent:'center'}}>
-                <Button variant="contained" sx={{marginRight:'5px'}} onClick={handleClose }>닫기</Button>
+              <div style={{display:'flex', width:'100%', justifyContent:'center',marginTop:'20px'}}>
+                <Button variant="contained" sx={{marginRight:'5px', backgroundColor:navy}} onClick={handleClose }>닫기</Button>
               </div>
             </Box>
           </Fade>
@@ -44,7 +48,7 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 500,
     height:'160px', 
-    //    bgcolor: 'background.paper',
+    bgcolor: 'background.paper',
     //border: '2px solid #000',
     boxShadow: 24,
     p: 4,

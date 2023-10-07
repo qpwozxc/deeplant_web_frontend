@@ -156,9 +156,9 @@ function DataView({page, currentUser ,dataProps}){
         const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
         const elapsedHour = elapsedMSec / 1000 / 60 / 60;
 
-        //로그인한 유저 정보
+        //로그인한 유저 정보 -> 임시로 저장
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
-
+        const tempUserID = 'junsu0573@naver.com';//
         // 1. 가열육 관능검사 데이터 수정 API POST
         // 수정한 것만 보내야할 것 같은데 
         for (let i =0; i < len ; i++){
@@ -173,28 +173,29 @@ function DataView({page, currentUser ,dataProps}){
                 ...req,
                 ['id'] : id,
                 ["createdAt"] : createdDate,
-                ["userId"] : userData["userId"],
+                ["userId"] : tempUserID,//userData["userId"],
                 ["seqno"] : i,
                 ["period"] : Math.round(elapsedHour),
             }
 
             ///meat/add/heatedmeat_eval
             const res = JSON.stringify(req);
-            
+            console.log('heated meat post', res);
             try{
-                const response  = fetch(`http:/${apiIP}/meat/add/heatedmeat_eval`, {
+                const response  = fetch(`http://${apiIP}/meat/add/heatedmeat_eval`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: res,
                 });
+                console.log("response from heated",response);
             }catch(err){
                 console.log('error')
                 console.error(err);
             }
             
-            //console.log("response",response);
+          
         }
 
         // 2. 실험실 데이터 수정 API POST
@@ -208,7 +209,7 @@ function DataView({page, currentUser ,dataProps}){
                 ...req,
                 ['id'] : id,
                 ['updatedAt'] : createdDate,
-                ['userId'] :  userData["userId"],
+                ['userId'] :  tempUserID,//userData["userId"],
                 ['seqno'] : i,
                 ['period'] :  Math.round(elapsedHour),
             }
@@ -266,7 +267,7 @@ function DataView({page, currentUser ,dataProps}){
                 ...req,
                 ['id']: id,
                 ['createdAt'] : createdDate,
-                ['userId'] : userData["userId"],
+                ['userId'] : tempUserID,//userData["userId"],
                 ['seqno'] : i+1,
                 ['period'] : Math.round(elapsedHour),
                 ['deepAging'] : {
@@ -278,7 +279,6 @@ function DataView({page, currentUser ,dataProps}){
             req && delete req['deepaging_data']
             //api 연결 /meat/add/deep_aging_data
             const res = JSON.stringify(req);
-            console.log(res);
             
             try{
                 fetch(`http://${apiIP}/meat/add/sensory_eval`, {
