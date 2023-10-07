@@ -179,7 +179,7 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
                             {//반려함이나 예측 페이지인 경우 삭제 체크박스 추가
                             (pageProp === 'reject')
                             &&
-                            <TableCell>
+                            <TableCell style={style.tableCell}>
                                 <Checkbox 
                                 value={content.id}
                                 key={content.id} 

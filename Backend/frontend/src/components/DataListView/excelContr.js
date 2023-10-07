@@ -4,6 +4,7 @@ import { ExcelRenderer,  } from "react-excel-renderer";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import { Box, Button,SvgIcon,} from "@mui/material";
+import {getDataListJSON, downloadExcel} from "./excelExport";
 // import timezone
 import { TIME_ZONE } from "../../config";
 const navy =  '#0F3659';
@@ -148,6 +149,17 @@ function ExcelController(){
 
         });
     };
+
+    const [excelData ,setExcelData] = useState();
+    const handleExcelExport = () => {
+      downloadExcel(excelData);
+    }
+    useEffect(()=>{
+      getDataListJSON().then((data)=>{
+        setExcelData(data);
+      });
+    },[])
+   
     return(
         <Box>
           <input 
@@ -174,7 +186,7 @@ function ExcelController(){
 
           <Button 
             style={{color:navy , backgroundColor:'white', border:`1px solid ${navy}`, height:'35px', borderRadius:'10px'}} 
-            onClick={()=>{}}
+            onClick={handleExcelExport}
           >
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
