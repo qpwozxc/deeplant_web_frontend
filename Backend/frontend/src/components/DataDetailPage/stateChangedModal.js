@@ -11,10 +11,8 @@ export default function StateChangedModal({confirmVal, setStateChanged, handlePa
     const [open, setOpen] = useState(true);
     const handleClose = () => {setOpen(false); setStateChanged(false); handleParentClose(); navigate({pathname : '/DataManage'});};
 
-    // 승인 상태 변경 api 호출
     const changeConfirmState=()=>{
         try{
-            /*const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);*/
             navigate({pathname : '/DataManage'});
             handleClose();
         }catch(err){
