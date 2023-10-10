@@ -160,7 +160,7 @@ function DataPAView({ currentUser ,dataProps}){
                         <Card.Body>
                             <Card.Text>
                                 <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>원본이미지</div>
-                                <div style={{ width: "100%",padding:'10px 0px'}}>
+                                <div style={{ width: "100%",padding:'10px 0px',borderRadius:'10px'}}>
                                     {
                                     previewImage
                                     ?<img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
@@ -179,7 +179,7 @@ function DataPAView({ currentUser ,dataProps}){
                                 <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>XAI이미지 [데이터/등급예측]</div>
                                 <div style={{width: "100%",display:'flex', justifyContent:'center',padding:'10px 0px'}}> 
                                     {dataXAIImg && loaded
-                                    ?<div className="imgContainer">
+                                    ?<div className="imgContainer" style={{borderRadius:'10px'}}>
                                         <img src={dataXAIImg} style={{height:'190px',width:'100%',objectFit:'contain',marginRight:'30px'}}/>
                                     </div>
                                     :<div style={{height:'170px',width:'100%',display:'flex',margin:'0px 20px',marginRight:'20px' ,justifyContent:'center', alignItems:'center'}}>
@@ -190,7 +190,7 @@ function DataPAView({ currentUser ,dataProps}){
                                     </div>
                                     }
                                     {gradeXAIImg && loaded
-                                    ?<div className="imgContainer">
+                                    ?<div className="imgContainer" style={{borderRadius:'10px'}}>
                                         <img src={gradeXAIImg}  style={{height:'190px',width:'100%',objectFit:'contain',}}/>
                                     </div>
                                     :<div style={{height:'170px',width:'100%',display:'flex', justifyContent:'center', alignItems:'center',margin:'0px 20px',}}>
@@ -217,8 +217,8 @@ function DataPAView({ currentUser ,dataProps}){
                         </Card.Text>
 
                         <Card.Text >
-                        <div  style={{height:'280px',width:"100%", border:'1px solid black'}}>
-                            <img src={qrImagePath} style={{width:'100px'}}/>
+                        <div  style={{height:'280px',width:"100%",display:'flex', justifyContent:'center', alignItems:'center'}}>
+                            <img src={qrImagePath} style={{width:'180px'}}/>
                         </div>
                         </Card.Text> 
 

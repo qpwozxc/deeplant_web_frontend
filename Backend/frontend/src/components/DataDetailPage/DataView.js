@@ -12,7 +12,7 @@ import RejectModal from "./rejectModal";
 // icons
 import {FaArrowLeft,FaArrowRight, FaUpload, FaRegCheckCircle, FaRegTimesCircle} from  "react-icons/fa";
 // mui 
-import { Box, Button,Paper, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, } from '@mui/material';
+import { IconButton,TextField, Autocomplete, } from '@mui/material';
 // firebase 
 import {  ref as storageRef ,uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../firebase-config.js';
@@ -24,7 +24,12 @@ import LabTable from "./tablesComps/labTable";
 import ApiTable from "./tablesComps/apiTable";
 // import timezone
 import { TIME_ZONE } from "../../config";
+import Spinner from "react-bootstrap/Spinner";
 
+import updateRawData from "../../API/updateRawData";
+import updateHeatedData from "../../API/updateHeatedData";
+import updateProbexptData from "../../API/updateProbexptData";
+import updateProcessedData from "../../API/updateProcessedData";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
@@ -64,7 +69,7 @@ function DataView({page, currentUser ,dataProps}){
     const [toggle4, setToggle4] = useState(options[0]);
     const [toggle4Value, setToggle4Value] = useState('');
     // "원육","처리육","가열육","실험실(/*전자혀,*/)","축산물 이력",별 수정 및 추가 input text
-    const [rawInput, setRawInput] = useState({});
+    const [rawInput, setRawInput] = useState({});// 이거 필요?없을 듯 
     const [processedInput, setProcessedInput] = useState({});
     const [heatInput, setHeatInput] = useState({});
     const [labInput , setLabInput] = useState({});
@@ -83,7 +88,7 @@ function DataView({page, currentUser ,dataProps}){
     useEffect(()=>{
         tabFields.map((t,index)=>{
             // 데이터가 없는 경우 ""값으로 
-            if (datas[index].length === 0 || datas[index] === null){
+            if ( datas[index] === null || datas[index].length === 0){
                 t.forEach((f)=>{
                     setInputFields[index].setter((currentField)=>({
                         ...currentField,
@@ -117,14 +122,6 @@ function DataView({page, currentUser ,dataProps}){
         }
         
     }
-    // 처리육 딥에이징 시간 (분) input 핸들링
- /*   const handleMinuteInputChange = (e, index)=>{
-        const value = e.target.value;
-        if (!isNaN(+value)){
-            setProcessedMinute((prev)=>({...prev, [index] : value}))
-        }
-    }
-*/
 
     // 수정 여부 버튼 토글
     const [edited, setIsEdited] = useState(false);
@@ -153,143 +150,27 @@ function DataView({page, currentUser ,dataProps}){
         const elapsedMSec = createdDate2.getTime() - butcheryDate.getTime();
         const elapsedHour = elapsedMSec / 1000 / 60 / 60;
 
-        //로그인한 유저 정보
+        //로그인한 유저 정보 -> 임시로 저장
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
+        const tempUserID = 'junsu0573@naver.com';// // 수정한 것만 보내야할 것 같은데 
+
+        // 0. 신선육 데이터 수정 
+        updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP);
 
         // 1. 가열육 관능검사 데이터 수정 API POST
-        // 수정한 것만 보내야할 것 같은데 
-        for (let i =0; i < len ; i++){
-            //console.log('heated data', heated_data[i]);
-            //console.log('heated input',heatInput[i]);
-            // 데이터 수정 
-            let req = {
-                ...heatInput[i],
-            };
-            //데이터 추가
-            req = {
-                ...req,
-                ['id'] : id,
-                ["createdAt"] : createdDate,
-                ["userId"] : userData["userId"],
-                ["seqno"] : i,
-                ["period"] : Math.round(elapsedHour),
-            }
-
-            ///meat/add/heatedmeat_eval
-            const res = JSON.stringify(req);
-            
-            try{
-                const response  = fetch(`http:/${apiIP}/meat/add/heatedmeat_eval`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: res,
-                });
-            }catch(err){
-                console.log('error')
-                console.error(err);
-            }
-            
-            //console.log("response",response);
+        for (let i =0; i < len ; i++){            
+            updateHeatedData(heatInput[i], i,id, createdDate, tempUserID, elapsedHour, apiIP);
         }
 
         // 2. 실험실 데이터 수정 API POST
         for (let i =0; i < len ; i++){
-            let req = (labInput[i]);
-            req = {
-                ...labInput[i],
-            }
-            //if (lab_data[i]){
-            req = {
-                ...req,
-                ['id'] : id,
-                ['updatedAt'] : createdDate,
-                ['userId'] :  userData["userId"],
-                ['seqno'] : i,
-                ['period'] :  Math.round(elapsedHour),
-            }
-            //}
-            // api 연결 /meat/add/probexpt_data
-            const res = JSON.stringify(req);
-            try{
-                fetch(`http://${apiIP}/meat/add/probexpt_data`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: res,
-                });
-            }catch(err){
-                console.log('error')
-                console.error(err);
-            }
+            updateProbexptData(labInput[i], i,id, createdDate, tempUserID, elapsedHour, apiIP);
         }
 
         // 3. 처리육 관능검사 데이터 수정 API POST
-        //console.log('length:', len, len-1);
         const pro_len = (len===1 ? len : (len-1));
-        for (let i =0; i <  pro_len; i++){
-            
-            // 수정된 게 있는 경우 (input 만 비교 )
-            console.log(processedInput[i], processed_data[i] 
-                , (processedMinute[i]),//processed_data[i]['deepaging_data']['minute']
-            );
-            // 1회차 데이터를 추가하는 경우(processeddata len === 0) (minute 값이 들어올 수도 있고 안들어올 수도있는데 안들어오면 input비교로 )
-            /*if (processed_data.length === 0){
-                // 데이터 추가가 일어나지 않은 경우
-                if (processedInput[i] === processed_data[i] && processedMinute[i].length === 0){
-                    console.log('no input change');
-                    continue;
-                }
-            }else{
-                // 수정된 데이터가 없는 경우
-                if (processedInput[i] === processed_data[i] && Number(processedMinute[i]) === 0){
-                    console.log('no input change2');
-                    continue;
-                }
-            }*/
-            // api를 호출하는 경우 : 추가하는 데이터가 있는 경우나 수정된 데이터가 있는 경우 
-
-                /*
-
-            console.log('compare',(processedInput[i]=== processed_data[i] 
-                && Number(processedMinute[i])===processed_data[i]['deepaging_data']['minute']
-                ));*/
-            //const delprocessedInput = del()
-            let req = (processedInput[i]);
-           
-            req = {
-                ...req,
-                ['id']: id,
-                ['createdAt'] : createdDate,
-                ['userId'] : userData["userId"],
-                ['seqno'] : i+1,
-                ['period'] : Math.round(elapsedHour),
-                ['deepAging'] : {
-                    ['date'] : processed_data[i]?processed_data[i]['deepaging_data']['date']: yy+mm+dd,
-                    ['minute'] : Number(processedMinute[i]?processedMinute[i]:0),
-                },
-                
-            }
-            req && delete req['deepaging_data']
-            //api 연결 /meat/add/deep_aging_data
-            const res = JSON.stringify(req);
-            console.log(res);
-            
-            try{
-                fetch(`http://${apiIP}/meat/add/sensory_eval`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: res,
-                });
-                console.log('deepaging',i,res);
-            }catch(err){
-                console.log('error')
-                console.error(err);
-            }
+        for (let i =0; i < pro_len; i++){
+            updateProcessedData(processedInput[i],processed_data[i],processedMinute[i], yy,mm,dd,i, id, createdDate, tempUserID, elapsedHour, apiIP);
         }
     };
     
@@ -297,7 +178,7 @@ function DataView({page, currentUser ,dataProps}){
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
     const [previewImage, setPreviewImage] = useState(raw_img_path);
-    
+    const [isUploadedToFirebase, SetisUploadedToFirebase] = useState(true);
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
@@ -310,6 +191,7 @@ function DataView({page, currentUser ,dataProps}){
             try {
               // 2. 변경할 이미지 firebase storage에 올리기
               await uploadBytes(fileRef, file);
+              SetisUploadedToFirebase(true);
               console.log("File uploaded successfully!");
             } catch (error) {
               console.error("Error uploading file:", error);
@@ -319,7 +201,8 @@ function DataView({page, currentUser ,dataProps}){
         // 파일에서 이미지 선택 
         reader.onload = () => {
             console.log('image selected', currentIdx, id);            
-            
+            //lock 걸어두기 
+            SetisUploadedToFirebase(false);
             uploadNewFile(imgFile, folderName, fileName);
 
             let newImages = imgArr;
@@ -381,37 +264,19 @@ function DataView({page, currentUser ,dataProps}){
         console.log('change');
     }
 
-    // [데이터 승인/반려 페이지] 검토 승인 여부 변경 토글 버튼
-    /*const [confirmVal, setConfirmVal] = useState(null);
-    const handleAlignment = (event, newAlignment) => {
-        setConfirmVal(newAlignment);
-    };
-    <ToggleButtonGroup value={confirmVal} exclusive onChange={handleAlignment} aria-label="text alignment">
-                <ToggleButton value="confirm" aria-label="left aligned">
-                    승인
-                </ToggleButton>
-                <ToggleButton value="reject" aria-label="left aligned">
-                    반려
-                </ToggleButton>
-            </ToggleButtonGroup>
-            <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handleConfirmSaveClick}>
-                저장
-            </button>
-    */
     const [confirmVal, setConfirmVal] = useState(null);
     
-    // [데이터 승인/반려 페이지] 승인 여부 변경 API 호출 
-    const handleConfirmSaveClick=(confirmVal)=>{
-        try{
-            /*const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
-            navigate({pathname : '/DataManage'});*/
-        }catch(err){
-            console.error(err);
-        }
-    };
 
     return(
         <div style={{width:'100%', marginTop:'70px'}}>
+            {
+                !isUploadedToFirebase
+                && 
+                <div style={divStyle.loadingBackground}>
+                    <Spinner/>
+                    <span style={divStyle.loadingText}>이미지를 업로드 중 입니다..</span>
+                </div>
+            }
         { // 데이터 승인/반려 페이지인 경우
         page === "검토"
         &&
@@ -483,7 +348,7 @@ function DataView({page, currentUser ,dataProps}){
                     </Card.Text>
                     {/**이미지 */}
                     <Card.Text>  
-                        <div style={{height:'350px',width:"100%", border:'1px solid black'}}>
+                        <div style={{height:'350px',width:"100%",borderRadius:'10px'}}>
                             {// 실제 이미지 
                             imgArr[currentIdx]
                             ?<img src={imgArr[currentIdx]}  alt={`Image ${currentIdx + 1}`} style={{height:'350px',width:"400px",objectFit:'contain'}}/>
@@ -560,8 +425,10 @@ function DataView({page, currentUser ,dataProps}){
                 </Card.Body>
             </Card>
             {/* 3. 세부 데이터 정보*/}
-            <Card style={{ width:'27vw', margin:'0px 10px', boxShadow: 24,}}>    
+            <Card style={{ width:'27vw', margin:'0px 10px', boxShadow: 24, height:'65vh',}}>    
+            
             <Tabs  value={value} onChange={handleChange} defaultActiveKey='rawMeat' aria-label="tabs" className="mb-3" style={{backgroundColor:'white', width:'100%'}}>
+            
                 <Tab value='raw' eventKey='rawMeat' title='원육' >
                     <RawTable data={rawInput}/>                  
                 </Tab>
@@ -590,6 +457,7 @@ function DataView({page, currentUser ,dataProps}){
                         processedToggleValue={processedToggleValue} 
                         handleInputChange={handleInputChange}                     
                     />
+                  
                 </Tab>
                 <Tab value='heat' eventKey='heatedMeat' title='가열육' style={{backgroundColor:'white'}}>
                     <Autocomplete value={toggle3}  size="small" onChange={(event, newValue) => {setToggle3(newValue)}} inputValue={toggle3Value} onInputChange={(event, newInputValue) => {setToggle3Value(newInputValue)}}
@@ -622,7 +490,8 @@ function DataView({page, currentUser ,dataProps}){
                         setApiInput={setApiInput}
                     />
                 </Tab>
-            </Tabs>         
+            </Tabs>     
+                
             </Card>
         </div> 
         {
@@ -728,7 +597,27 @@ const style={
         //backgroundColor:'white', 
         color:'#b0bec5',
         //border:'1px solid #002984'
+    },
+    loadingBackground : {
+        position: 'absolute',
+        width: '100vw',
+        height: '100vh',
+        top: 0,
+        left: 0,
+        backgroundColor: '#ffffffb7',
+        zIndex: 999,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
+      
+  ,loadingText :{
+    fontSize:'25px',
+    textAlign: 'center',
+  }
+
+ 
 }
 
   /***

@@ -4,6 +4,7 @@ import { ExcelRenderer,  } from "react-excel-renderer";
 import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import { Box, Button,SvgIcon,} from "@mui/material";
+import {getDataListJSON, downloadExcel} from "./excelExport";
 // import timezone
 import { TIME_ZONE } from "../../config";
 const navy =  '#0F3659';
@@ -30,23 +31,23 @@ function ExcelController(){
           // 파일 최종 수정 시간
           const lastModified = file.lastModified;
           console.log("cols", resp.cols ,"rows", resp.rows);
-          const sensory_eval = {};
+          //const sensory_eval = {};
           const heatedmeat_eval = {};
           const probexpt_data = {};
           // 엑셀 파일 값 -> JSON으로 변환 
-          for (let i = 1; i < 6; i++) {
+          /*for (let i = 1; i < 6; i++) {
             resp.rows[index][i]
             ? sensory_eval[resp.rows[0][i]] = resp.rows[index][i]
             : sensory_eval[resp.rows[0][i]] = null
             ;
-          }
-          for (let i = 6; i < 11; i++) {
+          }*/
+          for (let i = 1; i < 6; i++) {
             resp.rows[index][i]
             ? heatedmeat_eval[resp.rows[0][i]] = resp.rows[index][i]
             : heatedmeat_eval[resp.rows[0][i]] = null
             ;
           }
-          for (let i = 11; i<  resp.rows[0].length; i++) {
+          for (let i = 6; i<  resp.rows[0].length; i++) {
             resp.rows[index][i]
             ? probexpt_data[resp.rows[0][i]] = resp.rows[index][i]
             : probexpt_data[resp.rows[0][i]] = null
@@ -72,20 +73,23 @@ function ExcelController(){
 
           //로그인한 유저 정보
           const userData = JSON.parse(localStorage.getItem('UserInfo'));
-
+          const tempUserID = 'junsu0573@naver.com';
           // 1. 신선육 관능평가
-          let rawMeatEvalReq = sensory_eval;
+          /*let rawMeatEvalReq = sensory_eval;
           rawMeatEvalReq = {
             ...rawMeatEvalReq,
             ['id'] : id,
             ["createdAt"] : lastModifiedDate,
-            ["userId"] : userData["userId"],
+            ["userId"] : tempUserID,//userData["userId"],
             ["seqno"] : 0,
             ["period"] : Math.round(elapsedHour),
           }
 
           console.log('raw eval', rawMeatEvalReq);
           
+          const rawMeatEvalRes = JSON.stringify(rawMeatEvalReq);
+    
+*/
           // 2. 가열육 관능평가 데이터 
           // 데이터 수정 
           let heatedmeatEvalReq = heatedmeat_eval;
@@ -94,27 +98,27 @@ function ExcelController(){
               ...heatedmeatEvalReq,
               ['id'] : id,
               ["createdAt"] : lastModifiedDate,
-              ["userId"] : userData["userId"],
+              ["userId"] : tempUserID,//userData["userId"],
               ["seqno"] : 0,
               ["period"] : Math.round(elapsedHour),
           }
-          console.log('heated eval:',heatedmeatEvalReq)
+          
           ///meat/add/heatedmeat_eval
           const heatedmeatEvalRes = JSON.stringify(heatedmeatEvalReq);
-          
-         /* try{
-              const response  = fetch(`http:/${apiIP}/meat/add/heatedmeat_eval`, {
+          console.log('heated eval:',heatedmeatEvalRes)
+         try{
+              const response  = fetch(`http://${apiIP}/meat/add/heatedmeat_eval`, {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",
               },
-              body: res,
+              body: heatedmeatEvalRes,
               });
           }catch(err){
               console.log('error')
               console.error(err);
           }
-*/
+
           // 3. 실험실 데이터 
 
           let probexptReq = probexpt_data;
@@ -122,7 +126,7 @@ function ExcelController(){
               ...probexptReq,
               ['id'] : id,
               ['updatedAt'] : lastModifiedDate,
-              ['userId'] :  userData["userId"],
+              ['userId'] :   tempUserID,//userData["userId"],
               ['seqno'] : 0,
               ['period'] :  Math.round(elapsedHour),
           }
@@ -130,24 +134,35 @@ function ExcelController(){
           //}
           // api 연결 /meat/add/probexpt_data
           const probexptRes = JSON.stringify(probexptReq);
-          /*try{
+          try{
               fetch(`http://${apiIP}/meat/add/probexpt_data`, {
               method: "POST",
               headers: {
                   "Content-Type": "application/json",
               },
-              body: res,
+              body: probexptRes,
               });
           }catch(err){
               console.log('error')
               console.error(err);
-          }*/
+          }
             
         } 
       }
 
         });
     };
+
+    const [excelData ,setExcelData] = useState();
+    const handleExcelExport = () => {
+      downloadExcel(excelData);
+    }
+    useEffect(()=>{
+      getDataListJSON().then((data)=>{
+        setExcelData(data);
+      });
+    },[])
+   
     return(
         <Box>
           <input 
@@ -174,7 +189,7 @@ function ExcelController(){
 
           <Button 
             style={{color:navy , backgroundColor:'white', border:`1px solid ${navy}`, height:'35px', borderRadius:'10px'}} 
-            onClick={()=>{}}
+            onClick={handleExcelExport}
           >
             <div style={{display:'flex'}}>
               <SvgIcon fontSize="small">
