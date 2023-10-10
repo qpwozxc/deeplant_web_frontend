@@ -4,9 +4,9 @@ import DataList from "./DataList";
 import PaginationComp from "./paginationComp";
 import PaginationV2 from "./PaginationV2";
 import Spinner from "react-bootstrap/Spinner";
-import HandlePredictClick from "../API/predictPOST";
-import GetSingleData from "../API/detailMeatGet";
-import useGetDetail from "../API/useGetDetail";
+//import HandlePredictClick from "../API/predictPOST";
+import GetSingleData from "../../API/detailMeatGet"
+//import useGetDetail from "../API/useGetDetail";
 // 임시로 local data 사용 
 import listData from "../../Data/pagination.json";
 

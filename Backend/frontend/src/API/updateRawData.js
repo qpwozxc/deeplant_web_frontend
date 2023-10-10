@@ -20,7 +20,8 @@ export default function updateRawData(raw_data, id, createdDate, tempUserID, ela
         },
         body: JSON.stringify(req),
         });
-        console.log("response from heated",response);
+        console.log("response from raw",response);
+        return response;
     }catch(err){
         console.log('error')
         console.error(err);

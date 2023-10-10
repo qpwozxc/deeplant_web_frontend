@@ -30,6 +30,7 @@ import updateRawData from "../../API/updateRawData";
 import updateHeatedData from "../../API/updateHeatedData";
 import updateProbexptData from "../../API/updateProbexptData";
 import updateProcessedData from "../../API/updateProcessedData";
+import RestrictedModal from "./restrictedModal";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
@@ -132,6 +133,7 @@ function DataView({page, currentUser ,dataProps}){
 
     const len = processed_data_seq.length;
     // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
+    const [isLimitedToChangeRawImage, setIsLimitedToChangeRawImage] = useState(false);
     const onClickSubmitBtn = () => {
         setIsEdited(false);       
         // 수정 시간
@@ -152,10 +154,19 @@ function DataView({page, currentUser ,dataProps}){
 
         //로그인한 유저 정보 -> 임시로 저장
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
-        const tempUserID = 'junsu0573@naver.com';// // 수정한 것만 보내야할 것 같은데 
+        const tempUserID = 'junsu0573@naver.com';// //'junsu0573@gmail.com'; 
 
-        // 0. 신선육 데이터 수정 
-        updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP);
+        // 0. 원육 데이터 수정 
+        if (isRawImageChange){
+            const response = updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP);
+            response.then((response)=>{
+                response.statusText === "NOT FOUND"
+                && setIsLimitedToChangeRawImage(true);
+            });
+            setIsRawImageChange(false);
+            console.log('limit to change',response.statusText);
+        }
+     
 
         // 1. 가열육 관능검사 데이터 수정 API POST
         for (let i =0; i < len ; i++){            
@@ -178,11 +189,16 @@ function DataView({page, currentUser ,dataProps}){
     const [imgFile, setImgFile] = useState(null);
     const fileRef = useRef(null);
     const [previewImage, setPreviewImage] = useState(raw_img_path);
+    const [isRawImageChange, setIsRawImageChange] = useState(false);
     const [isUploadedToFirebase, SetisUploadedToFirebase] = useState(true);
     //imgFile이 변경될 때마다, 변경한 이미지 파일 화면에 나타내기  
     useEffect(() => {
         if (imgFile) {
         const fileName = id+'-'+currentIdx+'.png';
+        if (currentIdx === 0)
+        {
+            setIsRawImageChange(true);
+        }
         const folderName = "sensory_evals";
         // firebase 이미지 업로드 
         const uploadNewFile = async (file, folderName, fileName) => {
@@ -201,7 +217,7 @@ function DataView({page, currentUser ,dataProps}){
         // 파일에서 이미지 선택 
         reader.onload = () => {
             console.log('image selected', currentIdx, id);            
-            //lock 걸어두기 
+            //firebase에 업로드하기 전에 lock 걸어두기
             SetisUploadedToFirebase(false);
             uploadNewFile(imgFile, folderName, fileName);
 
@@ -306,6 +322,12 @@ function DataView({page, currentUser ,dataProps}){
         confirmVal === 'reject'
         &&
         <RejectModal id={id} confirmVal={confirmVal} setConfirmVal={setConfirmVal}/>
+       }
+       {
+        // 이미지 수정 불가능 팝업 - 일반 사용자임을 알리거나 서버를 확인하라는 경고 메시지 
+        isLimitedToChangeRawImage
+        &&
+        <RestrictedModal setIsLimitedToChangeRawImage={setIsLimitedToChangeRawImage}/>
        }
         <div style={style.singleDataWrapper}>
             {/* 1. 관리번호 고기에 대한 사진 -> 컴포넌트 따로 만들기*/}
