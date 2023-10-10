@@ -22,8 +22,7 @@ function Stats() {
       <Box
         sx={{
           width: "100%",
-          textAlign: "center",
-          paddingLeft: "140px",
+          paddingLeft: "210px",
           paddingBottom: "20px",
         }}
       >

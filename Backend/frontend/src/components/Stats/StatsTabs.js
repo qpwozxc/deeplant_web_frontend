@@ -5,6 +5,7 @@ import BarGraph from "./Charts/barGraph";
 import PieChart from "./Charts/pieChart";
 import AreaChart from "./Charts/BoxPlot/Sens_FreshMeat";
 import { IoBarChart, IoPieChart } from "react-icons/io5";
+import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { FaChartLine } from "react-icons/fa6";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -87,7 +88,21 @@ export default function StatsTabs({ startDate, endDate }) {
           alignItems: "center",
           justifyContent: "space-between",
         }}
-      >
+      ><Typography
+      component="h2"
+      variant="h4"
+      gutterBottom
+      style={{
+        color: '#151D48',
+        fontFamily: 'Poppins',
+        fontSize: `${(36 / 1920) * 100}vw`,
+        fontStyle: 'normal',
+        fontWeight: 600,
+        lineHeight: `${(36 / 1920) * 100 * 1.4}vw`,
+      }}
+    >
+      Statistics Analysis
+    </Typography>
         <Tabs
           value={value}
           onChange={handleChange}

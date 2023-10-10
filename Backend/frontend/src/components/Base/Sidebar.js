@@ -22,6 +22,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import PersonIcon from "@mui/icons-material/Person";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
@@ -30,8 +31,14 @@ import HomeIcon from "@mui/icons-material/Home";
 import { HiOutlineChip } from "react-icons/hi";
 
 import DeeplantLong from "../../src_assets/Deeplant_long.webp";
+import LOGO from "../../src_assets/LOGO.png"
 
 const mainListItems = [
+  {
+    label: "홈",
+    icon: <HomeIcon sx={{ fontSize: 30 }} />,
+    path: "/Home",
+  },
   {
     label: "홈",
     icon: <HomeIcon sx={{ fontSize: 30 }} />,
@@ -59,7 +66,7 @@ const mainListItems = [
   },
 ];
 
-const drawerWidth = `${(345 / 1920) * 100}vw`; //사이드바 가로 길이
+const drawerWidth = `${(345 / 1920) * 100}vw`; // Width when drawer is open
 const defaultTheme = createTheme();
 
 const Drawer = styled(MuiDrawer, {
@@ -68,7 +75,7 @@ const Drawer = styled(MuiDrawer, {
   "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
-    width: drawerWidth,
+    width:  drawerWidth ,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -77,14 +84,13 @@ const Drawer = styled(MuiDrawer, {
     backgroundColor: "#FFFFFF", //사이드바 배경
     boxShadow:`${(5 / 1920) * 100}vw 0px ${(30 / 1080) * 100}vh 0px rgba(238, 238, 238, 0.50)`, // 사이드바 그림자
     ...(!open && {
-      overflowX: "hidden",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
       width: theme.spacing(7),
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(8.3),
+        width: theme.spacing(8),
       },
     }),
   },
@@ -150,12 +156,14 @@ function Sidebar() {
               ...(open && { display: "none" }),
             }}
           >
-            <MenuIcon />
+            <img src={LOGO} alt="LOGO"  />
           </IconButton>
           <Typography sx={{ flexGrow: 1 }}>
-            <Link to="/Home">
-              <img src={DeeplantLong} alt="Deeplant Logo" height="70" />
-            </Link>
+          {open && (
+  <Link to="/Home">
+    <img src={DeeplantLong} alt="Deeplant Logo" />
+  </Link>
+)}
           </Typography>
           <IconButton component={Link} to="/profile">
             <Badge color="secondary">
@@ -190,7 +198,7 @@ function Sidebar() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         
-        <List component="nav">
+        <List component="nav" >
           {mainListItems.map((item) => (
             <Tooltip title={item.label} placement="right" arrow>
               <ListItemButton
@@ -199,12 +207,12 @@ function Sidebar() {
                 to={item.path}
                 selected={location.pathname === item.path}
                 sx={{
-                  marginBottom: 1,
                   ...(location.pathname === item.path && {
                     "& .MuiSvgIcon-root, .MuiTypography-root": {
                       color: "#FFF",
                     },
                   }),
+               
                 }}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
@@ -227,8 +235,8 @@ function Sidebar() {
           }}
         >
           <IconButton onClick={toggleDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
+  {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+</IconButton>
         </Toolbar>
       </Drawer>
     </ThemeProvider>

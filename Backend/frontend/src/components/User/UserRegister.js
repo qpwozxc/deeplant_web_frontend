@@ -9,6 +9,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { Box } from "@mui/material";
 function UserRegister({ handleClose }) {
   const [userId, setuserId] = useState("");
   const [createdAt, setCreatedAt] = useState(
@@ -19,7 +20,6 @@ function UserRegister({ handleClose }) {
   );
   const [loginAt, setloginAt] = useState(new Date().toISOString().slice(0, -5));
   const [password, setpassword] = useState("");
-  const [name, setname] = useState("");
   const [company, setcompany] = useState("");
   const [jobTitle, setjobTitle] = useState("");
   const [homeAddr, sethomeAddr] = useState("");
@@ -57,7 +57,7 @@ function UserRegister({ handleClose }) {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
-    if (isNameValid(name) && isEmailValid(userId)) {
+    if (isEmailValid(userId)) {
       try {
         const tempPassword = generateTempPassword();
         const { user } = await createUserWithEmailAndPassword(
@@ -74,7 +74,6 @@ function UserRegister({ handleClose }) {
           updatedAt: updatedAt,
           loginAt: loginAt,
           password: password,
-          name: name,
           company: company,
           jobTitle: jobTitle,
           homeAddr: homeAddr,
@@ -133,28 +132,7 @@ function UserRegister({ handleClose }) {
     <div>
       <div>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label column>*이름</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="이름"
-              onChange={(event) => {
-                const name = event.target.value;
-                setname(name);
-                if (!isNameValid(name)) {
-                  event.target.setCustomValidity("올바른 이름을 입력하세요.");
-                } else {
-                  event.target.setCustomValidity("");
-                }
-              }}
-            />
-            <Form.Control.Feedback type="invalid">
-              올바른 이름을 입력하세요.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Label column>*이메일</Form.Label>
+          <Form.Label column>*아이디</Form.Label>
           <InputGroup className="mb-3" hasValidation>
             <Form.Control
               required
@@ -232,6 +210,9 @@ function UserRegister({ handleClose }) {
           <div className="text-end">
             {" "}
             {/* 오른쪽 정렬 */}
+            <Button onClick={handleClose}>
+              취소
+            </Button>
             <Button variant="primary" type="submit" onClick={handleSubmit}>
               회원 등록
             </Button>
