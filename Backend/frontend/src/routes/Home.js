@@ -73,6 +73,7 @@ function Home() {
     fontStyle: "normal",
     fontWeight: 600,
     lineHeight: `${(50.4 / 1080) * 100}vh`, // 상대적인 크기
+    marginBottom: `${(58 / 1080) * 100}vh`,
   }}>
     원하시는 작업을 선택해주세요
   </Typography>

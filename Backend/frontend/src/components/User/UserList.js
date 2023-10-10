@@ -286,10 +286,8 @@ function UserList() {
         keyboard={false}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Body >
           <Modal.Title>신규 회원 등록</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
           <UserRegister handleClose={handleRegisterClose} />
         </Modal.Body>
       </Modal>

@@ -167,9 +167,23 @@ const LogInField = () => {
             mb: "160px",
           }}
         >
-          <Typography className={styles.customText} sx={{ alignSelf: 'center', textAlign: 'center',marginTop:`${(44 / 1080) * 100}vh`,marginBottom:`${(54 / 1080) * 100}vh` }}>
-          Login
-        </Typography>
+        <Typography
+  sx={{
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: `${(44 / 1080) * 100}vh`,
+    marginBottom: `${(54 / 1080) * 100}vh`,
+    color: '#616161',
+    fontFamily: 'Google Sans',
+    fontSize: `${(50 / 1080) * 100}vh`,
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 'normal',
+  }}
+>
+  Login
+</Typography>
+
         <input
   required
   id="email"
