@@ -1,5 +1,5 @@
 import { useState, useEffect , useRef} from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom'; 
 // react-bootstrap
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -35,6 +35,10 @@ const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
 function DataView({page, currentUser ,dataProps}){
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pageOffset = searchParams.get("pageOffset");
+    console.log(pageOffset);
+    
     const [dataLoad, setDataLoad] = useState(null);
     
     //데이터 받아오기 -> props 로 전달로 변경

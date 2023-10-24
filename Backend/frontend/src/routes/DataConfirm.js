@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams,Link } from "react-router-dom";
-import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
+import DataLoad from "../components/DataDetailPage/DetailDataController";
 import DataView from "../components/DataDetailPage/DataView";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import { FaArrowLeft } from "react-icons/fa";
@@ -11,6 +11,7 @@ function DataConfirm(){
     //현재 로그인한 유저 이메일
     const [currentUser, setCurrUser] = useState("admin@admin.com")
     const idParam  = useParams();
+    
     return(
         <Box sx={{ display: "flex"}}>
           <Box sx={style.fixed}>
@@ -27,7 +28,7 @@ function DataConfirm(){
               </span>
             </div> 
           </Box>
-          {DataLoad(idParam.id, "검토", currentUser)}
+          <DataLoad id = {idParam.id} page = {"검토"} currentUser={currentUser}/>
         
         </Box>
     );

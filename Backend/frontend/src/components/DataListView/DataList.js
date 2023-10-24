@@ -54,16 +54,6 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
         setDelId(id);
     }
 
-   /* //부모로 삭제할 데이터 전달  //setElete로 삭제할 고기 아이디 전달함 
-    useEffect(()=>{
-        if (typeof setChecked === 'function'){
-            setChecked(checkItems);
-        }
-    }, [checkItems]);
-    */
-    /*const setDelete =(items)=>{
-        setDeleteItems(items);
-    }*/
     // 테이블 헤더
     function OrderTableHead({ order, orderBy }) {
         return (
@@ -197,9 +187,9 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
                                     component={RouterLink}
                                     style={{textDecorationLine:'none',}} 
                                     to= {pageProp === 'pa' 
-                                        ?{pathname:`/dataPA/${content.id}`} 
-                                        : content.statusType === "승인" ? {pathname : `/dataView/${content.id}`}
-                                                                        :{pathname : `/DataConfirm/${content.id}`}}>
+                                        ?{pathname:`/dataPA/${content.id}`, search : `?pageOffset=${offset}`} 
+                                        : content.statusType === "승인" ? {pathname : `/dataView/${content.id}`, search : `?pageOffset=${offset}`}
+                                                                        :{pathname : `/DataConfirm/${content.id}`, search : `?pageOffset=${offset}`}}>
                                     {content.id}
                                 </Link>
                             </TableCell>

@@ -3,7 +3,7 @@ import { useParams, useLocation ,Link } from "react-router-dom";
 import { Box, Typography, Button, IconButton} from '@mui/material';
 import "bootstrap/dist/css/bootstrap.css"; 
 import { FaArrowLeft } from "react-icons/fa";
-import { DataLoad } from "../components/DataDetailPage/SingleDataLoad";
+import DataLoad from "../components/DataDetailPage/DetailDataController";
 
 const navy =  '#0F3659';
 
@@ -31,7 +31,7 @@ function DataPredict(){
             </span>
           </div>
         </Box>
-        {DataLoad(idParam.id, "예측", currentUser)}
+        <DataLoad id = {idParam.id} page = {"예측"} currentUser={currentUser}/>
         
       </Box>
     );

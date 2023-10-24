@@ -1,16 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import { Box,Button } from "@mui/material";
+import { useState, useEffect, } from "react";
+import { Box,} from "@mui/material";
 import DataList from "./DataList";
-import PaginationComp from "./paginationComp";
-import PaginationV2 from "./PaginationV2";
+import Pagination from "./Pagination";
 import Spinner from "react-bootstrap/Spinner";
-//import HandlePredictClick from "../API/predictPOST";
-import GetSingleData from "../../API/detailMeatGet"
-//import useGetDetail from "../API/useGetDetail";
-// 임시로 local data 사용 
-import listData from "../../Data/pagination.json";
+import getPredictedMeatList from "../../API/getPredictedMeatList";
 
-const apiIP = '3.38.52.82';
 
 const PADataListComp=({startDate, endDate})=>{
   const [isLoaded, setIsLoaded] = useState(true);
@@ -19,48 +13,32 @@ const PADataListComp=({startDate, endDate})=>{
   const [totalData, setTotalData] = useState(0);
   // 페이지네이션 컴포넌트와 공유하는 변수 -> current page 변화하면 api 새로 가져옴 
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 2; // 페이지네이션 원소 개수 
   const count = 6; // 한페이지당 보여줄 개수 
-  // 페이지네이션 - 전체 페이지 개수 
-  const totalPages = Math.ceil(totalData / count);
-
-  // 필터 -> api 연결되면 바꾸기
-  const [filter, setFilter] = useState('createdAt');
-  const [filterAsc, setFilterAsc] = useState(true);
 
   //API로부터 fetch 하는 함수
-  // ***** 우선 전체 fetch 했는데 나중에 예측된 것 , 안된것 토글 만들기 ****
-  const getMeatList = async (offset,) => {
-     const json = await (
-      await fetch(
-        `http://${apiIP}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&${filter}=${filterAsc}`
-      )
-    ).json();
+  const handlePredictedMeatListLoad = async () => {
+     const json = await getPredictedMeatList((currentPage - 1), count, startDate, endDate);
 
-    // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
-    //json = listData;
-
-    console.log("fetch done!", json);
     // 전체 데이터 수
     setTotalData(json["DB Total len"]);
-    // 데이터
+    // 데이터 가공
     let data = [];
     json.id_list.map((m) => {
-      setMeatList([...meatList, json.meat_dict[m]]);
       data = [...data, json.meat_dict[m]];
     });
     setMeatList(data);
+
     // 데이터 로드 성공
     setIsLoaded(true);
   };
 
   //데이터 api 로 부터 fetch
   useEffect(() => {
-    getMeatList(currentPage - 1 );
-  }, [startDate, endDate, currentPage, filter, filterAsc]);
+    handlePredictedMeatListLoad(currentPage - 1 );
+  }, [startDate, endDate, currentPage,]);
 
 
-  // 예측 POST 함수
+  /*// 예측 get
   const [predictItems, setPredictItems] = useState([]);
   const [isPredicted , setIsPredicted] = useState(false);
   const [data, setData] = useState();
@@ -76,48 +54,30 @@ const PADataListComp=({startDate, endDate})=>{
             
     }
   },[meatList])
-  console.log(currentPage,datas);
-
-  const handlePredict=()=>{
-   //console.log(singleData)
-    //console.log(predictItems);
-    /*for (let i = 0; i < predictItems.length; i++){
-        // api -> 함수 컴포넌트 화 ... -> 호출
-        const data = GetSingleData(predictItems[i], setSingleData);
-        //const datas = useGetDetail(predictItems[i]);
-        
-        if (singleData)
-            console.log(i, singleData['butcheryYmd'])
-            //HandlePredictClick(singleData['butcheryYmd']);
-    }*/
-    // 예측 후 
-    setIsPredicted(true);
-  }
+  console.log(currentPage,datas);*/
 
   return (
     <div>
       <div style={style.listContainer} >
         {
-          //meatList.length!==0
-          //? (//데이터가 로드된 경우 데이터 목록 반환
+          isLoaded
+          ? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList
             meatList={meatList}
             pageProp={'pa'}
-            setChecked = {setPredictItems}
+            //setChecked = {setPredictItems}
             offset={currentPage-1}
             count={count}
-            setFilter={setFilter}
-            setFilterAsc={setFilterAsc}
           />
-          // )
-          // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
-          //    <Spinner animation="border" />
-          //  )
+          )
+          : (// 데이터가 로드되지 않은 경우 로딩중 반환
+             <Spinner animation="border" />
+          )
         }
       </div>
       
       <Box sx={style.paginationBar}>
-        <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+        <Pagination totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       </Box>
     </div>
   );
