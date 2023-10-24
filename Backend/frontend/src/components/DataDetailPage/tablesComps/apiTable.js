@@ -13,10 +13,11 @@ const ApiTable=({edited, apiInput, api_data, setApiInput})=>{
                                 <TableCell key={'api-'+idx+'col1'}>{f}</TableCell>
                                 <TableCell key={'api-'+idx+'col2'}>    
                                 {
-                                    edited
-                                    ? <input key={'api-'+idx+'input'} name={f} style={{height:'23px'}} value={apiInput[f]} placeholder={api_data===null?"":api_data[f]} 
-                                            onChange={(e)=>{setApiInput((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
-                                    : apiInput[f] ? apiInput[f] : ""
+                                    //edited
+                                    //? <input key={'api-'+idx+'input'} name={f} style={{height:'23px'}} value={apiInput[f]} placeholder={api_data===null?"":api_data[f]} 
+                                    //        onChange={(e)=>{setApiInput((currentField)=>({...currentField, [e.target.name]: e.target.value,}))}}/>
+                                    //: 
+                                    apiInput[f] ? apiInput[f] : ""
                                 }
                                 </TableCell>
                             </TableRow>

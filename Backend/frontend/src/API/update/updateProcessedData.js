@@ -24,8 +24,9 @@ export default function updateProcessedData(processedInput,processed_data,proces
             && Number(processedMinute[i])===processed_data[i]['deepaging_data']['minute']
             ));*/
         //const delprocessedInput = del()
+
+        //request body에 보낼 데이터 가공  
         let req = (processedInput);
-        
         req = {
             ...req,
             ['id']: id,
@@ -40,7 +41,9 @@ export default function updateProcessedData(processedInput,processed_data,proces
             
         }
         req && delete req['deepaging_data']
-        //api 연결 /meat/add/deep_aging_data
+
+
+        ///meat/add/deep_aging_data로 처리육 수정 데이터 API 전송 
         const res = JSON.stringify(req);
         
         try{

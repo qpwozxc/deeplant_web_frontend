@@ -1,8 +1,8 @@
 export default function updateProbexptData(data,i, id, createdDate, tempUserID, elapsedHour, apiIP,){
+      //request body에 보낼 데이터 가공    
         let req = {
             ...data,
         }
-        //if (lab_data[i]){
         req = {
             ...req,
             ['id'] : id,
@@ -11,8 +11,7 @@ export default function updateProbexptData(data,i, id, createdDate, tempUserID, 
             ['seqno'] : i,
             ['period'] :  Math.round(elapsedHour),
         }
-        //}
-        // api 연결 /meat/add/probexpt_data
+        // /meat/add/probexpt_data로 실험 수정 데이터 전송 
         const res = JSON.stringify(req);
         try{
             fetch(`http://${apiIP}/meat/add/probexpt_data`, {

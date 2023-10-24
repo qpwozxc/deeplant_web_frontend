@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+
 const GetSingleData = (id,setData) => {
     //const [data, setData] = useState();
     //useEffect(() => {

@@ -5,8 +5,6 @@ import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIc
 import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import { Box, Button,SvgIcon,} from "@mui/material";
 import {getDataListJSON, downloadExcel} from "./excelExport";
-// import timezone
-import { TIME_ZONE } from "../../config";
 const navy =  '#0F3659';
 const apiIP = '3.38.52.82';
 

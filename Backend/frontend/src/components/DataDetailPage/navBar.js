@@ -1,6 +1,6 @@
-import { useParams,Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 
-import { Box, Typography, Button, IconButton} from '@mui/material';
+import { Box, IconButton} from '@mui/material';
 import { FaAngleDoubleLeft } from "react-icons/fa";
 import ExcelController from "../DataListView/excelContr";
 
@@ -22,20 +22,3 @@ function navBar(){
 }
 
 export default navBar;
-
-const style={
-    fixed:{
-      position: 'fixed', 
-      top:'70px',
-      right:'0',
-      left:'65px',
-      zIndex: 1,
-      width:'100%',
-      borderRadius:'0',
-      display:'flex',
-      justifyContent:'space-between',
-      backgroundColor:'white',
-      height: "70px",
-    },
-  
-  }

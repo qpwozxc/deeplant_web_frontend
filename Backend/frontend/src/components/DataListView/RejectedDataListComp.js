@@ -39,13 +39,6 @@ const RejectedDataListComp=({startDate, endDate})=>{
       getMeatList(currentPage - 1);
     }, [startDate, endDate, currentPage]);
 
-/**
- * 
- * <Box sx={style.deletBtnContainer}>
-          <Button variant="contained" style={style.deleteBtn} onClick={handleDeleteBtn}>삭제</Button>
-        </Box>
- */
-    
     return(
         <div>
           <div style={style.listContainer}>

@@ -26,10 +26,10 @@ import ApiTable from "./tablesComps/apiTable";
 import { TIME_ZONE } from "../../config";
 import Spinner from "react-bootstrap/Spinner";
 
-import updateRawData from "../../API/updateRawData";
-import updateHeatedData from "../../API/updateHeatedData";
-import updateProbexptData from "../../API/updateProbexptData";
-import updateProcessedData from "../../API/updateProcessedData";
+import updateRawData from "../../API/update/updateRawData";
+import updateHeatedData from "../../API/update/updateHeatedData";
+import updateProbexptData from "../../API/update/updateProbexptData";
+import updateProcessedData from "../../API/update/updateProcessedData";
 import RestrictedModal from "./restrictedModal";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';

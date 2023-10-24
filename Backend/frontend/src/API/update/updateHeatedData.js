@@ -1,8 +1,9 @@
 export default function updateHeatedData(data,i, id, createdDate, tempUserID, elapsedHour, apiIP,){
+    
+    //request body에 보낼 데이터 가공
     let req = {
         ...data,
     };
-    //데이터 추가
     req = {
         ...req,
         ['id'] : id,
@@ -12,16 +13,14 @@ export default function updateHeatedData(data,i, id, createdDate, tempUserID, el
         ["period"] : Math.round(elapsedHour),
     }
 
-    ///meat/add/heatedmeat_eval
-    const res = JSON.stringify(req);
-    console.log('heated meat post', res);
+    //meat/add/heatedmeat_eval로 수정 API 전송 
     try{
         const response  = fetch(`http://${apiIP}/meat/add/heatedmeat_eval`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: res,
+        body: JSON.stringify(req),
         });
         console.log("response from heated",response);
     }catch(err){

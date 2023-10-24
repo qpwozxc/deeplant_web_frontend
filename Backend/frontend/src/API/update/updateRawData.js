@@ -1,5 +1,7 @@
 
 export default function updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP,){
+    
+    //request body에 보낼 데이터 가공
     let req = {
         ...raw_data,
     }
@@ -11,7 +13,8 @@ export default function updateRawData(raw_data, id, createdDate, tempUserID, ela
         ["seqno"] : 0,
         ["period"] : Math.round(elapsedHour),
     }
-    console.log('raw meat post', JSON.stringify(req));
+    
+    // /meat/add/sensory_eval로 원육 수정 데이터 API 전송 
     try{
         const response  = fetch(`http://${apiIP}/meat/add/sensory_eval`, {
         method: "POST",
