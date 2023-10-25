@@ -1,5 +1,7 @@
-export default async function updateProcessedData(processedInput,processed_data,processedMinute, yy,mm,dd,i, id, createdDate, tempUserID, elapsedHour, apiIP, ){
+import { computeCurrentDate } from "../../components/DataDetailPage/computePeriod";
+export default async function updateProcessedData(processedInput,processed_data,processedMinute, i, id, createdDate, tempUserID, elapsedHour, apiIP, ){
     
+        const [yy,mm,dd] = computeCurrentDate();
         // 수정된 게 있는 경우 (input 만 비교 )
        
         // 1회차 데이터를 추가하는 경우(processeddata len === 0) (minute 값이 들어올 수도 있고 안들어올 수도있는데 안들어오면 input비교로 )
