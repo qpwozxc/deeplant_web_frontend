@@ -1,23 +1,19 @@
-import { useState, useEffect, useSyncExternalStore,navigate } from "react"
+import { useState, } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 import {FaRegCheckCircle} from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-const apiIP = '3.38.52.82';
+
 const navy =  '#0F3659';
 
 export default function StateChangedModal({confirmVal, setStateChanged, handleParentClose}) {
     //화면 창 닫기
     const navigate = useNavigate();
     const [open, setOpen] = useState(true);
-    const handleClose = () => {setOpen(false); setStateChanged(false); handleParentClose(); navigate({pathname : '/DataManage'});};
-
-    const changeConfirmState=()=>{
-        try{
-            navigate({pathname : '/DataManage'});
-            handleClose();
-        }catch(err){
-            console.error(err);
-        }
+    const handleClose = () => {
+      setOpen(false); 
+      setStateChanged(false); 
+      handleParentClose(); 
+      navigate({pathname : '/DataManage'});
     };
 
     return (
