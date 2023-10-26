@@ -10,6 +10,7 @@ import * as React from "react";
 import { FaChartLine } from "react-icons/fa6";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import BasicScatter from "./Charts/ScatterChart";
 import BasicPie from "./Charts/pieChart";
@@ -70,25 +71,19 @@ export default function StatsTabs({ startDate, endDate }) {
 
   
   const [alignment, setAlignment] = React.useState("맛");
-  const handleFirstChange = (event, newAlignment) => {
-    setAlignment(newAlignment);
-  };
   const [secondary, setSecondary] = React.useState("원육");
-  const handleSecondChange = (event, newSecond) => {
-    setSecondary(newSecond);
-  };
+
+  const handleFirstChange = (event) => {
+  setAlignment(event.target.value);
+};
+
+const handleSecondChange = (event) => {
+  setSecondary(event.target.value);
+};
+
   return (
     <Box sx={{ width: "900px", height: "350px" }}>
-      <Box
-        sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          backgroundColor: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      ><Typography
+      <Typography
       component="h2"
       variant="h4"
       gutterBottom
@@ -103,6 +98,16 @@ export default function StatsTabs({ startDate, endDate }) {
     >
       Statistics Analysis
     </Typography>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          backgroundColor: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -114,30 +119,31 @@ export default function StatsTabs({ startDate, endDate }) {
           <Tab label="상관관계" {...a11yProps(2)} />
           <Tab label="시계열" {...a11yProps(3)} />
         </Tabs>
-        <ToggleButtonGroup
-          color="primary"
-          value={alignment}
-          exclusive
-          onChange={handleFirstChange}
-          aria-label="Platform"
-        >
-          <ToggleButton value="맛">맛</ToggleButton>
-          <ToggleButton value="관능">관능</ToggleButton>
-        </ToggleButtonGroup>
+        <Box>
 
-        <ToggleButtonGroup
-          color="primary"
-          value={secondary}
-          exclusive
-          onChange={handleSecondChange}
-          aria-label="Platform"
-        >
-          <ToggleButton value="원육">원육</ToggleButton>
-          <ToggleButton value="처리육">처리육</ToggleButton>
-          <ToggleButton value="가열육" disabled={alignment === "맛"}>
-            가열육
-          </ToggleButton>
-        </ToggleButtonGroup>
+  <Select
+    labelId="alignment-label"
+    id="alignment"
+    value={alignment}
+    onChange={handleFirstChange}
+    label="맛 또는 관능"
+  >
+    <MenuItem value="맛">맛</MenuItem>
+    <MenuItem value="관능">관능</MenuItem>
+  </Select>
+  <Select
+    labelId="secondary-label"
+    id="secondary"
+    value={secondary}
+    onChange={handleSecondChange}
+    label="원육, 처리육, 가열육"
+  >
+    <MenuItem value="원육">원육</MenuItem>
+    <MenuItem value="처리육">처리육</MenuItem>
+    <MenuItem value="가열육" disabled={alignment === "맛"}>가열육</MenuItem>
+  </Select>
+  </Box>
+
       </Box>
       {/* BoxPlot(통계) */}
       <CustomTabPanel value={value} index={0}>

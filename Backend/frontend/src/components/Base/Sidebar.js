@@ -209,6 +209,9 @@ function Sidebar() {
                     "& .MuiSvgIcon-root, .MuiTypography-root": {
                       color: "#FFFFFF",
                     },
+                    "&.Mui-selected": {
+                      backgroundColor: "#7BD758",
+                    },
                   }),
                
                 }}
