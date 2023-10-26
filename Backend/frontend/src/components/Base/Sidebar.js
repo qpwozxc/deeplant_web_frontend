@@ -20,6 +20,8 @@ import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 // import icons
 import PersonIcon from "@mui/icons-material/Person";
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import PersonOutlineTwoToneIcon from '@mui/icons-material/PersonOutlineTwoTone';
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -36,7 +38,7 @@ import LOGO from "../../src_assets/LOGO.png"
 const mainListItems = [
   {
     label: "홈",
-    icon: <HomeIcon sx={{ fontSize: 30 }} />,
+    icon: <HomeIcon sx={{ fontSize: 60 }} />,
     path: "/Home",
   },
   {
@@ -106,7 +108,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   backgroundColor: "#FFFFFF",
   boxShadow: "none",
-  height: `${(120 / 1080) * 100}vh`,
+  minHeight: `${(90 / 1080) * 100}vh`,
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -164,35 +166,31 @@ function Sidebar() {
     <img src={DeeplantLong} alt="Deeplant Logo" />
   </Link>
 )}
-          </Typography>
-          <IconButton component={Link} to="/profile">
-            <Badge color="secondary">
-              <PersonIcon />
-            </Badge>
+    </Typography>
+          <IconButton >
+            <div style={{ backgroundColor: '#E8E8E8', width: '40px', height: '40px',borderRadius:'12px',marginRight:'10px' }}>
+              <PersonOutlineOutlinedIcon style={{ width: '100%', height: '100%' }} />
+            </div>
             {UserInfo && UserInfo.name ? (
-  <Typography
-    component="h1"
-    variant="h6"
-    noWrap
-    sx={{ flexGrow: 1 }}
-  >
-    {UserInfo.name}님
+  <div style={{ display: "flex", flexDirection: "column",alignItems: "flex-start" }}>
+  <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1,color:"black", fontSize: "21px"}}>
+    {UserInfo.name}
   </Typography>
+  <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 , fontSize: "11px"}}>
+    {UserInfo.type}
+  </Typography>
+</div>
+
 ) : (
   <Typography component="span" variant="body1" sx={{ flexGrow: 1 }}>
-    Loading... {/* 또는 원하는 로딩 메시지 */}
+    로그인 필요
   </Typography>
 )}
-
           </IconButton>
-
           <IconButton onClick={logout}>
-            <Badge color="secondary">
-              <LogoutIcon />
-            </Badge>
-            <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
-              로그아웃
-            </Typography>
+            <div style={{ backgroundColor: '#E8E8E8', width: '40px', height: '40px',borderRadius:'12px',marginRight:'10px' }}>
+              <LogoutIcon style={{ width: '100%', height: '100%' }} />
+            </div>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -209,7 +207,7 @@ function Sidebar() {
                 sx={{
                   ...(location.pathname === item.path && {
                     "& .MuiSvgIcon-root, .MuiTypography-root": {
-                      color: "#FFF",
+                      color: "#FFFFFF",
                     },
                   }),
                
