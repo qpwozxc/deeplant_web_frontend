@@ -4,6 +4,7 @@ import Spinner from "react-bootstrap/Spinner";
 import DataList from "./DataList";
 import Pagination from "./Pagination";
 import getMeatList from "../../API/getMeatList";
+import { useMeatListFetch } from "../../API/getMeatListSWR";
 
 const DataListComp=({startDate, endDate})=>{
   const [isLoaded, setIsLoaded] = useState(false);
