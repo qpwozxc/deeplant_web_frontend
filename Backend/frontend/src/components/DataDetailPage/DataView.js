@@ -24,7 +24,6 @@ import ApiTable from "./tablesComps/apiTable";
 import { TIME_ZONE } from "../../config";
 import Spinner from "react-bootstrap/Spinner";
 
-import updateRawData from "../../API/update/updateRawData";
 import updateHeatedData from "../../API/update/updateHeatedData";
 import updateProbexptData from "../../API/update/updateProbexptData";
 import updateProcessedData from "../../API/update/updateProcessedData";
@@ -66,6 +65,7 @@ function DataView({page, currentUser ,dataProps}){
     // 탭별 데이터 -> datas는 불변 , input text를 바꾸고 서버에 전송하고, db에서 바뀐 데이터를 받아서 datas에 저장 
     const datas = [ raw_data, processed_data, heated_data, lab_data, api_data];
    
+    const  butcheryYmd = api_data['butcheryYmd'];
     useEffect(()=>{
         options = processed_data_seq;
     },[]);
@@ -140,29 +140,16 @@ function DataView({page, currentUser ,dataProps}){
     const len = processed_data_seq.length;
     // 수정 완료 버튼 클릭 시 ,수정된 data api로 전송
     const [isLimitedToChangeRawImage, setIsLimitedToChangeRawImage] = useState(false);
-    const onClickSubmitBtn = () => {
+    const onClickSubmitBtn = async() => {
         setIsEdited(false);       
         // 수정 시간
         const createdDate = new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5);
         // period 계산 
         const elapsedHour = computePeriod(apiInput['butcheryYmd']);
-
+        
         //로그인한 유저 정보 -> 임시로 저장
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
         const tempUserID = 'junsu0573@naver.com';// //'junsu0573@gmail.com'; 
-
-        // 0. 원육 데이터 수정 -> 이미지만 변화
-        if (isRawImageChange){
-            const response = updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP)
-            response.then((response)=>{
-                response.statusText === "NOT FOUND"
-                && setIsLimitedToChangeRawImage(true);
-            });
-            setIsRawImageChange(false);
-            console.log('limit to change',response.statusText);
-            
-        }
-     
 
         // 1. 가열육 관능검사 데이터 수정 API POST
         for (let i =0; i < len ; i++){            
@@ -189,12 +176,13 @@ function DataView({page, currentUser ,dataProps}){
                 })
             ;
         }
+        console.log("original img path", processed_img_path);
 
         // 3. 처리육 관능검사 데이터 수정 API POST
         const pro_len = (len===1 ? len : (len-1));
         for (let i =0; i < pro_len; i++){
             updateProcessedData(
-                processedInput[i],processed_data[i],processedMinute[i],i, id, createdDate, tempUserID, elapsedHour, apiIP)
+                processedInput[i],processed_data[i],processedMinute[i],  i, id, tempUserID, createdDate,elapsedHour)
                 .then((response) => {
                     console.log('처리육 수정 POST요청 성공:', response);
                 })
@@ -274,7 +262,14 @@ function DataView({page, currentUser ,dataProps}){
        }
         <div style={style.singleDataWrapper}>
             {/* 1. 관리번호 고기에 대한 사진*/}
-            <MeatImgsCard edited={edited} page={page} raw_img_path={raw_img_path} processed_img_path={processed_img_path} SetisUploadedToFirebase={SetisUploadedToFirebase}  id={id}/>
+            <MeatImgsCard edited={edited} page={page} raw_img_path={raw_img_path} processed_img_path={processed_img_path} SetisUploadedToFirebase={SetisUploadedToFirebase}  id={id}
+            raw_data={raw_data}
+            setIsLimitedToChangeRawImage={setIsLimitedToChangeRawImage}
+            butcheryYmd={butcheryYmd}
+            processedInput={processedInput}
+            processed_data={processed_data} 
+            processedMinute={processedMinute}
+            />
             {/* 2. QR코드와 데이터에 대한 기본 정보*/}
             <QRInfoCard qrImagePath={qrImagePath} id={id} userId={userId} createdAt={createdAt}/>
 

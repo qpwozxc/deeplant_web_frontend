@@ -6,37 +6,31 @@ import updateDataStatus from "../../API/updateDataStatus";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
-export default function TransitionsModal({id, setIsDelClick}) {
+export default function DelWarningModal({idArr, setIsDelClick}) {
     //화면 창 닫기
     const navigate = useNavigate();
     const [open, setOpen] = useState(true);
-    const handleClose = () => {setOpen(false); setIsDelClick(false); window.location.reload();};
+    const handleClose = () => {
+      setOpen(false); 
+      setIsDelClick(false); 
+      //window.location.reload();
+    };
     const ondelete = async(id) =>{
       const resp= await fetch(`http://${apiIP}/meat/delete?id=${id}`);
       console.log('response', resp, id);
-      //window.location.reload();
     }
   
-    let idArr = [];
+    /*let idArr = [];
     if (typeof(id) !== 'string'){
       idArr = Array.from({ length: id.length }, (_, index) => id[index]);
     }else{
-      console.log('string')
       idArr.push(id);
     }
-    console.log(idArr);
+    console.log('삭제할 배열 목록',idArr, id);*/
     const handleOnDelete=()=>{
-        
-        //삭제 api 전송  /meat/delete?id=
-        //삭제할 것이 하나가 아니라 여러개(배열)인 경우
-        //if (typeof(id) !== 'string'){
-        for (let i = 0; i < id.length; i++){
-          ondelete(id[i]);
+        for (let i = 0; i < idArr.length; i++){
+          ondelete(idArr[i]);
         }
-        /*}else{
-          ondelete(id);
-        }*/
-        //
         handleClose();
     }
     return (
@@ -56,7 +50,7 @@ export default function TransitionsModal({id, setIsDelClick}) {
         >
           <Fade in={open}>
             <Box sx={style}>
-              <Typography id="transition-modal-title" variant="h6" component="h2">
+              <Typography id="transition-modal-title" key={"transition-modal-title"} variant="h6" component="h2">
                 <span style={{color:navy, fontSize:'20px', fontWeight:'600'}}>
                 정말로 삭제하시겠습니까?
                 </span>
@@ -68,17 +62,23 @@ export default function TransitionsModal({id, setIsDelClick}) {
 
               <Box style={{border:'1px solid #b0bec5',borderRadius:'10px',margin:'10px 0px', height:'130px'}}>
               {idArr.map(id => (
-                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                <Typography id="transition-modal-description" key={"transition-modal-description"}  sx={{ mt: 2 }}>
                   {id}
                 </Typography>
               ))}
               </Box>
               
               <div style={{display:'flex', width:'100%', justifyContent:'end'}}>
-                <Button variant="outlined" sx={{marginRight:'5px'}} onClick={handleClose }  style={{backgroundColor:'white',marginRight:'10px',border:`1px solid ${navy}`, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px'}}>
+                <Button 
+                  variant="outlined" sx={{marginRight:'5px'}} 
+                  onClick={handleClose}  
+                  style={{backgroundColor:'white',marginRight:'10px',border:`1px solid ${navy}`, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px'}}>
                   아니오
                 </Button>
-                <Button variant="contained" onClick={handleOnDelete} style={{backgroundColor:navy, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px',}}>
+                <Button 
+                  variant="contained" 
+                  onClick={handleOnDelete} 
+                  style={{backgroundColor:navy, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px',}}>
                  <FaRegTrashAlt/>
                  삭제
                 </Button>
@@ -98,7 +98,6 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 500,
     bgcolor: 'background.paper',
-    //border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     borderRadius:'10px'

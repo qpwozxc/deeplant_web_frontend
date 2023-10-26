@@ -5,7 +5,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Divider from '@mui/material/Divider';
 import './imgRot.css';
-import { Box, Typography, Button, ButtonGroup,IconButton,ToggleButton, ToggleButtonGroup,TextField, Autocomplete} from '@mui/material';
+import { TextField, Autocomplete} from '@mui/material';
 
 // import tables
 import RawTable from "./tablesComps/rawTable";
@@ -13,16 +13,15 @@ import PredictedRawTable from "./tablesComps/predictedRawTable";
 import ProcessedTablePA from "./tablesComps/processedTablePA";
 import PredictedProcessedTablePA from "./tablesComps/predictedProcessedTablePA";
 
+import { computePeriod } from "./computePeriod";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
 
 function DataPAView({ currentUser ,dataProps}){
-    const [dataLoad, setDataLoad] = useState(null);
     //데이터 받아오기 -> props 로 전달로 변경
     const { id, userId, createdAt,qrImagePath,raw_img_path, raw_data,processed_data,api_data, processed_data_seq, processed_minute , processed_img_path } = dataProps;
     const [processedMinute,setProcessedMinute] = useState(processed_minute);
-
     // 처리육 및 실험 회차 토글  
     useEffect(()=>{
         options = processed_data_seq;
@@ -44,16 +43,15 @@ function DataPAView({ currentUser ,dataProps}){
         try {
             const response = await fetch(`http://${apiIP}/predict/get?id=${id}&seqno=${seqno}`);
             if (!response.ok){
-                throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok', id, '-',seqno);
             }
             const json = await (response).json();
-            console.log("connected PA!!", json);
+            console.log("connected PA!!- seqno",seqno, json);
             setDataPA(json);
-            
             setLoaded(true);
             
         }catch (error){
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data seqno-', seqno,":", error);
             setDataPA(null);
             setDataXAIImg(null);
             setGradeXAIImg(null);
@@ -61,36 +59,27 @@ function DataPAView({ currentUser ,dataProps}){
     };
 
     useEffect(()=>{
-        //getData(seqno);
+        //XAI 이미지 로드
         dataPA && setDataXAIImg(dataPA.xai_imagePath);
         dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
     },[seqno, id]);
 
     //set image path
     useEffect(()=>{
-        //console.log('loaded?',loaded,dataPA);
+        //XAI 이미지 로드
         console.log('to load ',dataPA && dataPA.xai_imagePath);
         dataPA ? setDataXAIImg(dataPA.xai_imagePath) : console.log('null');
-        dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
-        
-        
+        dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath); 
     },[dataPA,loaded,id]);
     
     //데이터 예측 버튼 
     const handlePredictClick=()=>{
         //로그인한 유저 정보
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
-
+        const tempUserID = 'junsu0573@naver.com';
         // period 계산 
-        const butcheryYmd = api_data['butcheryYmd'];
-        const year = butcheryYmd.slice(0,4);
-        const month =  butcheryYmd.slice(4,6);
-        const day = butcheryYmd.slice(6,);
-
-        const butcheryDate = new Date(year, month, day, 0, 0, 0);
-        const elapsedMSec = new Date().getTime() - butcheryDate.getTime();
-        const elapsedHour = elapsedMSec / 1000 / 60 / 60;
-
+        const elapsedHour = computePeriod(api_data['butcheryYmd']);
+        
         const len = processed_data_seq.length;
         //seqno for loop
        // console.log('len',len);
@@ -98,7 +87,7 @@ function DataPAView({ currentUser ,dataProps}){
             let req = {
                 ["id"]:id,
                 ["seqno"]:i,
-                ["userId"]:userData["userId"],
+                ["userId"]:tempUserID,//userData["userId"],
                 ["period"]:Math.round(elapsedHour),
             };
     
@@ -111,9 +100,9 @@ function DataPAView({ currentUser ,dataProps}){
                 },
                 body: res,
                 });
-               console.log(res);
+                console.log("predict result-",seqno,res);
                 getData(seqno);
-                    // 강제 새로고침
+                // 강제 새로고침
                 window.location.reload();
                 
             }catch(err){
@@ -122,30 +111,23 @@ function DataPAView({ currentUser ,dataProps}){
             }
         }
     }
+
+
+    useEffect(()=>{
+        // 초기에 데이터 로드
+        getData(0);
+    },[])
     
-    
-// 탭변환에 맞는 -> 데이터 로드
-    const [tabKey, setTabKey] = useState('0');
-    //const [originImage, setOrImg] = useState(previewImage);
-   /* useEffect(()=>{
-        console.log('실행')
-        //setPreviewImage(previewImage);
-        //dataPA && setDataXAIImg(dataPA.xai_imagePath);
-        //dataPA && setGradeXAIImg(dataPA.xai_gradeNum_imagePath);
-    },[tabKey]);
-*/
-     const handleSelect=(key)=>{
-       // console.log('key', key);
-        // api fetch
+
+    //탭 변환에 맞는 데이터 로드 
+    const handleSelect=(key)=>{
+        // 예측 데이터 로드
         getData(key);
-        // change image
+        // 원본 이미지 바꾸기
         key === '0'
         ?setPreviewImage(raw_img_path)
         :setPreviewImage(processed_img_path[0]? processed_img_path[0]:null)
-        //change tab key
-       // setTabKey(key);
-     }
-     console.log('preview image ',previewImage);
+    }
 
     return(
         <div style={{width:'100%', marginTop:'70px'}}>
@@ -160,11 +142,11 @@ function DataPAView({ currentUser ,dataProps}){
                         <Card.Body>
                             <Card.Text>
                                 <div style={{color:'#002984', fontSize:'18px', fontWeight:'800'}}>원본이미지</div>
-                                <div style={{ width: "100%",padding:'10px 0px',borderRadius:'10px'}}>
+                                <div style={{width: "100%",padding:'10px 0px',borderRadius:'10px'}}>
                                     {
                                     previewImage
                                     ?<img src={previewImage} style={{height:'190px',width:'100%',objectFit:'contain',}}/>
-                                    :<div style={{height:'170px',width:'100%',display:'flex',justifyContent:'center', alignItems:'center'}}>데이터 이미지가 존재하지 않습니다.</div>
+                                    :<div style={{height:'190px',width:'100%',display:'flex',justifyContent:'center', alignItems:'center'}}>데이터 이미지가 존재하지 않습니다.</div>
                                     }
                                     
                                 </div>
@@ -182,7 +164,7 @@ function DataPAView({ currentUser ,dataProps}){
                                     ?<div className="imgContainer" style={{borderRadius:'10px'}}>
                                         <img src={dataXAIImg} style={{height:'190px',width:'100%',objectFit:'contain',marginRight:'30px'}}/>
                                     </div>
-                                    :<div style={{height:'170px',width:'100%',display:'flex',margin:'0px 20px',marginRight:'20px' ,justifyContent:'center', alignItems:'center'}}>
+                                    :<div style={{height:'190px',width:'100%',display:'flex',margin:'0px 20px',marginRight:'20px' ,justifyContent:'center', alignItems:'center'}}>
                                         <span style={{color:'#546e7a',  fontSize:'15px'}}>
                                             데이터 XAI 이미지가 존재하지 않습니다.
                                         </span>
@@ -244,7 +226,8 @@ function DataPAView({ currentUser ,dataProps}){
                 
                 {/* 3. 세부 데이터 정보*/}
                 <Card style={{ width:'24vw', margin:'0px 10px', boxShadow: 24,}}>     
-                <Tabs defaultActiveKey='0'  id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'100%'}} onSelect={handleSelect}>
+                <Tabs defaultActiveKey='0'  id="uncontrolled-tab-example" className="mb-3" style={{backgroundColor:'white', width:'100%'}} 
+                    onSelect={handleSelect}>
                     <Tab eventKey='0' title='원육' style={{backgroundColor:'white'}}>
                         <RawTable data={raw_data}/>
                         <PredictedRawTable raw_data={raw_data} dataPA={dataPA}/>
@@ -287,17 +270,12 @@ export default DataPAView;
 let options = ['원육',];
 
 //탭 버튼 별 데이터 항목 -> map함수 이용 json key값으로 세팅하는 걸로 바꾸기
-//'imagepPath','period', 'seqno', 'userId''createdAt',
 const style={
     singleDataWrapper:{
       height:'fit-content',
       marginTop:'50px',
-     // padding: "0px 50px",
       display: "flex",
       justifyContent: "space-between", 
-     // backgroundColor:'white', 
-     // borderTopLeftRadius:'10px' , 
-     // borderTopRightRadius:'10px',
       width: "100%",
     },
     editBtnWrapper:{
@@ -306,7 +284,6 @@ const style={
         width:'100%' ,
         display:'flex',
         justifyContent:'end', 
-        //backgroundColor:'white', 
         marginTop:'auto', 
         borderBottomLeftRadius:'10px', 
         borderBottomRightRadius:'10px'
@@ -348,61 +325,3 @@ const style={
     }
   
   }
-
-  /***
- * 
-  resp.propTypes={
-    id: PropTypes.string.isRequired,
-    deepAging: PropTypes.arrayOf(PropTypes.string), 
-    email: PropTypes.string.isRequired, 
-
-    fresh: PropTypes.shape({
-        marbling: PropTypes.number,
-        color:  PropTypes.number,
-        texture:  PropTypes.number,
-        surfaceMoisture: PropTypes.number,
-        total: PropTypes.number,
-      }), 
-
-    heated: PropTypes.shape({
-        flavor: PropTypes.number,
-        juiciness:  PropTypes.number,
-        tenderness:  PropTypes.number,
-        umami: PropTypes.number,
-        palability: PropTypes.number,
-      }), 
-    lab_data: PropTypes.shape({
-        L: PropTypes.number,
-        a:  PropTypes.number,
-        b:  PropTypes.number,
-        DL: PropTypes.number,
-        CL: PropTypes.number,
-        RW: PropTypes.number,
-        ph:  PropTypes.number,
-        WBSF:  PropTypes.number,
-        Cardepsin_activity: PropTypes.number,
-        MFI: PropTypes.number,
-      }), 
-
-    saveTime: PropTypes.string.isRequired, 
-
-    tongue: PropTypes.shape({
-        sourness: PropTypes.number,
-        bitterness:  PropTypes.number,
-        umami: PropTypes.number,
-        richness: PropTypes.number,
-      }), 
-    
-    apiData: PropTypes.shape({
-      butcheryPlaceNm: PropTypes.string.isRequired,
-      butcheryYmd: PropTypes.string.isRequired, 
-      farmAddr: PropTypes.string.isRequired, 
-      gradeNm: PropTypes.string.isRequired,
-      l_division: PropTypes.string.isRequired,
-      s_division: PropTypes.string.isRequired, 
-      species: PropTypes.string.isRequired, 
-      traceNumber: PropTypes.string.isRequired,
-    })
-}
- * 
- */

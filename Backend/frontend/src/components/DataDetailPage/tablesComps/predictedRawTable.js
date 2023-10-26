@@ -12,7 +12,8 @@ const PredictedRawTable=({raw_data, dataPA})=>{
                         return(
                             <TableRow key={'raw-Row'+idx}>
                                 <TableCell key={'raw-'+idx+'col1'}>{f}</TableCell>
-                                <TableCell key={'raw-'+idx+'col2'}>
+                                <TableCell key={'raw-'+idx+'col2'} style={{display:'flex'}}>
+                                    <div>
                                     {
                                     dataPA
                                     ?f === 'xai_gradeNum'
@@ -20,6 +21,8 @@ const PredictedRawTable=({raw_data, dataPA})=>{
                                         : dataPA[f] ? dataPA[f].toFixed(2) : ""
                                     :""
                                     }
+                                    </div>
+                                    
                                     {// 오차 계산
                                         f !== "xai_gradeNum"
                                         && 
