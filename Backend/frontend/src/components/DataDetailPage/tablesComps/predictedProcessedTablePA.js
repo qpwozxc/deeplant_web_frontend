@@ -19,14 +19,18 @@ const PredictedProcessedTablePA = ({processedToggleValue, processed_data, dataPA
                 {deepAgingPAField.map((f, idx) => (
                     <TableRow key={'processed-'+idx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
                     <TableCell component="th" scope="row">{f}</TableCell>
-                    <TableCell align="right">    
-                        {// 1회차 
-                        dataPA
-                        ?f === 'xai_gradeNum'
-                            ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
-                            : dataPA[f] ? dataPA[f].toFixed(2) : ""
-                        :""
-                        }
+                    <TableCell align="right" >  
+                    <div style={{display:'flex'}}>
+                        <div>
+                            {// 1회차 
+                            dataPA
+                            ?f === 'xai_gradeNum'
+                                ? dataPA['xai_gradeNum'] === 0 ? "0" : dataPA[f]
+                                : dataPA[f] ? dataPA[f].toFixed(2) : ""
+                            :""
+                            }
+                        </div>
+                        
                         {// 오차
                         (f !== "xai_gradeNum" &&f !== 'seqno' &&f !== 'period')
                         && 
@@ -46,6 +50,8 @@ const PredictedProcessedTablePA = ({processedToggleValue, processed_data, dataPA
                             </div>
                         )    
                         }
+                    </div>  
+                        
                     </TableCell>
                     {
                     //2회차 부터 

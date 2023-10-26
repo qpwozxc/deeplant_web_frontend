@@ -1,5 +1,7 @@
+const apiIP = '3.38.52.82';
 
-export default async function updateRawData(raw_data, id, createdDate, tempUserID, elapsedHour, apiIP,){
+export default async function updateRawData(raw_data, id, tempUserID, createdDate,elapsedHour, ){
+
     //request body에 보낼 데이터 가공
     let req = {
         ...raw_data,
