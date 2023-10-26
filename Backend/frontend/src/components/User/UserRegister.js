@@ -101,7 +101,6 @@ function UserRegister({ handleClose }) {
 
   const [isEmailAvailable, setIsEmailAvailable] = useState(true);
 
-  // Function to handle the "중복확인" button click
   const handleDuplicateCheck = async () => {
     const userI = userId;
     const emailInput = document.getElementById("emailInput");
@@ -116,15 +115,16 @@ function UserRegister({ handleClose }) {
         } else {
           emailInput.setCustomValidity("중복된 이메일입니다.");
           setIsEmailAvailable(false); // 이메일이 이미 등록된 경우
+
         }
       } catch (error) {
         console.error("Error checking duplicate email:", error);
         emailInput.setCustomValidity("중복 확인 오류가 발생했습니다.");
-        setIsEmailAvailable(true); // 오류가 발생했으므로 이메일을 사용 가능한 것으로 간주
+        setIsEmailAvailable(true); 
       }
     } else {
       emailInput.setCustomValidity("오류.");
-      setIsEmailAvailable(true); // 이메일이 올바르지 않으므로 사용 가능한 것으로 간주
+      setIsEmailAvailable(true); 
     }
   };
 
@@ -155,14 +155,17 @@ function UserRegister({ handleClose }) {
             >
               중복 확인
             </Button>
-            <Form.Control.Feedback type="invalid">
-              올바른 이메일을 입력하세요.
-            </Form.Control.Feedback>
-            {isEmailAvailable === false && (
-              <Form.Control.Feedback type="invalid">
-                이미 등록된 이메일입니다.
-              </Form.Control.Feedback>
-            )}
+            <Form.Control.Feedback type={isEmailAvailable && isEmailValid ? "valid" : "invalid"}>
+  {isEmailValid ? (
+    isEmailAvailable ? (
+      "사용 가능한 이메일입니다."
+    ) : (
+      "중복된 이메일입니다."
+    )
+  ) : (
+    "올바른 이메일을 입력하세요."
+  )}
+</Form.Control.Feedback>
           </InputGroup>
 
           <Form.Group className="mb-3">
