@@ -282,7 +282,7 @@ function UserList() {
       <Modal
         show={registerShow}
         onHide={handleRegisterClose}
-        backdrop="static"
+        backdrop="true"
         keyboard={false}
         centered
       >

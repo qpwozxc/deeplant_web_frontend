@@ -41,19 +41,19 @@ const cards = [
   {
     title: "데이터 예측",
     image: home4,
-    imageSize: {  height: '128px', width: '122px' },
+    imageSize: {  height: '100px', width: '100px' },
     link: "/PA",
   },
   {
     title: "사용자 관리",
     image: home5,
-    imageSize: { height: '128px', width: '107px'},
+    imageSize: { height: '108px', width: '132px'},
     link: "/UserManagement",
   },
   {
     title: "프로필",
     image: home6,
-    imageSize: { height: '112px', width: '147px' },
+    imageSize: { height: '112px', width: '152px' },
     link: "/Profile",
   },
 ];
@@ -101,7 +101,10 @@ function Home() {
                   image={card.image}
                 />
                 <CardContent>
-                  <Typography >
+                  <Typography 
+                  sx={{textAlign: 'center', }}
+                  
+                  gutterBottom variant="h6" component="div">
                     {card.title}
                   </Typography>
                 </CardContent>

@@ -201,6 +201,7 @@ const LogInField = () => {
     width: `${(365 / 1920) * 100}vw`, // 너비를 365px로 설정
     height: `${(72 / 1080) * 100}vh`, // 높이를 72px로 설정
     padding: "8px", // Add padding for styling if needed
+    marginBottom: `${(20 / 1080) * 100}vh`,
   }}
 />
 
@@ -244,7 +245,7 @@ const LogInField = () => {
             sx={{
               width:`${(366 / 1920) * 100}vw`,
               height: `${(64 / 1080) * 100}vh`,
-            marginTop: `${(125 / 1080) * 100}vh`,
+            marginTop: `${(100 / 1080) * 100}vh`,
             mb:`${(44 / 1080) * 100}vh`, 
             bgcolor: "#7BD758" }}
           >

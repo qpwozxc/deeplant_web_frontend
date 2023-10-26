@@ -208,12 +208,16 @@ function UserRegister({ handleClose }) {
           </Form.Group>
 
           <div className="text-end">
-            {" "}
             {/* 오른쪽 정렬 */}
-            <Button onClick={handleClose}>
+            <Button variant="text" onClick={handleClose} >
               취소
             </Button>
-            <Button variant="primary" type="submit" onClick={handleSubmit}>
+            <Button  type="submit" onClick={handleSubmit}
+            style={{
+              background: "#0F3659",
+              width: "150px"
+            }}
+            >
               회원 등록
             </Button>
           </div>
