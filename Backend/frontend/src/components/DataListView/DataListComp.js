@@ -1,80 +1,61 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, } from "react";
 import { Box, } from "@mui/material";
-import DataList from "./DataList";
-import PaginationComp from "./paginationComp";
-import PaginationV2 from "./PaginationV2";
 import Spinner from "react-bootstrap/Spinner";
-import listData from "../../Data/pagination.json"
-
-const apiIP = '3.38.52.82';
+import DataList from "./DataList";
+import Pagination from "./Pagination";
+import getMeatList from "../../API/getMeatList";
 
 const DataListComp=({startDate, endDate})=>{
-  //console.log("date", startDate, endDate);
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  // 고기 데이터 목록
   const [meatList, setMeatList] = useState([]);
-  // 페이지네이션 - api로 부터 받아오는 정보 전체 데이터 개수
+
+  // 데이터 전체 개수
   const [totalData, setTotalData] = useState(0);
-
-  // 페이지네이션 컴포넌트와 공유하는 변수 -> current page 변화하면 api 새로 가져옴 
+  // 현재 페이지 번호
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 2; // 페이지네이션 원소 개수 
-  const count = 6; // 한페이지당 보여줄 개수 
-  // 페이지네이션 - 전체 페이지 개수 
-  const totalPages = Math.ceil(totalData / count);
+  // 한페이지당 보여줄 개수 
+  const count = 6; 
 
-  //API로부터 fetch 하는 함수
-  const getMeatList = async (offset,) => {
-    let json = await (
-      await fetch(
-        `http://${apiIP}/meat/get?offset=${offset}&count=${count}&start=${startDate}&end=${endDate}&createdAt=true`
-      )
-    ).json();
-    console.log("fetch done!", json);
-
-    // 임시로 json 파일을 땡겨옴 ====api 연결로 수정 
-    //json = listData;
-    console.log(json)
-    // 전체 데이터 수
+  //데이터 API로 부터 fetch
+  const handleMeatListLoad = async () => {
+    const json = await getMeatList((currentPage - 1),count, startDate, endDate);  
+    // 데이터 가공
     setTotalData(json["DB Total len"]);
-    // 데이터
     let data = [];
     json.id_list.map((m) => {
-      setMeatList([...meatList, json.meat_dict[m]]);
+      //setMeatList([...meatList, json.meat_dict[m]]);
       data = [...data, json.meat_dict[m]];
     });
     setMeatList(data);
     // 데이터 로드 성공
     setIsLoaded(true);
-  };
+  }
 
-  //데이터 api 로 부터 fetch
   useEffect(() => {
-    getMeatList(currentPage - 1 );
+    handleMeatListLoad();  
   }, [startDate, endDate, currentPage, ]);
 
   return (
     <div >
       <div style={style.listContainer} >
         {
-          //meatList.length!==0
-          //? (//데이터가 로드된 경우 데이터 목록 반환
+          isLoaded
+          ? (//데이터가 로드된 경우 데이터 목록 반환
           <DataList
             meatList={meatList}
             pageProp={'list'}
             offset={currentPage-1}
             count={count}
           />
-          // )
-          // : (// 데이터가 로드되지 않은 경우 (데이터가 0인 경우랑 따로 봐야할듯 )로딩중 반환
-          //    <Spinner animation="border" />
-          // totalData ? page 랑 current page , setcurrent 만 넘겨주면 될듯 
-          //  )
+          )
+          : (// 데이터가 로드되지 않은 경우 로딩중 반환
+              <Spinner animation="border" />
+          )
         }
       </div>
       <Box sx={style.paginationBar}>
-        {//<PaginationComp totalPages={totalPages} limit={limit} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
-        }
-        <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+        <Pagination totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
       </Box>
     </div>
   );

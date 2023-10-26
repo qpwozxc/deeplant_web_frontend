@@ -1,6 +1,6 @@
 import { Paper,  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 
-const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
+const LabTable=({edited, labInput, lab_data,labToggleValue, handleInputChange})=>{
 
     return(
         
@@ -13,7 +13,7 @@ const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
                         <TableCell key={'labData-exp-col'}>{}</TableCell>
                         <TableCell key={'labData-exp-col0'}>원육</TableCell>
                         {
-                        Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                        Array.from({ length: Number(labToggleValue.slice(0, -1)) }, (_, arr_idx)=> ( 
                             <TableCell key={'labData-exp-col'+(arr_idx+1)}> {arr_idx+1}회차 </TableCell>
                         ))
                         }
@@ -36,7 +36,7 @@ const LabTable=({edited, labInput, lab_data,toggle4Value, handleInputChange})=>{
                         }
                         </TableCell>
                         {// 실험실 및 가열육 추가 데이터 수정 
-                        Array.from({ length: Number(toggle4Value.slice(0, -1)) }, (_, arr_idx) => (
+                        Array.from({ length: Number(labToggleValue.slice(0, -1)) }, (_, arr_idx) => (
                             <TableCell  key={'lab-'+arr_idx+'-col'+arr_idx}>
                             {
                                 edited

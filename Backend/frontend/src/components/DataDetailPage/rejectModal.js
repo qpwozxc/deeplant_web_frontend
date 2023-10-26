@@ -2,6 +2,7 @@ import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 import {FaRegTimesCircle} from "react-icons/fa";
 import StateChangedModal from "./stateChangedModal";
+import updateDataStatus from "../../API/updateDataStatus";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
@@ -12,14 +13,7 @@ export default function RejectModal({id, setConfirmVal, confirmVal}) {
 
     // 승인 상태 변경 api 호출
     const changeConfirmState=()=>{
-        try{
-            const resp = fetch(`http://${apiIP}/meat/${confirmVal}?id=${id}`);
-            //navigate({pathname : '/DataManage'});
-            setStateChanged(true);
-            //handleClose();
-        }catch(err){
-            console.error(err);
-        }
+        updateDataStatus(apiIP,confirmVal, id, setStateChanged);
     };
 
     

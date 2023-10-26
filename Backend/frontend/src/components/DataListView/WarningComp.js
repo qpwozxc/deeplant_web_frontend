@@ -2,7 +2,7 @@ import { useState, useEffect, useSyncExternalStore } from "react"
 import {Backdrop,Box, Modal, Fade,Button, Typography} from '@mui/material';
 import {FaRegTrashAlt} from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-
+import updateDataStatus from "../../API/updateDataStatus";
 const apiIP = '3.38.52.82';
 const navy =  '#0F3659';
 
@@ -75,7 +75,9 @@ export default function TransitionsModal({id, setIsDelClick}) {
               </Box>
               
               <div style={{display:'flex', width:'100%', justifyContent:'end'}}>
-                <Button variant="outlined" sx={{marginRight:'5px'}} onClick={handleClose }  style={{backgroundColor:'white',marginRight:'10px',border:`1px solid ${navy}`, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px'}}>아니오</Button>
+                <Button variant="outlined" sx={{marginRight:'5px'}} onClick={handleClose }  style={{backgroundColor:'white',marginRight:'10px',border:`1px solid ${navy}`, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px'}}>
+                  아니오
+                </Button>
                 <Button variant="contained" onClick={handleOnDelete} style={{backgroundColor:navy, height:'35px', borderRadius:'10px', width:'100px', fontSize:'17px',}}>
                  <FaRegTrashAlt/>
                  삭제

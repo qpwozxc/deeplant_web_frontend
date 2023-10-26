@@ -1,6 +1,6 @@
 import { Paper,  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 
-const HeatTable=({edited, heatInput, heated_data,toggle3Value,handleInputChange,})=>{
+const HeatTable=({edited, heatInput, heated_data,heatedToggleValue,handleInputChange,})=>{
     return(
         <TableContainer key='heatedmeat' component={Paper} sx={{/*minWidth:'fit-content',maxWidth:'680px',*/width:'100%',overflow:'auto'}}>
             <Table sx={{ minWidth: 300 }} size="small" aria-label="a dense table">
@@ -9,7 +9,7 @@ const HeatTable=({edited, heatInput, heated_data,toggle3Value,handleInputChange,
                         <TableCell key={'heatedmeat-exp-col'}>{}</TableCell>
                         <TableCell key={'heatedmeat-exp-col0'}>원육</TableCell>
                         {
-                        Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx)=> ( 
+                        Array.from({ length: Number(heatedToggleValue.slice(0, -1)) }, (_, arr_idx)=> ( 
                             <TableCell key={'heatedmeat-exp-col'+(arr_idx+1)}>{arr_idx+1}회차</TableCell>
                         ))
                         }
@@ -28,7 +28,7 @@ const HeatTable=({edited, heatInput, heated_data,toggle3Value,handleInputChange,
                         }
                         </TableCell>
                         {// 실험실 및 가열육 추가 데이터 수정 
-                        Array.from({ length: Number(toggle3Value.slice(0, -1)) }, (_, arr_idx) => (
+                        Array.from({ length: Number(heatedToggleValue.slice(0, -1)) }, (_, arr_idx) => (
                             <TableCell key={'heated-'+arr_idx+'-col'+arr_idx}>
                             {
                                 edited

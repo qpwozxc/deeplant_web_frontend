@@ -1,34 +1,31 @@
-import { useState, useEffect, useRef } from "react";
-import { Box, Button,  } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, } from "@mui/material";
 // 데이터 목록 컴포넌트
 import DataList from "./DataList";
 import Spinner from "react-bootstrap/Spinner";
-import PaginationV2 from "./PaginationV2";
+import Pagination from "./Pagination";
 import './DataListComp.module.css'
+import getRejectedMeatList from "../../API/getRejectedMeatList";
 const navy =  '#0F3659';
-const apiIP = '3.38.52.82';
 
 const RejectedDataListComp=({startDate, endDate})=>{
     const [isLoaded, setIsLoaded] = useState(true);
-    const [meatList, setMeatList] = useState([]);
 
+    const [meatList, setMeatList] = useState([]);
+    //현재 페이지
     const [currentPage, setCurrentPage] = useState(1);
     // 전체 데이터 
     const [totalData, setTotalData] = useState(0);
-    const offset = 0; // 현재 로드하는 페이지의 인덱스 (fetch)
-    const count = 6; // 한페이지당 보여줄 개수 (fetch)
-    const limit = 5; // 한 화면당 페이지 배열의 원소 개수
-    const totalPages = Math.ceil(totalData / count); 
-  
+    const offset = 0; // 현재 로드하는 페이지의 인덱스
+    const count = 6; // 한페이지당 보여줄 개수 
+    const totalPages = Math.ceil(totalData / count);
+
     //api fetch
-    const getMeatList = async (offset) => {
-      const json = await (
-        await fetch(`http://${apiIP}/meat/status?statusType=1&offset=${offset}&count=${count}&start=${startDate}&end=${endDate}`)
-      ).json();
-      console.log('fetch done!');
-      // 전체 데이터 수 fetch
+    const handleRejectedMeatListLoad = async() => { // offset 파라미터로 필요?
+      const json = await getRejectedMeatList(offset, count, startDate, endDate);
+      // 전체 데이터 수
       setTotalData(json["DB Total len"]);
-      // 데이터 fetch
+      // 반려데이터
       setMeatList(json['반려']);
       // 데이터 로드 성공
       setIsLoaded(true);
@@ -36,16 +33,9 @@ const RejectedDataListComp=({startDate, endDate})=>{
   
       //데이터 api 로 부터 fetch
     useEffect(() => {
-      getMeatList(currentPage - 1);
+      handleRejectedMeatListLoad(currentPage - 1);
     }, [startDate, endDate, currentPage]);
 
-/**
- * 
- * <Box sx={style.deletBtnContainer}>
-          <Button variant="contained" style={style.deleteBtn} onClick={handleDeleteBtn}>삭제</Button>
-        </Box>
- */
-    
     return(
         <div>
           <div style={style.listContainer}>
@@ -58,7 +48,7 @@ const RejectedDataListComp=({startDate, endDate})=>{
             )}
           </div>
           <Box sx={style.paginationBar}>
-            <PaginationV2 totalPages={totalPages} totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+            <Pagination totalDatas={totalData} count={count} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </Box>
       </div>
     );

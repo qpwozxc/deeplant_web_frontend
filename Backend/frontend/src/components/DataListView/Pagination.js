@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Box, IconButton
-,FormControl, MenuItem, Select, Divider,
-} from '@mui/material';
+import { Box, IconButton,FormControl, MenuItem, Select, Divider,} from '@mui/material';
 import { FaArrowLeft, FaArrowRight} from "react-icons/fa";
 
 const navy = '#0F3659';
 
-function PaginationV2({totalPages, count,totalDatas,currentPage, setCurrentPage }){
+function Pagination({count,totalDatas,currentPage, setCurrentPage }){
+      // 페이지네이션 - 전체 페이지 개수 
+  const totalPages = Math.ceil(totalDatas / count);
+
     //count - 한페이지당 보여줄 데이터 개수 
     const pageArr = Array.from({length: totalPages}, (undefined, i) => i+1); 
     // 이전 버튼 클릭
@@ -61,4 +62,4 @@ function PaginationV2({totalPages, count,totalDatas,currentPage, setCurrentPage 
     );
 }
 
-export default PaginationV2;
+export default Pagination;
