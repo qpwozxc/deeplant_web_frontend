@@ -27,10 +27,11 @@ export default function DelWarningModal({idArr, setIsDelClick}) {
       idArr.push(id);
     }
     console.log('삭제할 배열 목록',idArr, id);*/
-    const handleOnDelete=()=>{
+    const handleOnDelete=async()=>{
         for (let i = 0; i < idArr.length; i++){
-          ondelete(idArr[i]);
+          await ondelete(idArr[i]);
         }
+        window.location.reload();
         handleClose();
     }
     return (
