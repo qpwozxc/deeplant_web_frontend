@@ -3,6 +3,8 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import Spinner from "react-bootstrap/Spinner";
+
 import Divider from '@mui/material/Divider';
 import './imgRot.css';
 import { TextField, Autocomplete} from '@mui/material';
@@ -35,6 +37,10 @@ function DataPAView({ currentUser ,dataProps}){
     const [previewImage, setPreviewImage] = useState(raw_img_path);
     const [dataXAIImg ,setDataXAIImg] = useState(null);
     const [gradeXAIImg, setGradeXAIImg] = useState(null);
+
+    //예측 post
+    const [isPredictedDone, SetIsPredictedDone] = useState(true); // 화면 로딩중 표시를 위한 것
+
 
    // 예측 데이터 fetch
     const [loaded, setLoaded] = useState(false);
@@ -73,7 +79,7 @@ function DataPAView({ currentUser ,dataProps}){
     },[dataPA,loaded,id]);
     
     //데이터 예측 버튼 
-    const handlePredictClick=()=>{
+    const handlePredictClick=async()=>{
         //로그인한 유저 정보
         const userData = JSON.parse(localStorage.getItem('UserInfo'));
         const tempUserID = 'junsu0573@naver.com';
@@ -83,6 +89,7 @@ function DataPAView({ currentUser ,dataProps}){
         const len = processed_data_seq.length;
         //seqno for loop
        // console.log('len',len);
+        SetIsPredictedDone(false);
         for (let i = 0; i < len; i++){
             let req = {
                 ["id"]:id,
@@ -93,7 +100,7 @@ function DataPAView({ currentUser ,dataProps}){
     
             const res = JSON.stringify(req);
             try{
-                fetch(`http://${apiIP}/predict`, {
+                await fetch(`http://${apiIP}/predict`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -101,14 +108,16 @@ function DataPAView({ currentUser ,dataProps}){
                 body: res,
                 });
                 console.log("predict result-",seqno,res);
-                getData(seqno);
+                await getData(seqno);
+                
                 // 강제 새로고침
-                window.location.reload();
+                //window.location.reload();
                 
             }catch(err){
                 console.log('error')
                 console.error(err);
             }
+            SetIsPredictedDone(true);
         }
     }
 
@@ -120,9 +129,9 @@ function DataPAView({ currentUser ,dataProps}){
     
 
     //탭 변환에 맞는 데이터 로드 
-    const handleSelect=(key)=>{
+    const handleSelect=async(key)=>{
         // 예측 데이터 로드
-        getData(key);
+        await getData(key); 
         // 원본 이미지 바꾸기
         key === '0'
         ?setPreviewImage(raw_img_path)
@@ -131,6 +140,14 @@ function DataPAView({ currentUser ,dataProps}){
 
     return(
         <div style={{width:'100%', marginTop:'70px'}}>
+            {
+                !isPredictedDone
+                && 
+                <div style={divStyle.loadingBackground}>
+                    <Spinner/>
+                    <span style={divStyle.loadingText}>맛 데이터 및 등급을 예측 중 입니다..</span>
+                </div>
+            }
             <div style={style.editBtnWrapper}>
                 <button type="button" class="btn btn-outline-success" style={{marginLeft:'30px'}} onClick={handlePredictClick}>예측</button>
             </div>  
@@ -324,4 +341,26 @@ const style={
 
     }
   
+  }
+  const divStyle = {
+        loadingBackground : {
+            position: 'absolute',
+            width: '100vw',
+            height: '100vh',
+            top: 0,
+            left: 0,
+            backgroundColor: '#ffffffb7',
+            zIndex: 999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }
+        
+    ,loadingText :{
+        fontSize:'25px',
+        textAlign: 'center',
+    }
+
+ 
   }
