@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 function DataList({meatList, pageProp, offset, count, totalPages}){
 
     // 삭제 
-    // 테이블 헤더상 선택 삭제 클릭
-    const [isTableHeaderDelClick, setIsTableHeaderDelClick] = useState(false);
+    // 테이블 헤더상 선택 삭제 클릭 -> 변수명 isDelClick으로 바꾸기
+    const [isDelClick, setIsDelClick] = useState(false);
 
     // 테이블 헤더의 선택 삭제버튼 클릭
     const handleTableHeaderDeleteBtn = () =>{
-        setIsTableHeaderDelClick(true);
+        setIsDelClick(true);
         //setDeleteItems(checkItems);
     }
 
@@ -50,7 +50,7 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
         let idArr = [];
         idArr.push(id);
         setCheckItems(idArr);
-        setIsTableHeaderDelClick(true);
+        setIsDelClick(true);
         //setDelId(id);
     }
 
@@ -221,13 +221,13 @@ function DataList({meatList, pageProp, offset, count, totalPages}){
         {
             // 테이블 셀의 삭제버튼이 클릭된 경우 
             isTableCellDelClick
-            ?<DelWarningModal idArr={checkItems} setIsDelClick={setIsTableHeaderDelClick}/>
+            ?<DelWarningModal idArr={checkItems} setIsDelClick={setIsDelClick}/>
             :<></>
         }
         {
             // 테이블 헤더의 선택 삭제 버튼이 클릭된 경우
-            isTableHeaderDelClick       
-            ?<DelWarningModal idArr={checkItems} setIsDelClick={setIsTableHeaderDelClick}/>
+            isDelClick       
+            ?<DelWarningModal idArr={checkItems} setIsDelClick={setIsDelClick}/>
             :<></>
         }
         </Box>

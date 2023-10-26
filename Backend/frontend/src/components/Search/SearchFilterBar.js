@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 import { TIME_ZONE } from "../../config";
 const navy =  '#0F3659';
 
-function SearchFilterBar({setStartDate, setEndDate}){
+function SearchFilterBar({setStartDate, setEndDate, setIsDateFilterClicked}){
     const [isDur, setIsDur] = useState(true);
     const [clicked, setClicked] = useState(false);
     //조회 기간 (탭으로 클릭 시)
@@ -155,7 +155,9 @@ function SearchFilterBar({setStartDate, setEndDate}){
                     <Divider variant="middle" style={{margin:"10px 0px"}}/>
 
                     <Box style={{display:'flex', justifyContent:'end'}}>
-                        <button onClick={()=>{setIsDur(false); /*setClicked(true); */handleBtn(); setAnchorEl(null);}} style={styles.finishBtn}>
+                        <button 
+                            onClick={()=>{setIsDur(false); handleBtn(); setAnchorEl(null); }} 
+                            style={styles.finishBtn}>
                             완료
                         </button>
                     </Box>

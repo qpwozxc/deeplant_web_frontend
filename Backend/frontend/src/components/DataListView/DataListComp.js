@@ -15,6 +15,7 @@ const DataListComp=({startDate, endDate})=>{
   const [totalData, setTotalData] = useState(0);
   // 현재 페이지 번호
   const [currentPage, setCurrentPage] = useState(1);
+  // setCurrentPage를 dataList로 전달 
   // 한페이지당 보여줄 개수 
   const count = 6; 
 
@@ -43,12 +44,12 @@ const DataListComp=({startDate, endDate})=>{
         {
           isLoaded
           ? (//데이터가 로드된 경우 데이터 목록 반환
-          <DataList
-            meatList={meatList}
-            pageProp={'list'}
-            offset={currentPage-1}
-            count={count}
-          />
+            <DataList
+              meatList={meatList}
+              pageProp={'list'}
+              offset={currentPage-1}
+              count={count}
+            />
           )
           : (// 데이터가 로드되지 않은 경우 로딩중 반환
               <Spinner animation="border" />
@@ -70,7 +71,6 @@ const style = {
     textAlign: "center",
     width: "100%",
     paddingRight:'0px',
-    //padding: "0px 120px",
     paddingBottom: "0",
     height:'400px',
   },

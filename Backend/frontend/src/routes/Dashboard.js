@@ -22,11 +22,13 @@ const navy =  '#0F3659';
 function Dashboard() { 
   // 목록/ 통계/ 반려함 탭 메뉴
   const [value, setValue] = useState('list');
-  const [period, setPeriod] = useState(7);
+  //const [period, setPeriod] = useState(7);
   const s = new Date();
   s.setDate(s.getDate() -7);
   const [startDate, setStartDate] = useState(new Date(s.getTime() + TIME_ZONE).toISOString().slice(0, -5));
   const [endDate, setEndDate] = useState(new Date(new Date().getTime() + TIME_ZONE).toISOString().slice(0, -5));
+  // 완료버튼 클릭 여부 
+  const [isDateFilterClicked, setIsDateFilterClicked] = useState(false);
 
   useEffect(()=>{
     console.log('str', startDate, 'end', endDate);
@@ -44,7 +46,7 @@ function Dashboard() {
             </div>
           : <span style={{color:`${navy}`, fontSize:'30px', fontWeight:'600'}}>Dashboard</span>
         }
-        <div style={{display:'flex', /*width:'100%',*/ justifyContent:'end'}}>
+        <div style={{display:'flex',justifyContent:'end'}}>
           <Button  style = {value === "reject"? styles.tabBtnCilcked : {color:`${navy}`, border:`1px solid ${navy}`}} value="reject" variant="outlined" onClick={(e)=>{setValue(e.target.value)}}>
             <FaBoxOpen style={{marginRight:'3px'}}/>
             반려함
@@ -62,7 +64,7 @@ function Dashboard() {
 
       {/**검색필터, 엑셀  */}
       <Box sx={styles.fixed}>
-        <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate}/>
+        <SearchFilterBar setStartDate={setStartDate} setEndDate={setEndDate} />
         <div style={{display: "flex",justifyContent: "center", alignItems:'center', paddingRight:'85px'}}>
           { value === "list" && <ExcelController/>}
           { value === "stat" && <StatsExport/>}
@@ -81,12 +83,7 @@ export default Dashboard;
 
 const styles={
   fixed:{
-    //position: 'fixed', 
-    //top:'170px',
-    //right:'0',
-    //left:'65px',
     zIndex: 1,
-    //width:'100%',
     borderRadius:'0',
     display:'flex',
     justifyContent:'space-between',
@@ -94,11 +91,8 @@ const styles={
     margin:'10px 0px'
   },
   fixedTab:{
-    //position: 'fixed', 
-    //top:'240px',
     right:'0',
     left:'0px',
-   // width:'100%',
     borderRadius:'0',
     backgroundColor:'',
     display:'flex', 
